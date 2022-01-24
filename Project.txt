@@ -1,8 +1,0 @@
-New Feature
-Adding feature 2
-<<<<<<< HEAD
-Amazing Feature 3
-Adding a very important fix right here
-=======
-AMAZING FEATURE OMG
->>>>>>> FeatureTwo
