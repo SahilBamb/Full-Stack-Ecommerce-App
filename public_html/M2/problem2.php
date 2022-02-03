@@ -11,10 +11,13 @@ function getTotal($arr) {
         $total+=$arr[$x];
     }
     //TODO do rounding stuff here
-    $total=round($total,2);
-    if ( $total == (int)$total ) {
-        $total=round($total,1);
-    }
+
+    $oldTotal=$total;
+   # $total=round($total,2);
+   $total=number_format($total, 2, '.', '');
+
+
+
     echo "The total is " . var_export($total, true);
 }
 echo "Problem 2: Adding Floats<br>";

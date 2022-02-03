@@ -10,11 +10,10 @@ function processArray($arr) {
     //TODO add logic here to echo out only odd values
     for ($x=0;$x<count($arr);$x++){
         if ($arr[$x]%2==1){
-            echo $arr[$x];
+            echo $arr[$x], "<br>";
         }
     }
     
-
 }
 echo "Problem 1: Odd Output<br>";
 ?>

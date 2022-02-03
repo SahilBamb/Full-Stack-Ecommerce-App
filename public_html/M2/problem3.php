@@ -16,6 +16,7 @@ function bePositive($arr) {
             else {
                 echo $arr[$x];
             }
+            echo "<br>";
         }
 
 }
