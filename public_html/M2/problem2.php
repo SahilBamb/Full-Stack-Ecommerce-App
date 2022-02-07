@@ -11,9 +11,6 @@ function getTotal($arr) {
         $total+=$arr[$x];
     }
     //TODO do rounding stuff here
-
-    $oldTotal=$total;
-   # $total=round($total,2);
    $total=number_format($total, 2, '.', '');
 
 
