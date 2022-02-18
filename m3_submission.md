@@ -1,6 +1,6 @@
 <table><tr><td> <em>Assignment: </em> JavaScript & CSS Challenge</td></tr>
 <tr><td> <em>Student: </em> Sahil Bambulkar(sb59)</td></tr>
-<tr><td> <em>Generated: </em> 2/18/2022 2:30:21 PM</td></tr>
+<tr><td> <em>Generated: </em> 2/18/2022 4:14:52 PM</td></tr>
 <tr><td> <em>Grading Link: </em> <a rel="noreferrer noopener" href="https://learn.ethereallab.app/homework/IT202-010-S22/javascript-csschallenge/grade/sb59" target="_blank">Grading</a></td></tr></table>
 <table><tr><td> <em>Instructions: </em> <ul>
 <li>Reminder: Make sure you start in dev and it&#39;s up to date<ol>
@@ -80,12 +80,12 @@
 <tr><td> <em>Sub-Task 10: </em> Briefly explain how you updated the content of the title tag with the link text</td></tr>
 <tr><td> <em>Response:</em> <p>This was done the sam eway as the h1 tag except using the<br>title tag instead through document.getElementsByTagName(&quot;title&quot;)[0].innerText = window.location.href; Again wtih a timeout to allow<br>time for the page to update. <br></p><br></td></tr>
 </table></td></tr>
-<table><tr><td> <em>Deliverable 3: </em> Misc </td></tr><tr><td><em>Status: </em> <img width="100" height="20" src="https://via.placeholder.com/400x120/f2c037/000000?text=Partial"></td></tr>
+<table><tr><td> <em>Deliverable 3: </em> Misc </td></tr><tr><td><em>Status: </em> <img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=Complete"></td></tr>
 <tr><td><table><tr><td> <em>Sub-Task 1: </em> Comment briefly talking about what you learned and/or any difficulties you encountered and how you resolved them (or attempted to)</td></tr>
 <tr><td> <em>Response:</em> <p>The CSS part was relatively simple to understand and just took some time<br>understanding each of the selectors. On the other hand the JavaScript part was<br>very tricky as I struggled to get a cohesive understanding of when each<br>part runs. I ultimately learned a lot through it and I think having<br>a few more problems like this to solve (or just problems like create<br>this page) would be extremely helpful in cementing these concepts. I really thought<br>I understood HTML CSS and JavaScript a lot better than I did after<br>reading the slides, but this assignment really put me in my place. Ultimately<br>it was good excersize and made me learn a lot. <br></p><br></td></tr>
 <tr><td> <em>Sub-Task 2: </em> Add a link to your pull request (hw branch to dev only)</td></tr>
 <tr><td> <a rel="noreferrer noopener" target="_blank" href="https://github.com/SahilBamb/IT202-010/pull/9">https://github.com/SahilBamb/IT202-010/pull/9</a> </td></tr>
 <tr><td> <em>Sub-Task 3: </em> Add a link to your solution html file from prod (again you can assume the url at this point)</td></tr>
-<tr><td>Not provided</td></tr>
+<tr><td> <a rel="noreferrer noopener" target="_blank" href="https://github.com/SahilBamb/IT202-010/blob/prod/public_html/challenge.html">https://github.com/SahilBamb/IT202-010/blob/prod/public_html/challenge.html</a> </td></tr>
 </table></td></tr>
 <table><tr><td><em>Grading Link: </em><a rel="noreferrer noopener" href="https://learn.ethereallab.app/homework/IT202-010-S22/javascript-csschallenge/grade/sb59" target="_blank">Grading</a></td></tr></table>
