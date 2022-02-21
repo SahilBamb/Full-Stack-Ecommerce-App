@@ -10,11 +10,13 @@
             getCurrentSelection();
         });
 
-
+        //Adds an EventListener for the Page to Load
         document.addEventListener("DOMContentLoaded", function(e) {
-
+            //Adds an EventListener for the navigation to be clicked
             document.getElementsByTagName("nav")[0].addEventListener("click", function(e) {
             setTimeout(() => { 
+                //Adds an Grabs the new URL (after timeout) and updates h1 and title tags wth the clickedOn text
+                //This needs to be seperated from the rest of the URL using the # as a delimiter
                 clickedOn=window.location.href.split('#')[1];
                 document.getElementsByTagName("h1")[0].innerText = clickedOn;
                 document.getElementsByTagName("title")[0].innerText = clickedOn;
@@ -57,7 +59,7 @@
         a:hover {color: green;}
 
         /* Change the "bullet points" of this entire list to checkmarks (✓) */
-        ul li :not(a) {list-style: "✓  ";}
+        ul :not(a) {list-style: "✓  ";}
 
         /* Styling of My Own Choice: added a background and border to <h3> elements */
         h3 {background-image: url('http://www.designyourway.net/blog/wp-content/uploads/2018/11/pastel-background-goo.jpg'); border: 1px solid black;}
