@@ -15,8 +15,9 @@
 
             document.getElementsByTagName("nav")[0].addEventListener("click", function(e) {
             setTimeout(() => { 
-                document.getElementsByTagName("h1")[0].innerText = window.location.href;
-                document.getElementsByTagName("title")[0].innerText = window.location.href;
+                clickedOn=window.location.href.split('#')[1];
+                document.getElementsByTagName("h1")[0].innerText = clickedOn;
+                document.getElementsByTagName("title")[0].innerText = clickedOn;
                 });}, 100);
             
             });
