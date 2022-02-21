@@ -1,6 +1,6 @@
 <table><tr><td> <em>Assignment: </em> JavaScript & CSS Challenge</td></tr>
 <tr><td> <em>Student: </em> Sahil Bambulkar(sb59)</td></tr>
-<tr><td> <em>Generated: </em> 2/20/2022 11:29:24 PM</td></tr>
+<tr><td> <em>Generated: </em> 2/20/2022 11:36:05 PM</td></tr>
 <tr><td> <em>Grading Link: </em> <a rel="noreferrer noopener" href="https://learn.ethereallab.app/homework/IT202-010-S22/javascript-csschallenge/grade/sb59" target="_blank">Grading</a></td></tr></table>
 <table><tr><td> <em>Instructions: </em> <ul>
 <li>Reminder: Make sure you start in dev and it&#39;s up to date<ol>
@@ -34,7 +34,13 @@
 <table><tr><td> <em>Deliverable 1: </em> Completed Challenge Screenshots </td></tr><tr><td><em>Status: </em> <img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=Complete"></td></tr>
 <tr><td><table><tr><td> <em>Sub-Task 1: </em> Screenshot of the Primary page with the checklist items completed</td></tr>
 <tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154888479-1c8fa5bf-32de-4c41-a128-22234ac0c1a9.png"/></td></tr>
-<tr><td> <em>Caption:</em> <p>This screenshot shows the primary page with the checklist items all completed.<br></p>
+<tr><td> <em>Caption:</em> <p>This screenshot shows the primary page with the checklist items all completed. I<br>only uploaded the code screenshot once here to reduce clutter space. <br></p>
+</td></tr>
+<tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154889771-a8247adf-0d2f-40dc-b2f4-9d3f269d3307.png"/></td></tr>
+<tr><td> <em>Caption:</em> <p>sb59 2/20 - This shows all the CSS code, all relevent comments are<br>present explaining the purpose and function of each line. <br></p>
+</td></tr>
+<tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154889869-e69c521b-c265-41b4-994d-a685612a7941.png"/></td></tr>
+<tr><td> <em>Caption:</em> <p>sb59 2/20 - This shows all the JavaScript code, all relevent comments are<br>present explaining the purpose and function of each line. <br></p>
 </td></tr>
 </table></td></tr>
 <tr><td> <em>Sub-Task 2: </em> Screenshot showing after the login link is clicked (be sure to include the url)</td></tr>
