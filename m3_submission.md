@@ -1,6 +1,6 @@
 <table><tr><td> <em>Assignment: </em> JavaScript & CSS Challenge</td></tr>
 <tr><td> <em>Student: </em> Sahil Bambulkar(sb59)</td></tr>
-<tr><td> <em>Generated: </em> 2/20/2022 11:36:05 PM</td></tr>
+<tr><td> <em>Generated: </em> 2/20/2022 11:45:11 PM</td></tr>
 <tr><td> <em>Grading Link: </em> <a rel="noreferrer noopener" href="https://learn.ethereallab.app/homework/IT202-010-S22/javascript-csschallenge/grade/sb59" target="_blank">Grading</a></td></tr></table>
 <table><tr><td> <em>Instructions: </em> <ul>
 <li>Reminder: Make sure you start in dev and it&#39;s up to date<ol>
@@ -33,7 +33,7 @@
 </td></tr></table>
 <table><tr><td> <em>Deliverable 1: </em> Completed Challenge Screenshots </td></tr><tr><td><em>Status: </em> <img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=Complete"></td></tr>
 <tr><td><table><tr><td> <em>Sub-Task 1: </em> Screenshot of the Primary page with the checklist items completed</td></tr>
-<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154888479-1c8fa5bf-32de-4c41-a128-22234ac0c1a9.png"/></td></tr>
+<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154890649-2ef38698-67fa-4fb4-887a-bbfefabcae95.png"/></td></tr>
 <tr><td> <em>Caption:</em> <p>This screenshot shows the primary page with the checklist items all completed. I<br>only uploaded the code screenshot once here to reduce clutter space. <br></p>
 </td></tr>
 <tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154889771-a8247adf-0d2f-40dc-b2f4-9d3f269d3307.png"/></td></tr>
@@ -44,22 +44,22 @@
 </td></tr>
 </table></td></tr>
 <tr><td> <em>Sub-Task 2: </em> Screenshot showing after the login link is clicked (be sure to include the url)</td></tr>
-<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154888509-9e4dc65d-87d3-4a33-9aea-bcdf832ee256.png"/></td></tr>
+<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154890679-f21b6ae7-23a6-48f4-9e1a-717bfdd6324e.png"/></td></tr>
 <tr><td> <em>Caption:</em> <p>This screenshot shows the page after the login link is clicked. Note: the<br>mouse was also kept over the link to show it change colors.<br></p>
 </td></tr>
 </table></td></tr>
 <tr><td> <em>Sub-Task 3: </em> Screenshot showing after the register link is clicked (be sure to include the url)</td></tr>
-<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154888528-4f509667-62f1-47af-aef0-3f9f7308a12a.png"/></td></tr>
+<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154890704-324f712f-1ac8-4d0c-af05-bdc2c0d015da.png"/></td></tr>
 <tr><td> <em>Caption:</em> <p>This screenshot shows the page after the register link is clicked. Note: the<br>mouse was also kept over the link to show it change colors.<br></p>
 </td></tr>
 </table></td></tr>
 <tr><td> <em>Sub-Task 4: </em> Screenshot showing after the profile link is clicked (be sure to include the url)</td></tr>
-<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154888543-f946ad72-f421-4f10-a57d-39d34194fffb.png"/></td></tr>
+<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154890725-16574287-5924-4e4e-ac68-f419c8bb81cc.png"/></td></tr>
 <tr><td> <em>Caption:</em> <p>This screenshot shows the page after the profile link is clicked. Note: the<br>mouse was also kept over the link to show it change colors.<br></p>
 </td></tr>
 </table></td></tr>
 <tr><td> <em>Sub-Task 5: </em> Screenshot showing after the logout link is clicked (be sure to include the url)</td></tr>
-<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154888579-0885870d-4acf-4c79-a381-a38c60c27555.png"/></td></tr>
+<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/154890748-848d23c1-4fa0-4d32-a609-71f99cdd4dd3.png"/></td></tr>
 <tr><td> <em>Caption:</em> <p>This screenshot shows the page after the logout link is clicked. Note: the<br>mouse was also kept over the link to show it change colors.<br></p>
 </td></tr>
 </table></td></tr>
