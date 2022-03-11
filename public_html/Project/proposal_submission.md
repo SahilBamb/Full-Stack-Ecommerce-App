@@ -1,6 +1,6 @@
 <table><tr><td> <em>Assignment: </em> Proposal markdown</td></tr>
 <tr><td> <em>Student: </em> Sahil Bambulkar(sb59)</td></tr>
-<tr><td> <em>Generated: </em> 3/11/2022 3:20:32 AM</td></tr>
+<tr><td> <em>Generated: </em> 3/11/2022 11:34:52 AM</td></tr>
 <tr><td> <em>Grading Link: </em> <a rel="noreferrer noopener" href="https://learn.ethereallab.app/homework/IT202-010-S22/proposal-markdown/grade/sb59" target="_blank">Grading</a></td></tr></table>
 <table><tr><td> <em>Instructions: </em> <ol>
 <li>Copy this template (use the raw button or you&#39;ll miss part of the template): <a href="https://gist.github.com/MattToegel/420ef0ad0925eca69c70ca951572abfb">https://gist.github.com/MattToegel/420ef0ad0925eca69c70ca951572abfb</a> (Links to an external site.)</li>
@@ -39,12 +39,12 @@
 </table></td></tr>
 <table><tr><td> <em>Deliverable 2: </em> Github Issues and Project Board </td></tr><tr><td><em>Status: </em> <img width="100" height="20" src="https://via.placeholder.com/400x120/009955/fff?text=Complete"></td></tr>
 <tr><td><table><tr><td> <em>Sub-Task 1: </em> Add Screenshots showing the generated Issues on Github (there should be at least 9; 1 per major bullet point)</td></tr>
-<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/157829139-a2b6f1df-f5ff-4ac6-b5f9-fc865c467194.png"/></td></tr>
-<tr><td> <em>Caption:</em> <p>There are 12 issues with some additional sub issues given their own issue<br>for clarity<br></p>
+<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/157908769-98dac464-f8d6-4662-aea5-245f2029338b.png"/></td></tr>
+<tr><td> <em>Caption:</em> <p>There are 9 issues with some additional sub issues in the descriptions<br></p>
 </td></tr>
 </table></td></tr>
 <tr><td> <em>Sub-Task 2: </em> Add Screenshots from the perspective of the Project board showing all issues in the TODO column</td></tr>
-<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/157828804-c9968225-285c-40b6-9525-df860d472799.png"/></td></tr>
+<tr><td><table><tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/157908335-1d03e0db-60b4-417b-b57c-1a8bbe10c5a1.png"/></td></tr>
 <tr><td> <em>Caption:</em> <p>The screenshot showed the completed Project Board with each To Do task and<br>some Completed tasks<br></p>
 </td></tr>
 </table></td></tr>
