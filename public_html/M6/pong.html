@@ -392,9 +392,8 @@
                 }
                 else {removeList.push(i);}
             }
-            var hollen = removeList.length;
-            for (let i = 0; i < hollen; i++) {
-                removeList.pop(i);
+            for (let i = 0; i < removeList.length; i++) {
+                drawables.pop(removeList[i]);
             }
 
         }
