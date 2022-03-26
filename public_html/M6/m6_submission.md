@@ -1,6 +1,6 @@
 <table><tr><td> <em>Assignment: </em> HW HTML5 Canvas Game</td></tr>
 <tr><td> <em>Student: </em> Sahil Bambulkar(sb59)</td></tr>
-<tr><td> <em>Generated: </em> 3/26/2022 3:46:21 PM</td></tr>
+<tr><td> <em>Generated: </em> 3/26/2022 3:51:32 PM</td></tr>
 <tr><td> <em>Grading Link: </em> <a rel="noreferrer noopener" href="https://learn.ethereallab.app/homework/IT202-010-S22/hw-html5-canvas-game/grade/sb59" target="_blank">Grading</a></td></tr></table>
 <table><tr><td> <em>Instructions: </em> <ol>
 <li>Create a branch for this assignment called <em>M6-HTML5-Canvas</em></li>
@@ -35,7 +35,7 @@
 <tr><td><table><tr><td> <em>Sub-Task 1: </em> What game did you pick to edit/modify?</td></tr>
 <tr><td> <em>Response:</em> <p>I decided to edit the Professor&#39;s pong game, but I changed it considerably<br>so it does not resemble pong at all anymore. <br></p><br></td></tr>
 <tr><td> <em>Sub-Task 2: </em> Add the direct link to the html5.html file from Heroku Prod (i.e., https://mt85-prod.herokuapp.com/M6/html5.html)</td></tr>
-<tr><td> <a rel="noreferrer noopener" target="_blank" href="https://sb59-dev.herokuapp.com/M6/pong.html">https://sb59-dev.herokuapp.com/M6/pong.html</a> </td></tr>
+<tr><td> <a rel="noreferrer noopener" target="_blank" href="https://sb59-prod.herokuapp.com/M6/pong.html">https://sb59-prod.herokuapp.com/M6/pong.html</a> </td></tr>
 <tr><td> <em>Sub-Task 3: </em> Add the pull request link for this assignment from M6-HTML5-Canvas to dev</td></tr>
 <tr><td> <a rel="noreferrer noopener" target="_blank" href="https://github.com/SahilBamb/IT202-010/pull/39">https://github.com/SahilBamb/IT202-010/pull/39</a> </td></tr>
 </table></td></tr>
