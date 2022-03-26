@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        //modified from http://jsfiddle.net/bencentra/q1s8gmqv/?utm_source=website&utm_medium=embed&utm_campaign=q1s8gmqv
+        //Global Variables
+        var canvas;
+        var context;
+        var loop;
+        var leftPaddle;
+        var rightPaddle;
+        var ball;
+        var paddleWidth = 25;
+        var paddleHeight = 100;
+        var ballSize = 10;
+        var ballSpeed = 2;
+        var paddleSpeed = 5;
+        var projectileType = 1;
+        var drawables = [];
+        var removeList = [];
+        // Key Codes
+        var SPACE = 32;
+        var A = 65;
+        var D = 68;
+        var W = 87;
+        var S = 83;
+        var UP = 38;
+        var DOWN = 40;
+        var visibilityPercent = 0.6;
+
+        var health = 100;
+        var score = 0;
+
+        // Keep track of pressed keys
+        var keys = {
+            A: false,
+            D: false,
+            W: false,
+            S: false,
+            UP: false,
+            DOWN: false
+        };
+
+        // Keep track of the score
+        var leftScore = 0;
+        var rightScore = 0;
+        function init() {
+            canvas = document.getElementById("board");
+            if (canvas.getContext) {                //Checks if it supports context
+                context = canvas.getContext("2d");  //
+                newPaddle = makePlayer(100, 100, 50, 50, 5, '#0000BC');
+                healthBar = makehealthBar(100, 50, 400, 5, '#DE3163');
+                drawables.push(newPaddle);
+                //console.log("drawables", drawables);
+                attachKeyListeners();
+                loop = window.setInterval(gameLoop, 16); //16ms
+                canvas.focus();
+            }
+        }
+        
+
+        function attachKeyListeners() {
+            // Listen for keydown events
+            canvas.addEventListener('keydown', function (e) {
+                //console.log("keydown", e);
+                if (e.keyCode === SPACE) {
+                    if (projectileType===1) makeBasicProjectile(newPaddle.x,newPaddle.y);
+                    if (projectileType===2) makeRapidProjectile(newPaddle.x,newPaddle.y);
+                    if (projectileType===3) makeLayeredProjectile(newPaddle.x,newPaddle.y);
+                    if (projectileType===4) makeBeamProjectile(newPaddle.x,newPaddle.y);
+                }
+                if (e.keyCode === A) {
+                    keys.A = true;
+                }
+                if (e.keyCode === W) {
+                    keys.W = true;
+                }
+                if (e.keyCode === S) {
+                    keys.S = true;
+                }
+                if (e.keyCode === D) {
+                    keys.D = true;
+                }
+                if (e.keyCode === UP) {
+                    keys.UP = true;
+                }
+                if (e.keyCode === DOWN) {
+                    keys.DOWN = true;
+                }
+                //console.log(keys);
+            });
+
+            canvas.addEventListener('keyup', function (e) {
+                //console.log("keyup", e);
+                if (e.keyCode === A) {
+                    keys.A = false;
+                }
+                if (e.keyCode === D) {
+                    keys.D = false;
+                }
+                if (e.keyCode === W) {
+                    keys.W = false;
+                }
+                if (e.keyCode === S) {
+                    keys.S = false;
+                }
+                if (e.keyCode === UP) {
+                    keys.UP = false;
+                }
+                if (e.keyCode === DOWN) {
+                    keys.DOWN = false;
+                }
+                //console.log(keys);
+            });
+        }
+
+        function makeRapidProjectile(x,y){
+            console.log("Made a projectile");
+            project = makeProject(x, y, 10, 10, 25, '#48C9B0');
+            var spread = 5;
+            var bullets = Math.floor(Math.random() * 20)+1;;
+            for (let i = 0; i < bullets; i++) {
+                project = makeProject(x-20, y, 10, 10, 25, '#48C9B0');  
+                project.movey=true;
+                project.changey = Math.floor(Math.random() * spread)+1;
+                if (Math.random()>.5) project.changey*=-1;
+                drawables.push(project);
+            }
+
+        }
+
+        function makeBasicProjectile(x,y){
+            console.log("Made a basic projectile");
+            project = makeProject(x, y, 20, 20, 15, '#0000BC');
+            drawables.push(project);
+        }
+
+        function makeBeamProjectile(x,y){
+            console.log("Made a beam projectile");
+            project = makeProject(x, y, 1000, 20, 15, '#DFFF00');
+            project.movey=true;
+            project.changey = Math.floor(Math.random() * 4)+1;
+            if (Math.random()>.5) project.changey*=-1;
+            drawables.push(project);
+        }
+
+        function makeLayeredProjectile(x,y){
+            console.log("Made a layered projectile");
+            project = makeProject(x, y+45, 20, 20, 15, '#FF7F50');
+            drawables.push(project);
+            project = makeProject(x, y, 20, 20, 15, '#FF7F50');
+            drawables.push(project);
+            project = makeProject(x, y-45, 20, 20, 15, '#FF7F50');
+            drawables.push(project);
+        }
+
+        function movePlayers() {
+            if (keys.W || keys.UP) {
+                newPaddle.y -= newPaddle.s;
+            }
+            if (keys.D) {
+                newPaddle.x += newPaddle.s;
+            }
+            if (keys.A) {
+                newPaddle.x -= newPaddle.s;
+            }
+            if (keys.S || keys.DOWN) {
+                newPaddle.y += newPaddle.s;
+            }
+            if (keys.A) {
+                newPaddle.x -= newPaddle.s;
+            }
+            //clampToCanvas(leftPaddle);
+        }
+
+
+        // Create a rectangle object - for paddles, ball, etc
+        // Pseudo Class declaration 
+        function makePlayer(x, y, width, height, speed, color) {
+            if (!color)
+                color = '#000000';
+            return {
+                type: "player",
+                x: x,
+                y: y,
+                w: width,
+                h: height,
+                s: speed,
+                c: color,
+                exists: true,
+                draw: function () {
+                    context.fillStyle = this.c;
+                    context.fillRect(this.x, this.y, this.w, this.h);
+                    
+                }
+            };
+        }
+
+
+        // Pseudo Class declaration  
+        function makeProject(x, y, width, height, speed, color) {
+            if (!color)
+                color = '#0F0F0F';
+            return {
+                type: "projectile",
+                movey: false,
+                changey: 0,
+                x: x,
+                y: y,
+                w: width,
+                h: height,
+                s: speed,
+                c: color,
+                exists: true,
+                draw: function () {
+                    this.x+=this.s;
+                    if (this.movey) {this.y+=this.changey;}
+                    for (let i = 0; i < drawables.length; i++) {
+                    if (drawables[i].exists && (drawables[i].type==="enemy" || drawables[i].type==="PowerUp")){
+                        if (( (this.x+20)> drawables[i].x) && (this.x<drawables[i].x) && (this.y<drawables[i].y) && (this.y+50>drawables[i].y)) {
+                            console.log(drawables[i].type);
+                            
+                                score++;
+                                drawables[i].exists=false;
+                            if (drawables[i].type=="PowerUp") {
+                                projectileType=drawables[i].projectileT;
+                                console.log("Got a Powerup!");
+                                console.log(drawables[i].projectileT);
+                                drawables[i].exists=false;
+                            }
+                            else{
+                                //console.log("Hit an enemy!");
+                                score++;
+                                drawables[i].exists=false;
+
+                            }
+                            
+                        }
+
+                    }
+                        }
+                    
+                    context.fillStyle = this.c;
+                    context.fillRect(this.x, this.y, this.w, this.h);
+                }
+            };
+        }
+
+        function drawScores() {
+            // Draw the scores
+            context.fillStyle = '#000000';
+            context.font = '24px Helvetica';
+            context.textAlign = 'left';
+            let offsetY = canvas.height * .05;
+            let offsetX = canvas.width * .01;
+            context.fillText('Health: ' + health, offsetX, offsetY);
+            context.textAlign = 'right';
+            context.fillText('Score: ' + score, canvas.width - offsetX, offsetY);
+            context.fillStyle = '#DE3163'
+                   
+        }
+
+        function drawDeathScreen() {
+            // Draw the scores
+            context.fillStyle = '#E55312';
+            context.font = '24px Helvetica';
+            context.textAlign = 'left';
+            let offsetY = canvas.height * .05;
+            let offsetX = canvas.width * .01;
+            context.fillText('Game Over!', offsetX, offsetY);
+            context.textAlign = 'right';
+            context.fillText('Final Score: ' + score, canvas.width - offsetX, offsetY);
+            context.fillStyle = '#E55312'
+                
+        }
+
+
+        function makeEnem(x, y, width, height, speed, color) {
+            if (!color)
+                color = '#2FF747';
+            return {
+                type: "enemy",
+                x: x,
+                y: y,
+                w: width,
+                h: height,
+                s: speed,
+                c: color,
+                exists: true,
+                draw: function () {
+                    this.x-=this.s;
+                    context.fillStyle = this.c;
+                    context.fillRect(this.x, this.y, this.w, this.h);
+                }
+            };
+        }
+
+        function makePowerup(x, y, width, height, speed, color) {
+            if (!color)
+                color = '#F328EA';
+            return {
+                type: "PowerUp",
+                projectileT: Math.floor(Math.random() * 4)+1,
+                x: x,
+                y: y,
+                w: width,
+                h: height,
+                s: speed,
+                c: color,
+                exists: true,
+                draw: function () {
+                    this.x-=this.s;
+                    context.fillStyle = this.c;
+                    context.fillRect(this.x, this.y, this.w, this.h);
+                }
+            };
+        }
+
+        function addPowerUp(){
+            pw = makePowerup(canvas.width-40, Math.random()*canvas.height,  20,  20,  Math.random()*5,'#F328EA');
+            drawables.push(pw);
+        }
+
+        function makehealthBar(x, y, width, height, color) {
+            if (!color)
+                color = '#FF0000';
+            return {
+                type: "UI",
+                x: x,
+                y: y,
+                w: width,
+                h: height,
+                c: color,
+                exists: true,
+                draw: function () {
+                    context.fillStyle = this.c;
+                    context.fillRect(this.x, this.y, this.w, this.h);
+                }
+            };
+        }
+
+        function updateHealth(){
+            health--;
+        }
+
+        function makeEnemies(x,y){
+            en = makeEnem(canvas.width-10, Math.random()*canvas.height,  Math.random()*40,  Math.random()*40,  Math.random()*5,'#2FF747');
+            drawables.push(en);
+        }
+
+
+        function erase() {
+            context.fillStyle = '#FFFFFF';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function gameLoop() {
+
+            if (health>0){
+                erase();
+                drawScores();
+                movePlayers()
+
+                if ( (Math.floor(Math.random() * 100000)) > (99000-(score*100))) {
+                    makeEnemies(10,10);
+                }
+                else if ( (Math.floor(Math.random() * 10000)) > (9990)) {
+                    addPowerUp(10,10);
+                }
+
+        }
+
+            else{
+                erase();
+                drawDeathScreen()
+            }
+
+
+
+            //console.log("New enemey spawned");    
+                
+
+            //draw stuff
+            removeList = [];
+            for (let i = 0; i < drawables.length; i++) {
+                if (drawables[i].exists) {
+                    drawables[i].draw();
+                    if (drawables[i].type=="player") continue
+                    if (drawables[i].x<0) {drawables[i].exists=false; updateHealth(); console.log("left the map!");}
+                    if (drawables[i].x>canvas.width) drawables[i].exists=false; 
+                    //console.log(drawables[i]);
+                }
+                else {removeList.push(i);}
+            }
+            for (let i = 0; i < removeList.length; i++) {
+                //drawables.pop(removeList[i]);
+            }
+
+        }
+    </script>
+    <style>
+        canvas:focus{
+            border: 3px solid black;
+        }
+        canvas:not(:focus){
+            border: 1px dotted black;
+        }
+
+        img:hover {
+            /* Start the shake animation and make the animation last for 0.5 seconds */
+            animation: shake 0.5s;
+
+            /* When the animation is finished, start again */
+            animation-iteration-count: infinite;
+        }
+
+
+    </style>
+</head>
+
+<body onload="init();">
+    <div>
+    <h1 style="display: inline;">Battle Shooters 3: Revenge of the Arcane</h1>
+    <h3 style="display: inline;"><a href="index.html">Back</a></h3>
+    </div>
+    <main>
+        <canvas tabindex="0" id="board" width="600px" height="600px" >
+
+        </canvas>
+    </main>
+</body>
+
+</html>
