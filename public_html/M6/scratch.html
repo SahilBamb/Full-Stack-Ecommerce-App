@@ -16,12 +16,6 @@
         var ballSpeed = 2;
         var paddleSpeed = 5;
         var projectileType = 1;
-        var projectileToColor = {
-                    1: "#0000BC",
-                    2: "#48C9B0",
-                    3: "#FF7F50",
-                    4: "DFFF00"
-                    };
         var drawables = [];
         var removeList = [];
         // Key Codes
@@ -64,9 +58,7 @@
             }
         }
         
-        //(ucid: sb59, date: 3/25)
-        //This is the update movement system, it allows for different
-        //weapons and for different angles for the player to shoot from
+
         function attachKeyListeners() {
             // Listen for keydown events
             canvas.addEventListener('keydown', function (e) {
@@ -121,11 +113,9 @@
                 //console.log(keys);
             });
         }
-        //(ucid: sb59, date: 3/25)
-        //This creates a shot gun projectile that randomly generates the number of bullets
-        //and launches them in different directions
+
         function makeRapidProjectile(x,y){
-            console.log("Made a rapid projectile");
+            console.log("Made a projectile");
             project = makeProject(x, y, 10, 10, 25, '#48C9B0');
             var spread = 5;
             var bullets = Math.floor(Math.random() * 20)+1;;
@@ -138,16 +128,13 @@
             }
 
         }
-        //(ucid: sb59, date: 3/25)
-        //This creates the basic default projectile that is just a single bullet in a straight line
+
         function makeBasicProjectile(x,y){
             console.log("Made a basic projectile");
             project = makeProject(x, y, 20, 20, 15, '#0000BC');
             drawables.push(project);
         }
 
-        //(ucid: sb59, date: 3/25)
-        //This creates a laser projectile which is a long beam that has a slight downward slope (random angle)
         function makeBeamProjectile(x,y){
             console.log("Made a beam projectile");
             project = makeProject(x, y, 1000, 20, 15, '#DFFF00');
@@ -157,8 +144,6 @@
             drawables.push(project);
         }
 
-        //(ucid: sb59, date: 3/25)
-        //This creates a 3 stacked shot with 3 different bullets moving in a straight line
         function makeLayeredProjectile(x,y){
             console.log("Made a layered projectile");
             project = makeProject(x, y+45, 20, 20, 15, '#FF7F50');
@@ -205,22 +190,14 @@
                 exists: true,
                 draw: function () {
                     context.fillStyle = this.c;
-                    context.fillRect(this.x, this.y-10, this.w/2, this.h);
                     context.fillRect(this.x, this.y, this.w, this.h);
-                    context.fillRect(this.x, this.y+10, this.w/2, this.h);
-                    context.fillStyle = projectileToColor[projectileType];
-                    context.fillRect(this.x+50, this.y+12, this.w/2, this.h/2);
                     
                 }
             };
         }
 
-        //(ucid: sb59, date: 3/25)
-        // This is the logic for each projectile
-        //Essentially it works by moving to the right of the screen in different ways
-        //A notable part of the code is the collision detection that runs through the drawables array
-        //It checks if anything is within its collision box and then turns its "exists off" and iterates the players score
-        //It also allows the pickup of PowerUps that change the projectile type
+
+        // Pseudo Class declaration  
         function makeProject(x, y, width, height, speed, color) {
             if (!color)
                 color = '#0F0F0F';
@@ -242,6 +219,7 @@
                     if (drawables[i].exists && (drawables[i].type==="enemy" || drawables[i].type==="PowerUp")){
                         if (( (this.x+20)> drawables[i].x) && (this.x<drawables[i].x) && (this.y<drawables[i].y) && (this.y+50>drawables[i].y)) {
                             console.log(drawables[i].type);
+                            
                                 score++;
                                 drawables[i].exists=false;
                             if (drawables[i].type=="PowerUp") {
@@ -295,9 +273,8 @@
             context.fillStyle = '#E55312'
                 
         }
-        //(ucid: sb59, date: 3/25)
-        //This is the Enemies function that allows enemies to be spawned 
-        //They are all green and move in a straight line to the left toward the player
+
+
         function makeEnem(x, y, width, height, speed, color) {
             if (!color)
                 color = '#2FF747';
@@ -314,17 +291,10 @@
                     this.x-=this.s;
                     context.fillStyle = this.c;
                     context.fillRect(this.x, this.y, this.w, this.h);
-                    context.fillStyle = "#FF0000";
-                    context.fillRect(this.x-(this.w*.1), this.y, this.w/5, this.h/5);
-                    context.fillRect(this.x+(this.w*.9), this.y, this.w/5, this.h/5);
                 }
             };
         }
-        
-        //(ucid: sb59, date: 3/25)
-        //This is the Powerup function that allows powerups to be made 
-        //which are treated similar to enemies but are pink
-        //One notable aspect is that they have a randomly generated projectileT value
+
         function makePowerup(x, y, width, height, speed, color) {
             if (!color)
                 color = '#F328EA';
@@ -341,7 +311,7 @@
                 draw: function () {
                     this.x-=this.s;
                     context.fillStyle = this.c;
-                    context.fillRect(this.x, this.y, this.w/2, this.h);
+                    context.fillRect(this.x, this.y, this.w, this.h);
                 }
             };
         }
@@ -349,11 +319,6 @@
         function addPowerUp(){
             pw = makePowerup(canvas.width-40, Math.random()*canvas.height,  20,  20,  Math.random()*5,'#F328EA');
             drawables.push(pw);
-        }
-
-        function makeEnemies(x,y){
-            en = makeEnem(canvas.width-10, Math.random()*canvas.height,  Math.random()*40,  Math.random()*40,  Math.random()*5,'#2FF747');
-            drawables.push(en);
         }
 
         function makehealthBar(x, y, width, height, color) {
@@ -378,6 +343,10 @@
             health--;
         }
 
+        function makeEnemies(x,y){
+            en = makeEnem(canvas.width-10, Math.random()*canvas.height,  Math.random()*40,  Math.random()*40,  Math.random()*5,'#2FF747');
+            drawables.push(en);
+        }
 
 
         function erase() {
@@ -395,7 +364,7 @@
                 if ( (Math.floor(Math.random() * 100000)) > (99000-(score*100))) {
                     makeEnemies(10,10);
                 }
-                if ( (Math.floor(Math.random() * 10000)) > (9990)) {
+                else if ( (Math.floor(Math.random() * 10000)) > (9990)) {
                     addPowerUp(10,10);
                 }
 
@@ -405,6 +374,9 @@
                 erase();
                 drawDeathScreen()
             }
+
+
+
 
 
 
@@ -423,8 +395,9 @@
                 }
                 else {removeList.push(i);}
             }
-            for (let i = 0; i < removeList.length; i++) {
-                //drawables.pop(removeList[i]);
+            var hollen = removeList.length;
+            for (let i = 0; i < hollen; i++) {
+                removeList.pop(i);
             }
 
         }
@@ -451,7 +424,8 @@
 
 <body onload="init();">
     <div>
-    <h1 style="display: inline;">Battle Shooters: Dont Let the Aliens Pass!</h1>
+    <h1 style="display: inline;">Battle Shooters 3: Revenge of the Arcane</h1>
+    <h3 style="display: inline;"><a href="index.html">Back</a></h3>
     </div>
     <main>
         <canvas tabindex="0" id="board" width="600px" height="600px" >
