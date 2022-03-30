@@ -1,3 +1,6 @@
+
+<link rel="stylesheet" href="mystyle.css">
+
 <?php
 session_start();
 session_unset();

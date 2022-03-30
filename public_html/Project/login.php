@@ -1,3 +1,6 @@
+
+<link rel="stylesheet" href="mystyle.css">
+
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 ?>

@@ -1,3 +1,6 @@
+
+<link rel="stylesheet" href="mystyle.css">
+
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 ?>
@@ -85,7 +88,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
             flash("Successfully registered!");
         } catch (Exception $e) {
             flash("There was a problem registering", "danger");
-            flash("<pre>" . var_export($e, true) . "</pre>", "danger");
+            //flash("<pre>" . var_export($e, true) . "</pre>", "danger");
         }
     }
 }

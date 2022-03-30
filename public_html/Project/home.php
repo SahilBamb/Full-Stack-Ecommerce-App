@@ -1,4 +1,9 @@
+
+
+<link rel="stylesheet" href="mystyle.css">
+
 <?php
+
 require(__DIR__ . "/../../partials/nav.php");
 ?>
 <h1>Home</h1>
@@ -14,3 +19,5 @@ if (is_logged_in()) {
 <?php
 require(__DIR__ . "/../../partials/flash.php");
 ?>
+
+

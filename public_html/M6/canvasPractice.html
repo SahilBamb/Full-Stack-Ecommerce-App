@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function init(){
+
+                var c = document.getElementById("board");
+                var ctx = c.getContext("2d");
+                ctx.moveTo(0,0);
+                ctx.lineTo(200,100);
+                ctx.stroke();
+
+                ctx.fillStyle = 'blanchedalmond';
+                ctx.fillRect(10, 10, 150, 100);
+
+
+            }
+        </script>
+
+
+        
+    </head>
+
+    <body onload="init();">
+        <div>
+        <h1 style="display: inline;">Canvas Practice</h1>
+        </div>
+        <main>
+            <canvas tabindex="0" id="board" width="600px" height="600px" style="border:1px solid #000000;">
+    
+            </canvas>
+        </main>
+    </body>
+
+
+</html>
