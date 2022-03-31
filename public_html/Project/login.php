@@ -1,13 +1,22 @@
 
-<link rel="stylesheet" href="mystyle.css">
+<!-- <link rel="stylesheet" href="mystyle.css"> -->
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="form.css">
+
 
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 ?>
+<div class="container"> <!-- added this div pair -->
 <form onsubmit="return validate(this)" method="POST">
+    <h1>Login to Account</h1>
     <div>
-        <label for="email">Email</label>
-        <input type="email" name="email" required />
+        <label for="email">Email/Username</label>
+        <input type="text" name="email" required />
     </div>
     <div>
         <label for="pw">Password</label>
@@ -15,12 +24,37 @@ require(__DIR__ . "/../../partials/nav.php");
     </div>
     <input type="submit" value="Login" />
 </form>
+</div>
+
 <script>
     function validate(form) {
+        let isValid = true; 
+        let email = form.email.value;
+        //Queuing up all errors
+        
+        //Checks if email, password and username are set
+        //Also checks if theyare empty
+        if ((email.value === "") || (form.password.value === "")) { isValid=false;} 
+
+
+        if (form.email.value.includes("@")) {
+
+            //Checking if it is a valid EMAIL
+            if (form.email.value.length < 8) {isValid=false;};
+        }
+        
+         //Checking if it is a valid USERNAME
+        else {
+            const regex = /^[a-z0-9_-]{3,16}$/;
+            if (form.email.value.match(regex)) {isValid=false;};
+        }  
+
         //TODO 1: implement JavaScript validation
         //ensure it returns false for an error and true for success
 
-        return true;
+        console.log(isValid);
+        alert();
+        return isValid;
     }
 </script>
 <?php
@@ -35,21 +69,39 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
         flash("Email must not be empty", "danger");
         $hasError = true;
     }
-    //sanitize
-    $email = sanitize_email($email);
-    //validate
-    if (!is_valid_email($email)) {
-        flash("Invalid email address", "danger");
-        $hasError = true;
+
+    if (str_contains($email, "@")) {
+        //sanitize
+        $email = sanitize_email($email);
+    
+        //validate
+        if (!is_valid_email($email)) {
+            flash("Invalid email address", "danger");
+            $hasError = true;
+        }
+    } else {
+        if (!is_valid_username($email)) {
+            flash("Invalid username");
+            $hasError = true;
+        }
     }
+
     if (empty($password)) {
         flash("password must not be empty", "danger");
         $hasError = true;
     }
+
+    if (!is_valid_password($password)) {
+        flash("Password too short");
+        $hasError = true;
+    }
+
+    //I don't think this should be here
     if (strlen($password) < 8) {
         flash("Password too short", "danger");
         $hasError = true;
-    }
+    }    
+    
     if (!$hasError) {
         //TODO 4
         $db = getDB();
@@ -64,7 +116,27 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
                     if (password_verify($password, $hash)) {
                         flash("Welcome $email");
                         $_SESSION["user"] = $user;
+                        //Why were these try taken away?
+                        try {
+                            //lookup potential roles
+                            $stmt = $db->prepare("SELECT Roles.name FROM Roles 
+                            JOIN UserRoles on Roles.id = UserRoles.role_id 
+                            where UserRoles.user_id = :user_id and Roles.is_active = 1 and UserRoles.is_active = 1");
+                            $stmt->execute([":user_id" => $user["id"]]);
+                            $roles = $stmt->fetchAll(PDO::FETCH_ASSOC); //fetch all since we'll want multiple
+                        } catch (Exception $e) {
+                            error_log(var_export($e, true));
+                        }
+                        //save roles or empty array
+                        //why is this $roles instead of isset($roles)
+                        if (isset($roles)) { 
+                            $_SESSION["user"]["roles"] = $roles; //at least 1 role
+                        } else {
+                            $_SESSION["user"]["roles"] = []; //no roles
+                        }
+                        flash("Welcome, " . get_username());
                         die(header("Location: home.php"));
+
                     } else {
                         flash("Invalid password", "danger");
                     }
@@ -72,8 +144,9 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
                     flash("Email not found", "danger");
                 }
             }
-        } catch (Exception $e) {
-            flash("<pre>" . var_export($e, true) . "</pre>");
+        }   catch (Exception $e) {
+            flash("There was a problem logging-in", "danger");
+            //flash("<pre>" . var_export($e, true) . "</pre>");
         }
     }
 }

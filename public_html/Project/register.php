@@ -1,10 +1,19 @@
 
-<link rel="stylesheet" href="mystyle.css">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="form.css">
 
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 ?>
+
+
 <form onsubmit="return validate(this)" method="POST">
+    <h1>Register Account</h1>
     <div>
         <label for="email">Email</label>
         <input type="email" name="email" required />
@@ -18,7 +27,7 @@ require(__DIR__ . "/../../partials/nav.php");
         <input type="password" id="pw" name="password" required minlength="8" />
     </div>
     <div>
-        <label for="confirm">Confirm</label>
+        <label for="confirm">Confirm Password</label>
         <input type="password" name="confirm" required minlength="8" />
     </div>
     <input type="submit" value="Register" />
@@ -27,7 +36,6 @@ require(__DIR__ . "/../../partials/nav.php");
     function validate(form) {
         //TODO 1: implement JavaScript validation
         //ensure it returns false for an error and true for success
-
         return true;
     }
 </script>

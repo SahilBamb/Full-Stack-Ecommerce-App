@@ -23,20 +23,30 @@
 
     moveMeUp(document.getElementById("flash"));
 </script>
+
 <style>
+ 
+    .alert-info, .alert-success, .alert-warning, .alert-danger {
+        margin: 10px 0px;
+        padding:12px;
+    }
+
+    .alert-info, {
+        color: #00529B;
+        background-color: #BDE5F8;
+    }
     .alert-success {
-        background-color: green
+        color: #4F8A10;
+        background-color: #DFF2BF;
     }
-
     .alert-warning {
-        background-color: yellow;
+        color: #9F6000;
+        background-color: #FEEFB3;
     }
-
     .alert-danger {
-        background-color: red;
+        color: #D8000C;
+        background-color: #FFD2D2;
     }
 
-    .alert-info {
-        background-color: teal;
-    }
+
 </style>

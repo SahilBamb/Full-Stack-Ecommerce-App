@@ -1,5 +1,12 @@
-nav ul li {display:inline; list-style-type:none;} 
+/*
+UCID: sb59
+Date: 3/30/22
+Site(s)/Who: https://www.w3schools.com/Css/css_navbar.asp
+Purpose: I borrowed and changed CSS for navigation from W3Schools
+Why: I liked the design but did not like the colors and changed them
+*/
 
+nav ul li {display:inline; list-style-type:none;} 
 
 ul {
     list-style-type: none;
