@@ -80,9 +80,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
         flash("Password too short", "danger");
         $hasError = true;
     }
-    if (
-        strlen($password) > 0 && $password !== $confirm
-    ) {
+    if (strlen($password) > 0 && $password !== $confirm) {
         flash("Passwords must match", "danger");
         $hasError = true;
     }
@@ -95,7 +93,8 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
             $stmt->execute([":email" => $email, ":password" => $hash, ":username" => $username]);
             flash("Successfully registered!");
         } catch (Exception $e) {
-            flash("There was a problem registering", "danger");
+            users_check_duplicate($e->errorInfo);
+            //flash("Sorry that username or email has been taken", "danger");
             //flash("<pre>" . var_export($e, true) . "</pre>", "danger");
         }
     }

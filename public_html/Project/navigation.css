@@ -6,7 +6,9 @@ Purpose: I borrowed and changed CSS for navigation from W3Schools
 Why: I liked the design but did not like the colors and changed them
 */
 
-nav ul li {display:inline; list-style-type:none;} 
+
+
+nav ul li {display:inline; list-style-type:none; font-family: 'Open Sans', sans-serif;} 
 
 ul {
     list-style-type: none;

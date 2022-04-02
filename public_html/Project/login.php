@@ -32,28 +32,32 @@ require(__DIR__ . "/../../partials/nav.php");
         let email = form.email.value;
         //Queuing up all errors
         
-        //Checks if email, password and username are set
-        //Also checks if theyare empty
-        if ((email.value === "") || (form.password.value === "")) { isValid=false;} 
+        //Checks if email is empty
+        if ((email === "")) {flash("Email cannot not be empty", "warning"); isValid=false;} 
 
+         //Also checks if password is empty
+        if ((form.password.value === "")) {flash("Password cannot not be empty", "warning"); isValid=false;} 
 
         if (form.email.value.includes("@")) {
-
             //Checking if it is a valid EMAIL
-            if (form.email.value.length < 8) {isValid=false;};
+            if (form.email.value.length < 8) {flash("Email is not long enough", "warning"); isValid=false;};
+            const regexEmail = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/;
+            if (!regexEmail.test(form.email.value)) {flash("Email format is not correct", "warning"); isValid=false;}
         }
         
-         //Checking if it is a valid USERNAME
+          //Checking if it is a valid USERNAME
         else {
-            const regex = /^[a-z0-9_-]{3,16}$/;
-            if (form.email.value.match(regex)) {isValid=false;};
-        }  
+            const regexUsername = /^[a-z0-9_-]{3,16}$/;
+            if (!regexUsername.test(form.email.value)) {
+                flash("Username format is not correct", "danger"); 
+                isValid=false;
+                }
+        }    
 
         //TODO 1: implement JavaScript validation
         //ensure it returns false for an error and true for success
 
         console.log(isValid);
-        alert();
         return isValid;
     }
 </script>
@@ -66,7 +70,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
     //TODO 3
     $hasError = false;
     if (empty($email)) {
-        flash("Email must not be empty", "danger");
+        flash("Email cannot not be empty", "danger");
         $hasError = true;
     }
 
@@ -81,7 +85,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
         }
     } else {
         if (!is_valid_username($email)) {
-            flash("Invalid username");
+            flash("Invalid username", "danger");
             $hasError = true;
         }
     }

@@ -31,7 +31,7 @@
         padding:12px;
     }
 
-    .alert-info, {
+    .alert-info {
         color: #00529B;
         background-color: #BDE5F8;
     }
