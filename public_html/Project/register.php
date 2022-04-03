@@ -1,7 +1,19 @@
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="form.css">
+
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 ?>
+
+
 <form onsubmit="return validate(this)" method="POST">
+    <h1>Register Account</h1>
     <div>
         <label for="email">Email</label>
         <input type="email" name="email" required />
@@ -15,17 +27,54 @@ require(__DIR__ . "/../../partials/nav.php");
         <input type="password" id="pw" name="password" required minlength="8" />
     </div>
     <div>
-        <label for="confirm">Confirm</label>
+        <label for="confirm">Confirm Password</label>
         <input type="password" name="confirm" required minlength="8" />
     </div>
     <input type="submit" value="Register" />
 </form>
 <script>
+    //register.php (email, username, password length)
     function validate(form) {
-        //TODO 1: implement JavaScript validation
-        //ensure it returns false for an error and true for success
+        let pw = form.password.value;
+        let con = form.confirm.value;
+        let usn = form.username.value;
+        let email = form.email.value;
+        let isValid = true;
+        
+        //example of using flash via javascript
+        //find the flash container, create a new element, appendChild
 
-        return true;
+        //Queuing up all errors
+        
+        //Checks if email is empty 
+        if ((email === "")) {flash("Email cannot be empty", "warning"); isValid=false;} 
+
+        else {
+            //If it is not empty, checks if email is correct format
+            const regexEmail = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/;
+            if (!regexEmail.test(email)) {flash("Invalid email address", "warning"); isValid=false;}
+        }
+
+        //Checks if username is empty (also isSet)
+        if ((usn === "")) {flash("Username cannot be empty", "warning"); isValid=false;} 
+
+        else {
+            //If it is not empty, checks if username is correct format
+            const regexUsername = /^[a-z0-9_-]{3,16}$/;
+            if (!regexUsername.test(usn)) {flash("Username must only contain 3-16 characters a-z, 0-9, _, or -", "warning"); isValid=false;}
+        }
+
+        //Checks if password and confirm password are empty
+        if ((pw==="") || (con==="")){
+            flash("Please input both the new password and confirm password", "warning"); isValid=false;
+        }
+        else {
+            //If not empty, checks if password not equal to confirm password and password length is less than 8
+            if (pw !== con){flash("Password does not match confirm password", "warning"); isValid=false;}
+            if (pw.length < 8) {flash("Password is not long enough", "warning"); isValid=false;}
+        }
+        
+        return isValid;
     }
 </script>
 <?php
@@ -69,9 +118,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
         flash("Password too short", "danger");
         $hasError = true;
     }
-    if (
-        strlen($password) > 0 && $password !== $confirm
-    ) {
+    if (strlen($password) > 0 && $password !== $confirm) {
         flash("Passwords must match", "danger");
         $hasError = true;
     }
@@ -84,8 +131,9 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
             $stmt->execute([":email" => $email, ":password" => $hash, ":username" => $username]);
             flash("Successfully registered!");
         } catch (Exception $e) {
-            flash("There was a problem registering", "danger");
-            flash("<pre>" . var_export($e, true) . "</pre>", "danger");
+            users_check_duplicate($e->errorInfo);
+            //flash("Sorry that username or email has been taken", "danger");
+            //flash("<pre>" . var_export($e, true) . "</pre>", "danger");
         }
     }
 }
