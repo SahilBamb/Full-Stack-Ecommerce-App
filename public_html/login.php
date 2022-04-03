@@ -138,6 +138,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
                             $roles = $stmt->fetchAll(PDO::FETCH_ASSOC); //fetch all since we'll want multiple
                         } catch (Exception $e) {
                             error_log(var_export($e, true));
+                            flash("Permissions were not able to be retreived", "danger");
                         }
                         //save roles or empty array
                         //why is this $roles instead of isset($roles)
