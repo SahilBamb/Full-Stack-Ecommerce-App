@@ -6,7 +6,7 @@ function users_check_duplicate($errorInfo)
         //NOTE: this assumes your table name is `Users`, edit it accordingly
         preg_match("/Users.(\w+)/", $errorInfo[2], $matches);
         if (isset($matches[1])) {
-            flash("The chosen " . $matches[1] . " is not available.", "warning");
+            flash("The chosen " . $matches[1] . " is not available.", "danger");
         } else {
             //TODO come up with a nice error message
             flash("An unhandled error occured", "danger");
