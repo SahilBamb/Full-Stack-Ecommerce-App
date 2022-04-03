@@ -99,15 +99,15 @@ if (isset($_POST["save"])) {
 
                             flash("Password reset", "success");
                         } else {
-                            flash("Current password is invalid", "danger");
+                            flash("Current password is invalid", "warning");
                         }
                     }
                 } catch (Exception $e) {
                     //echo "<pre>" . var_export($e->errorInfo, true) . "</pre>";
-                    flash("There was an unexpected error", "danger");
+                    flash("An unexpected error occurred", "danger");
                 }
             } else {
-                flash("New passwords don't match", "danger");
+                flash("New passwords don't match", "warning");
             }
         }
     }
