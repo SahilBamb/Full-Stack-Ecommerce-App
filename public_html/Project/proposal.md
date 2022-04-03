@@ -17,23 +17,23 @@
 
 - Milestone 1
 
-    - [ ] \(mm/dd/yyyy of completion) User will be able to register a new account
+    - [x] \(03/8/2022) User will be able to register a new account
         -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) User will be able to login to their account (given they enter the correct credentials)
+    - [x] \(03/10/2022) User will be able to login to their account (given they enter the correct credentials)
         -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) User will be able to logout
+    - [x] \(03/10/2022) User will be able to logout
         -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) Basic security rules implemented
+    - [ ] \(03/29/2022 of completion) Basic security rules implemented
         -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) Basic Roles implemented
+    - [ ] \(03/29/2022 of completion) Basic Roles implemented
         -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) Site should have basic styles/theme applied; everything should be styled
+    - [x] \(03/30/2022) Site should have basic styles/theme applied; everything should be styled
         -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) Any output messages/errors should be “user friendly”
+    - [x] \(04/30/2022 of completion) Any output messages/errors should be “user friendly”
         -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) User will be able to see their profile
+    - [x] \(mm/dd/yyyy of completion) User will be able to see their profile
         -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) User will be able to edit their profile
+    - [x] \(mm/dd/yyyy of completion) User will be able to edit their profile
         -  Link to related .md file: [Link Name](link url)
 
 - Milestone 2
