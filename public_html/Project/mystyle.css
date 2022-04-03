@@ -1,0 +1,17 @@
+
+h1, div {font-family: 'Open Sans', sans-serif;}
+
+body {
+    background-color: lightblue;
+  }
+  
+  h1 {
+    color: navy;
+    margin-left: 20px;
+  }
+
+h1, div  {
+  text-align: center;
+  display:grid;
+  place-items: center;
+}
