@@ -144,21 +144,63 @@ $username = get_username();
 </form>
 
 <script>
+    //profile.php (email, username, current/new password length, new == confirm password (given))
     function validate(form) {
         let pw = form.newPassword.value;
         let con = form.confirmPassword.value;
+        let cp = form.currentPassword.value;
+        let usn = form.username.value;
+        let email = form.email.value;
         let isValid = true;
+        
         //TODO add other client side validation....
 
         //example of using flash via javascript
         //find the flash container, create a new element, appendChild
-        if (pw !== con) {
-            flash("Password and Confrim password must match", "warning");
-            isValid = false;
+
+        //Queuing up all errors
+        
+        //Checks if email is empty (also isSet)
+        if ((email === "")) {flash("Email cannot be empty", "warning"); isValid=false;} 
+
+        else {
+            //If it is not empty, checks if email is correct format
+            const regexEmail = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/;
+            if (!regexEmail.test(email)) {flash("Invalid email address", "warning"); isValid=false;}
         }
+
+        //Checks if username is empty (also isSet)
+        if ((usn === "")) {flash("Username cannot be empty", "warning"); isValid=false;} 
+
+        else {
+            //Checks if username is correct format
+            const regexUsername = /^[a-z0-9_-]{3,16}$/;
+            if (!regexUsername.test(usn)) {flash("Username must only contain 3-16 characters a-z, 0-9, _, or -", "warning"); isValid=false;}
+        }
+
+         //Also checks if password is empty
+        if ((cp === "")) {
+            //If it is, and new password or confirm password are fill give warning
+            if ((pw!=="") || (con!=="")){
+                flash("Please input your current password to reset your password", "warning"); isValid=false;
+            }
+        } 
+            //If it is not, check both are equal and length of pw is not less than 8 
+        else{
+            if ((pw==="") || (con==="")){
+                flash("To reset password, please input both the new password and confirm password", "warning"); isValid=false;
+            }
+            else {
+                if (pw !== con){flash("Password does not match confirm password", "warning"); isValid=false;}
+                if (pw.length < 8) {flash("Password is not long enough", "warning"); isValid=false;}
+            }
+        }
+
+        //ensure it returns false for an error and true for success
         return isValid;
     }
 </script>
+
 <?php
 require_once(__DIR__ . "/../../partials/flash.php");
 ?>
