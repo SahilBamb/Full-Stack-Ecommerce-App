@@ -5,7 +5,10 @@
 
 <?php
 require_once(__DIR__ . "/../../partials/nav.php");
-is_logged_in(true);
+if (!is_logged_in()) {
+    flash("Please login or register before editing your profile", "warning");
+    die(header("Location: login.php"));
+}
 ?>
 <?php
 if (isset($_POST["save"])) {
