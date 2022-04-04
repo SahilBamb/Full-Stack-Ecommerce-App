@@ -45,6 +45,7 @@
         - [Milestone 1](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone1.md)
         - [Profile: https://sb59-prod.herokuapp.com/Project/profile.php](https://sb59-prod.herokuapp.com/Project/profile.php)
 
+
 - Milestone 2
   - (duplicate template here for Milestone 1 features)
 - Milestone 3
