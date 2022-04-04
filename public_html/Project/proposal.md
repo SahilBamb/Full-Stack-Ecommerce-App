@@ -2,8 +2,8 @@
 ## Project Summary: This project will create a simple e-commerce site for users. 
 ## Github Link: https://github.com/SahilBamb/IT202-010/tree/prod/public_html/Project/
 ## Project Board Link: https://github.com/SahilBamb/IT202-010/projects/1
-## Website Link: https://sb59-prod.herokuapp.com/Project
-## Your Name: Sahil Bambulkar
+## Website Link: https://sb59-prod.herokuapp.com/Project/home.php
+## Sahil Bambulkar
 
 <!-- Line item / Feature template (use this for each bullet point) -- DO NOT DELETE THIS SECTION
 
