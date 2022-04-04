@@ -17,24 +17,34 @@
 
 - Milestone 1
 
-    - [ ] \(mm/dd/yyyy of completion) User will be able to register a new account
-        -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) User will be able to login to their account (given they enter the correct credentials)
-        -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) User will be able to logout
-        -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) Basic security rules implemented
-        -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) Basic Roles implemented
-        -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) Site should have basic styles/theme applied; everything should be styled
-        -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) Any output messages/errors should be “user friendly”
-        -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) User will be able to see their profile
-        -  Link to related .md file: [Link Name](link url)
-    - [ ] \(mm/dd/yyyy of completion) User will be able to edit their profile
-        -  Link to related .md file: [Link Name](link url)
+    - [x] \(03/8/2022) User will be able to register a new account
+        - [Milestone 1](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone1.md)
+        - [Register: https://sb59-prod.herokuapp.com/Project/register.php](https://sb59-prod.herokuapp.com/Project/register.php)
+    - [x] \(03/10/2022) User will be able to login to their account (given they enter the correct credentials)
+        - [Milestone 1](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone1.md)
+        - [Login: https://sb59-prod.herokuapp.com/Project/login.php](https://sb59-prod.herokuapp.com/Project/login.php)
+    - [x] \(03/10/2022) User will be able to logout
+        - [Milestone 1](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone1.md)
+        - [Logout: https://sb59-prod.herokuapp.com/Project/logout.php](https://sb59-prod.herokuapp.com/Project/logout.php)
+    - [x] \(03/29/2022 of completion) Basic security rules implemented
+        - [Milestone 1](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone1.md)
+        - [Profile: https://sb59-prod.herokuapp.com/Project/profile.php](https://sb59-prod.herokuapp.com/Project/profile.php)
+    - [x] \(03/29/2022 of completion) Basic Roles implemented
+        - [Milestone 1](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone1.md)
+        - [Create_Role/Assign_Role/List_Role: ../../admin/create_role.php](https://sb59-prod.herokuapp.com/Project/admin/create_role.php)
+    - [x] \(03/30/2022) Site should have basic styles/theme applied; everything should be styled
+        - [Milestone 1](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone1.md)
+        - [mystyle.css/navigation.css/form.css: ../../Project/form.css](https://sb59-prod.herokuapp.com/Project/form.css)
+    - [x] \(04/30/2022 of completion) Any output messages/errors should be “user friendly”
+        - [Milestone 1](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone1.md)
+        - [Register: https://sb59-prod.herokuapp.com/Project/register.php](https://sb59-prod.herokuapp.com/Project/register.php)
+    - [x] \(03/08/2022 of completion) User will be able to see their profile
+        - [Milestone 1](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone1.md)
+        - [Profile: https://sb59-prod.herokuapp.com/Project/profile.php](https://sb59-prod.herokuapp.com/Project/profile.php)
+    - [x] \(03/08/2022 of completion) User will be able to edit their profile
+        - [Milestone 1](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone1.md)
+        - [Profile: https://sb59-prod.herokuapp.com/Project/profile.php](https://sb59-prod.herokuapp.com/Project/profile.php)
+
 
 - Milestone 2
   - (duplicate template here for Milestone 1 features)

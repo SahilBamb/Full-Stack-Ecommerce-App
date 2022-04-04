@@ -5,8 +5,8 @@ Site(s)/Who: https://www.w3schools.com/css/css_form.asp
 Purpose: I borrowed and changed CSS from W3Schools
 Why: I liked the design
 */
-
-  form {font-family: 'Open Sans', sans-serif;}
+  
+  form, body {font-family: 'Open Sans', sans-serif;}
   
   h1 {background-color: #E4EDF2;}  
 

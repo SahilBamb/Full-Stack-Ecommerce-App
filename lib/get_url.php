@@ -1,4 +1,3 @@
-
 <?php
 function get_url($dest)
 {

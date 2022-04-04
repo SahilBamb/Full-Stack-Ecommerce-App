@@ -5,7 +5,10 @@
 
 <?php
 require_once(__DIR__ . "/../../partials/nav.php");
-is_logged_in(true);
+if (!is_logged_in()) {
+    flash("Please login or register before editing your profile", "warning");
+    die(header("Location: login.php"));
+}
 ?>
 <?php
 if (isset($_POST["save"])) {
@@ -99,14 +102,15 @@ if (isset($_POST["save"])) {
 
                             flash("Password reset", "success");
                         } else {
-                            flash("Current password is invalid", "warning");
+                            flash("Current password is invalid", "danger");
                         }
                     }
                 } catch (Exception $e) {
-                    echo "<pre>" . var_export($e->errorInfo, true) . "</pre>";
+                    //echo "<pre>" . var_export($e->errorInfo, true) . "</pre>";
+                    flash("There was an unexpected error", "danger");
                 }
             } else {
-                flash("New passwords don't match", "warning");
+                flash("New passwords don't match", "danger");
             }
         }
     }
