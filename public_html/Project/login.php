@@ -1,7 +1,6 @@
 
 <!-- <link rel="stylesheet" href="mystyle.css"> -->
 
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
@@ -117,7 +116,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
     if (!$hasError) {
         //TODO 4
         $db = getDB();
-        $stmt = $db->prepare("SELECT id, email, username, password from Users where email = :email");
+        $stmt = $db->prepare("SELECT id, email, username, password from Users where email = :email or username = :email");
         try {
             $r = $stmt->execute([":email" => $email]);
             if ($r) {
@@ -137,7 +136,8 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
                             $stmt->execute([":user_id" => $user["id"]]);
                             $roles = $stmt->fetchAll(PDO::FETCH_ASSOC); //fetch all since we'll want multiple
                         } catch (Exception $e) {
-                            error_log(var_export($e, true));
+                            //error_log(var_export($e, true));
+                            flash("There was an error retrieving privileges", "danger");
                         }
                         //save roles or empty array
                         //why is this $roles instead of isset($roles)
@@ -146,14 +146,14 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
                         } else {
                             $_SESSION["user"]["roles"] = []; //no roles
                         }
-                        flash("Welcome, " . get_username());
+                        //flash("Welcome, " . get_username());
                         die(header("Location: home.php"));
 
                     } else {
                         flash("Invalid password", "danger");
                     }
                 } else {
-                    flash("Email not found", "danger");
+                    flash("Email/Username not found", "danger");
                 }
             }
         }   catch (Exception $e) {
