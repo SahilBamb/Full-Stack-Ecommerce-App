@@ -46,35 +46,38 @@
         - [Profile: https://sb59-prod.herokuapp.com/Project/profile.php](https://sb59-prod.herokuapp.com/Project/profile.php)
 
 - Milestone 2
-    - [x] \(04/05/2022) User will be able to register a new account
+    - [x] \(04/05/2022) User with an admin role or shop owner role will be able to add products to inventory
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md)
         - [Create Product: https://sb59-prod.herokuapp.com/Project/admin/create_product.php](https://sb59-prod.herokuapp.com/Project/admin/create_product.php)
     - [ ] \(xx/xx/2022) Any user will be able to see products with visibility = true on the Shop page
-        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md)
+        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
         - []()
     - [ ] \(xx/xx/2022) Admin/Shop owner will be able to see products with any visibility
-        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md)
+        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
+        - []()
+    - [ ] \(xx/xx/2022) Admin/Shop owner will be able to edit any product
+        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
         - []()
     - [ ] \(xx/xx/2022) User will be able to click an item from a list and view a full page with more info about the item (Product Details Page)
-        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md)
+        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
         - []()
     - [ ] \(xx/xx/2022) User must be logged in for any Cart related activity below
-        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md)
+        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
         - []()
     - [ ] \(xx/xx/2022) User will be able to add items to Cart
-        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md)
+        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
         - []()
     - [ ] \(xx/xx/2022) User will be able to see their cart
-        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md)
+        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
         - []()
     - [ ] \(xx/xx/2022) User will be able to change quantity of items in their cart
-        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md)
+        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
         - []()
     - [ ] \(xx/xx/2022) User will be able to remove a single item from their cart via button click
-        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md)
+        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
         - []()
     - [ ] \(xx/xx/2022) User will be able to clear their entire cart via a button click
-        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md)
+        - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
         - []()
 - Milestone 3
   - (duplicate template here for Milestone 1 features)
