@@ -27,7 +27,7 @@ require(__DIR__ . "/../../partials/nav.php");
 $db = getDB();
 //generally try to avoid SELECT *, but this is about being dynamic so I'm using it this time
 //$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND WHERE name LIKE ORDER BY modified LIMIT 10"; 
-$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1";
+$query = "SELECT id, name, description, category, stock, unit_price FROM Products WHERE visibility=1";
 
 //echo "<pre>" . var_export($_SESSION, true) . "</pre>";
 //echo "<pre>" . var_export($_GET, true) . "</pre>";
@@ -78,8 +78,8 @@ try {
 }
 
 ?>
-
-<h3>Shop</h3>
+<br>
+<h2>Shop</h2>
 <?php if (count($results) == 0) : ?>
     <p>No results to show</p>
 <?php else : ?>
@@ -90,6 +90,7 @@ try {
                     <?php foreach ($record as $column => $value) : ?>
                         <th><?php se($column); ?></th>
                     <?php endforeach; ?>
+                    <th>Product Page</th>
                     <th>Purchase</th>
                 </thead>
             <?php endif; ?>
@@ -97,7 +98,9 @@ try {
                 <?php foreach ($record as $column => $value) : ?>
                     <td><?php se($value, null, "N/A"); ?></td>
                 <?php endforeach; ?>
-
+                <td>
+                    <a href="product_page.php?id=<?php se($record, "id"); ?>">View Product</a>
+                </td>
                 <td>
                     <a href="dynamic_edit.php?id=<?php se($record, "id"); ?>">Add To Cart</a>
                 </td>
