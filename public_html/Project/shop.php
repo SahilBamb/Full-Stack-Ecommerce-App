@@ -1,9 +1,15 @@
 
+
+
+<!-- <link rel="stylesheet" href="mystyle.css"> -->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
-
-<!-- <link rel="stylesheet" href="mystyle.css"> -->
+<link rel="stylesheet" href="form.css">
 
 <script>
 
@@ -28,7 +34,7 @@ $query = "SELECT name, description, category, stock, unit_price FROM Products WH
 
 //echo "<pre>" . var_export($_SESSION, true) . "</pre>";
 
-if (isset($_SESSION["search"]) || isset($_SESSION["category"])) {
+/* if (isset($_SESSION["search"]) || isset($_SESSION["category"])) {
 
     echo "<h2>" . "Filter Applied" . "</h2>";
 
@@ -46,8 +52,8 @@ if (isset($_SESSION["category"])) {
     $category = $_SESSION["category"];
     $query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND category LIKE $category ORDER BY modified LIMIT 10";
     
+} */
 
-}
 $stmt = $db->prepare($query);
 $results = [];
 try {
@@ -58,11 +64,11 @@ try {
 }
 ?>
 
-<h3>View Products</h3>
+<h3>Shop</h3>
 <?php if (count($results) == 0) : ?>
     <p>No results to show</p>
 <?php else : ?>
-    <table>
+    <table class="table">
         <?php foreach ($results as $index => $record) : ?>
             <?php if ($index == 0) : ?>
                 <thead>
@@ -78,29 +84,32 @@ try {
                 <?php endforeach; ?>
 
                 <td>
-                    <a href="dynamic_edit.php?id=<?php se($record, "id"); ?>">Buy</a>
+                    <a href="dynamic_edit.php?id=<?php se($record, "id"); ?>">Add To Cart</a>
                 </td>
             </tr>
         <?php endforeach; ?>
     </table>
+
+
 <?php endif; ?>
 
 <form onsubmit="return validate(this)" method="POST">
     <h3>Filters</h3>
-    <div>
-        <label for="search">Search</label>
-        <input type="text" name="search" required />
+    <div class="mb-3">
+        <label for="search" class="form-label">Search</label>
+        <input type="text" class="form-control" name="search" required />
+        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
     </div>
-    <div>
-        <label for="category">Category</label>
-        <input type="text" name="category" required maxlength="30" />
+    <div class="mb-3">
+        <label for="category" class="form-label">Category</label>
+        <input type="text" class="form-control" name="category" required maxlength="30" />
     </div>
-    <div>
-        <label for="SortByPrice">Sort By Price</label>
-        <input type="checkbox" id="SortByPrice" name="SortByPrice" value="1">
+    <div class="mb-3 form-check">
+        <label class="form-check-label" for="SortByPrice">Sort By Price</label>
+        <input type="checkbox" class="form-check-input" id="SortByPrice" name="SortByPrice" value="1">
     </div>
 
-    <input type="submit" value="Filter" />
+    <input type="submit" class="btn btn-primary" />
 </form>
 
 
