@@ -32,32 +32,40 @@ $query = "SELECT name, description, category, stock, unit_price FROM Products WH
 //echo "<pre>" . var_export($_SESSION, true) . "</pre>";
 //echo "<pre>" . var_export($_GET, true) . "</pre>";
 
-if (isset($_GET["search"]) || isset($_GET["category"])) {
+if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) {
 
-    echo "<h2>" . "Filters Applied" . "</h2>";
-
+    if ($_GET["search"]=="") {unset($_GET['search']);}
+    if ($_GET["category"]=="") {unset($_GET['category']);}
+    if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) echo "<h2>" . "Filters Applied" . "</h2>";
+    
 }
 
 if (isset($_GET["search"])) {
+    echo "<h5>" . "Searching: " . $_GET["search"] . "</h5>";
 
-    $search = "%" . $_GET["search"] . "%";
+    //$search = "%" . $_GET["search"] . "%";
     //$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND name LIKE '" . $search . "' ORDER BY modified LIMIT 10";
+    
+    $search = "%" . se($_GET, "search", "", false) . "%";
     $subqery = " AND name LIKE '" . $search . "' ";
     $query .=$subqery;
 }
 
 
-
 if (isset($_GET["category"])) {
-
-    $category = "%" . $_GET["category"] . "%";
+    echo "<h5>" . "Category: " . $_GET["category"] . "</h5>";
+    $category = "%" . se($_GET, "category", "", false) . "%";
     //$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND category LIKE '" . $category . "' ORDER BY modified LIMIT 10";
     $subqery = " AND category LIKE '" . $category . "' ";
     $query .=$subqery;
-
 } 
 
 $Endquery = " ORDER BY modified LIMIT 10";
+if (isset($_GET["SortByPrice"])) {
+    echo "<h5>" . "Sorting By Price " . "</h5>";
+    $Endquery = " ORDER BY unit_price LIMIT 10";
+}
+
 $query .=$Endquery;
 
 $stmt = $db->prepare($query);
@@ -99,17 +107,18 @@ try {
 
 
 <?php endif; ?>
+<!-- se($_GET, "category", "", false) -->
 
 <form onsubmit="return validate(this)" method="GET">
     <h3>Filters</h3>
+    <div id="emailHelp" class="form-text">Submit empty fields to clear filters</div>
     <div class="mb-3">
         <label for="search" class="form-label">Search</label>
-        <input type="text" class="form-control" name="search" />
-        <div id="emailHelp" class="form-text">Search for anything you need</div>
+        <input type="text" class="form-control" value="<?php if (isset($_GET['search'])) se($_GET['search']); ?>" name="search" />
     </div>
     <div class="mb-3">
         <label for="category" class="form-label" >Category</label>
-        <input type="text" class="form-control" name="category" maxlength="30" />
+        <input type="text" class="form-control" value="<?php if (isset($_GET['category'])) se($_GET['category']); ?>" name="category" maxlength="30" />
     </div>
     <div class="mb-3 form-check">
         <input type="checkbox" class="form-check-input" id="SortByPrice" name="SortByPrice" value="1">
@@ -117,42 +126,3 @@ try {
     </div>
     <input type="submit" class="btn btn-primary" />
 </form>
-
-
-<?php 
-
-if (isset($_POST["search"]) && isset($_POST["category"])) {
-
-    $search = se($_POST, "search", "", false);
-    $category = se($_POST, "category", "", false);
-
-    $hasError = false;
-
-    if (empty($search)) {
-        flash("Search field is empty", "danger");
-        $hasError = true;
-    }
-
-    if (empty($category)) {
-        flash("Category field is empty", "danger");
-        $hasError = true;
-    }
-    
-    if (!$hasError) {
-        $db = getDB();
-        $query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 ORDER BY modified LIMIT 1"; 
-        $stmt = $db->prepare($query);
-        $results = [];
-        $_SESSION["search"]=$_POST["search"];
-        $_SESSION["category"]=$_POST["category"];
-        //echo "<pre>" . var_export($_SESSION, true) . "</pre>";
-        try {
-            $stmt->execute();
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            echo "<pre>" . var_export($e, true) . "</pre>";
-        }
-
-    }
-}
-?>
