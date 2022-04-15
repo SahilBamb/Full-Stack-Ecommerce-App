@@ -1,6 +1,3 @@
-
-
-
 <!-- <link rel="stylesheet" href="mystyle.css"> -->
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -30,29 +27,38 @@ require(__DIR__ . "/../../partials/nav.php");
 $db = getDB();
 //generally try to avoid SELECT *, but this is about being dynamic so I'm using it this time
 //$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND WHERE name LIKE ORDER BY modified LIMIT 10"; 
-$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 ORDER BY modified LIMIT 10";
+$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1";
 
 //echo "<pre>" . var_export($_SESSION, true) . "</pre>";
+//echo "<pre>" . var_export($_GET, true) . "</pre>";
 
-/* if (isset($_SESSION["search"]) || isset($_SESSION["category"])) {
+if (isset($_GET["search"]) || isset($_GET["category"])) {
 
-    echo "<h2>" . "Filter Applied" . "</h2>";
-
-}
-
-if (isset($_SESSION["search"])) {
-
-    $search = $_SESSION["search"];
-    $query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND name LIKE $search ORDER BY modified LIMIT 10";
+    echo "<h2>" . "Filters Applied" . "</h2>";
 
 }
 
-if (isset($_SESSION["category"])) {
+if (isset($_GET["search"])) {
 
-    $category = $_SESSION["category"];
-    $query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND category LIKE $category ORDER BY modified LIMIT 10";
-    
-} */
+    $search = "%" . $_GET["search"] . "%";
+    //$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND name LIKE '" . $search . "' ORDER BY modified LIMIT 10";
+    $subqery = " AND name LIKE '" . $search . "' ";
+    $query .=$subqery;
+}
+
+
+
+if (isset($_GET["category"])) {
+
+    $category = "%" . $_GET["category"] . "%";
+    //$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND category LIKE '" . $category . "' ORDER BY modified LIMIT 10";
+    $subqery = " AND category LIKE '" . $category . "' ";
+    $query .=$subqery;
+
+} 
+
+$Endquery = " ORDER BY modified LIMIT 10";
+$query .=$Endquery;
 
 $stmt = $db->prepare($query);
 $results = [];
@@ -62,6 +68,7 @@ try {
 } catch (PDOException $e) {
     echo "<pre>" . var_export($e, true) . "</pre>";
 }
+
 ?>
 
 <h3>Shop</h3>
@@ -93,22 +100,21 @@ try {
 
 <?php endif; ?>
 
-<form onsubmit="return validate(this)" method="POST">
+<form onsubmit="return validate(this)" method="GET">
     <h3>Filters</h3>
     <div class="mb-3">
         <label for="search" class="form-label">Search</label>
-        <input type="text" class="form-control" name="search" required />
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        <input type="text" class="form-control" name="search" />
+        <div id="emailHelp" class="form-text">Search for anything you need</div>
     </div>
     <div class="mb-3">
-        <label for="category" class="form-label">Category</label>
-        <input type="text" class="form-control" name="category" required maxlength="30" />
+        <label for="category" class="form-label" >Category</label>
+        <input type="text" class="form-control" name="category" maxlength="30" />
     </div>
     <div class="mb-3 form-check">
-        <label class="form-check-label" for="SortByPrice">Sort By Price</label>
         <input type="checkbox" class="form-check-input" id="SortByPrice" name="SortByPrice" value="1">
+        <label class="form-check-label" for="SortByPrice">Sort By Price</label>
     </div>
-
     <input type="submit" class="btn btn-primary" />
 </form>
 
