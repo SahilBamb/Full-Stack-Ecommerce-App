@@ -96,7 +96,7 @@ try {
                 <?php endforeach; ?>
 
                 <td>
-                    <a href="dynamic_edit.php?id=<?php se($record, "id"); ?>">Edit</a>
+                    <a href="product_edit.php?id=<?php se($record, "id"); ?>">Edit</a>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -123,7 +123,6 @@ try {
     </div>
     <input type="submit" class="btn btn-primary" />
 </form>
-
 
 
 
