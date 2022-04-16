@@ -92,6 +92,7 @@ try {
                     <?php endforeach; ?>
                     <th>Product Page</th>
                     <th>Purchase</th>
+                    <?php if (has_role("Admin")) : echo '<th>Edit</th>'; endif; ?>
                 </thead>
             <?php endif; ?>
             <tr>
@@ -104,6 +105,11 @@ try {
                 <td>
                     <a href="dynamic_edit.php?id=<?php se($record, "id"); ?>">Add To Cart</a>
                 </td>
+                <?php if (has_role("Admin")) : ?>
+                    <td>
+                        <a href="./admin/product_edit.php?id=<?php se($record, "id"); ?>">Edit</a>
+                    </td>
+                <?php endif; ?>
             </tr>
         <?php endforeach; ?>
     </table>
