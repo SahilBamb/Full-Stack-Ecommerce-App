@@ -79,9 +79,9 @@ if (isset($_POST["save"])) {
     }
 
     //check/update password
-    $current_password = se($_POST, "currentPassword", null, false);
+/*     $current_password = se($_POST, "currentPassword", null, false);
     $new_password = se($_POST, "newPassword", null, false);
-    $confirm_password = se($_POST, "confirmPassword", null, false);
+    $confirm_password = se($_POST, "confirmPassword", null, false); */
 
 }
 ?>
@@ -96,7 +96,7 @@ if (isset($_POST["save"])) {
         try {
             $stmt->execute($params);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            flash("Product Loaded", "success");
+            //flash("Product Loaded", "success");
         } catch (Exception $e) {
             echo "<pre>" . var_export($e->errorInfo, true) . "</pre>";
             flash("There was an unexpected error", "danger");
@@ -113,7 +113,7 @@ if (isset($_POST["save"])) {
     $id = se($results[0], "id", null, false);
 ?>
 
-<div class="container-fluid">
+<div class="container-fluid">  
     <h1>Product Edit</h1>
     <form method="POST" onsubmit="return validate(this);">
         <div class="mb-3">
@@ -138,13 +138,13 @@ if (isset($_POST["save"])) {
             <input class="form-control" type="text" name="descr" id="descr" value="<?php echo $descr ?>"/>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="visibility" value="1" id="flexRadioDefault1" <?php if ($category==1) : echo "checked"; endif;?>>
+            <input class="form-check-input" type="radio" name="visibility" value="1" id="flexRadioDefault1" <?php if ($visibility==1) : echo "checked"; endif;?>>
             <label class="form-check-label" for="flexRadioDefault1">
                 Visible
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="visibility" value="0" id="flexRadioDefault2" <?php if ($category==0) : echo "checked"; endif;?>>
+            <input class="form-check-input" type="radio" name="visibility" value="0" id="flexRadioDefault2" <?php if ($visibility==0) : echo "checked"; endif;?>>
             <label class="form-check-label" for="flexRadioDefault2">
                 Hidden
             </label>

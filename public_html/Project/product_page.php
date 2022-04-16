@@ -63,7 +63,7 @@ if (count($results) != 0) :
     $name = $results[0]['name'];
     $descr = $results[0]['description'];
     $category = $results[0]['category'];
-    $category = strtoupper($category);
+    $category = ucfirst($category);
     $stock = $results[0]['stock'];
     $unit_price = $results[0]['unit_price'];
     $image = $results[0]['image'];
@@ -93,7 +93,11 @@ endif;
         </div>
     </div>
     <div class="col">
-        <h1> <?php echo $name ?> <?php if ($sale>0) : ?> <span class="badge bg-secondary">Sale</span> <?php endif; ?></h1> 
+        <h1> <?php echo $name ?> 
+            <?php if (has_role("Admin")) : ?>
+            <button type="button" onClick="location.href='./admin/product_edit.php?id=<?php echo $id?>'"  class="btn btn-outline-primary">Edit</button>
+            <?php endif; ?>
+            <?php if ($sale>0) : ?> <span class="badge bg-secondary">Sale</span> <?php endif; ?></h1> 
             
             <dl class="row">
                 <dt class="col-sm-3">Category</dt>
