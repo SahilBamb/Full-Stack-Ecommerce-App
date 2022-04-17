@@ -102,6 +102,7 @@ try {
             <?php if ($index == 0) : ?>
                 <thead>
                     <?php foreach ($record as $column => $value) : ?>
+                        <?php if (($column=='id')) : continue; endif  ?> <!-- skips product id row from displaying -->
                         <th><?php se($column); ?></th>
                     <?php endforeach; ?>
                     <th>Product Page</th>
@@ -111,7 +112,8 @@ try {
             <?php endif; ?>
             <tr>
                 <?php foreach ($record as $column => $value) : ?>
-                    <td><?php se($value, null, "N/A"); ?></td>
+                    <?php if (($column=='id')) : continue; endif  ?> <!-- skips product id row from displaying -->
+                    <td><?php if   ( (is_numeric($value)) && ((int) $value != $value) ) :  echo "$"; endif; ?><?php se($value, null, "N/A"); ?></td>
                 <?php endforeach; ?>
                 <td>
                     <a href="product_page.php?id=<?php se($record, "id"); ?>">View Product</a>

@@ -30,7 +30,7 @@ function add_to_cart(item_id, curr_quantity, quantity = 1) {
             //flash("There was a problem adding the item to cart", "danger");
         });
 
-        setTimeout("location.reload(true);", 50);
+        //setTimeout("location.reload(true);", 50);
         
     }
 
