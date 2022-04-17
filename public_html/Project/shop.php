@@ -11,7 +11,6 @@
 <script>
 
 function add_to_cart(item_id, quantity = 1) {
-        console.log(item_id);
         postData({
             item_id: item_id,
             desired_quantity: quantity
@@ -25,8 +24,7 @@ function add_to_cart(item_id, quantity = 1) {
                 flash(data.message, "danger");
             }
         }).catch(e => {
-            console.log(e);
-            //flash("There was a problem adding the item to cart", "danger");
+            flash("There was a problem adding the item to cart", "danger");
         });
     }
 

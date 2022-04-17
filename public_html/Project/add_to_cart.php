@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__ . "/../../lib/functions.php");
-error_log("add_to_cart received data: " . var_export($_REQUEST, true));
+//error_log("add_to_cart received data: " . var_export($_REQUEST, true));
 if (session_status() != PHP_SESSION_ACTIVE) {
     session_start();
 }
@@ -47,6 +47,8 @@ if (isset($item_id)) {
         http_response_code(403);
         $response["status"] = 403;
         $response["message"] = "Must be logged in to add to cart";
+        //flash("Please login to add to cart", "Danger");
     }
 }
 echo json_encode($response);
+

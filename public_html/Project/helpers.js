@@ -51,10 +51,12 @@ function isEqual (a, b) {
 
 //URL is invalid
 async function postData (data = {}, url = "/Project/api/game-backend.php") {
-    console.log(url);
-    console.log(Object.keys(data).map(function (key) {
+    
+/*     console.log(Object.keys(data).map(function (key) {
         return "" + key + "=" + data[key]; // line break for wrapping only
-    }).join("&"));
+    }).join("&")); */
+
+
     let example = 1;
     if (example === 1) {
         // Default options are marked with *
@@ -74,9 +76,32 @@ async function postData (data = {}, url = "/Project/api/game-backend.php") {
             }).join("&") //JSON.stringify(data) // body data type must match "Content-Type" header
         });
 
-        console.log("In postData...");
-        console.log(response.json());
         return response.json(); // parses JSON response into native JavaScript objects
     } 
+    
+    else if (example === 3) {
+        //make jQuery awaitable
+        //https://petetasker.com/using-async-await-jquerys-ajax
+        //check if jQuery is present
+        // @ts-ignore
+        if (window.$) {
+            let result;
+
+            try {
+                // @ts-ignore
+                result = await $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: Object.keys(data).map(function (key) {
+                        return "" + key + "=" + data[key]; // line break for wrapping only
+                    }).join("&")
+                });
+
+                return result;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
 
 }
