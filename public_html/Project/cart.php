@@ -11,14 +11,14 @@
 <script>
 
 function add_to_cart(item_id, curr_quantity, quantity = 1) {
-        console.log(item_id);
+        //console.log(item_id);
         postData({
             item_id: item_id,
             desired_quantity: quantity, 
             curr_quantity: curr_quantity
         }, "/Project/add_to_cart.php").then(data => {
             if (data.status === 200) {
-                flash(data.message, "success");
+                flash(data.message, "warning");
 /*                 if (get_cart) {
                     get_cart();
                 } */
@@ -30,7 +30,7 @@ function add_to_cart(item_id, curr_quantity, quantity = 1) {
             //flash("There was a problem adding the item to cart", "danger");
         });
 
-        //setTimeout("location.reload(true);", 50);
+        setTimeout("location.reload(true);", 400);
         
     }
 
@@ -92,8 +92,8 @@ try {
             <tr>
                 <?php foreach ($record as $column => $value) : ?>
                     <?php if (($column=='prodid') || ($column=='item_id')) : continue; endif  ?> <!-- skips product id values and userid values from displaying -->
-                    <td><?php if   ( (is_numeric($value)) && ((int) $value != $value) ) :  
-                        echo "$"; endif;  se($value, null, "N/A"); ?></td> <!-- Adds dollar signs to all amounts -->
+                    <td><?php if   ( (is_numeric($value)) && ((int) $value != $value) ) :  echo "$"; endif;  
+                    se($value, null, "N/A"); ?></td> <!-- Adds dollar signs to all amounts -->
                 <?php endforeach; ?>
                 <td>
                     <a href="product_page.php?id=<?php se($record, "item_id"); ?>">View Product</a>
