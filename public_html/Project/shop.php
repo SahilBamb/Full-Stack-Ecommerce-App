@@ -10,11 +10,23 @@
 
 <script>
 
-function fun() {  
-            var btn = document.createElement("button");  
-            btn.innerHTML = "Click me";  
-            document.body.appendChild(btn);  
-        }  
+function add_to_cart(item_id, quantity = 1) {
+        postData({
+            item_id: item_id,
+            desired_quantity: quantity
+        }, "/Project/add_to_cart.php").then(data => {
+            if (data.status === 200) {
+                flash(data.message, "success");
+/*                 if (get_cart) {
+                    get_cart();
+                } */
+            } else {
+                flash(data.message, "danger");
+            }
+        }).catch(e => {
+            flash("There was a problem adding the item to cart", "danger");
+        });
+    }
 
 function validate() {  
     return true;
@@ -24,6 +36,8 @@ function validate() {
 
 <?php
 require(__DIR__ . "/../../partials/nav.php");
+
+
 $db = getDB();
 //generally try to avoid SELECT *, but this is about being dynamic so I'm using it this time
 //$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND WHERE name LIKE ORDER BY modified LIMIT 10"; 
@@ -88,6 +102,7 @@ try {
             <?php if ($index == 0) : ?>
                 <thead>
                     <?php foreach ($record as $column => $value) : ?>
+                        <?php if (($column=='id')) : continue; endif  ?> <!-- skips product id row from displaying -->
                         <th><?php se($column); ?></th>
                     <?php endforeach; ?>
                     <th>Product Page</th>
@@ -97,13 +112,15 @@ try {
             <?php endif; ?>
             <tr>
                 <?php foreach ($record as $column => $value) : ?>
-                    <td><?php se($value, null, "N/A"); ?></td>
+                    <?php if (($column=='id')) : continue; endif  ?> <!-- skips product id row from displaying -->
+                    <td><?php if   ( (is_numeric($value)) && ((int) $value != $value) ) :  echo "$"; endif; ?><?php se($value, null, "N/A"); ?></td>
                 <?php endforeach; ?>
                 <td>
                     <a href="product_page.php?id=<?php se($record, "id"); ?>">View Product</a>
                 </td>
                 <td>
-                    <a href="dynamic_edit.php?id=<?php se($record, "id"); ?>">Add To Cart</a>
+                    <!-- <a href="dynamic_edit.php?id=<?php se($record, "id"); ?>">Add To Cart</a> -->
+                    <button onclick="add_to_cart('<?php se($record, 'id'); ?>')" class="btn btn-primary">Add to Cart</button>
                 </td>
                 <?php if (has_role("Admin")) : ?>
                     <td>
@@ -135,3 +152,44 @@ try {
     </div>
     <input type="submit" class="btn btn-primary" />
 </form>
+
+<?php
+require_once(__DIR__ . "/../../lib/functions.php");
+error_log("add_to_cart received data: " . var_export($_REQUEST, true));
+if (session_status() != PHP_SESSION_ACTIVE) {
+    session_start();
+}
+//handle the potentially incoming post request
+$item_id = (int)se($_POST, "item_id", null, false);
+$desired_quantity = (int)se($_POST, "desired_quantity", 0, false);
+$response = ["status" => 400, "message" => "Invalid data"];
+http_response_code(400);
+if (isset($item_id) && $desired_quantity > 0) {
+    if (is_logged_in()) {
+        $db = getDB();
+        //note adding to cart doesn't verify price or quantity
+        $stmt = $db->prepare("INSERT INTO RM_Cart (item_id, quantity, user_id) VALUES(:iid, :q, :uid) ON DUPLICATE KEY UPDATE quantity = quantity + :q");
+        $stmt->bindValue(":iid", $item_id, PDO::PARAM_INT);
+        $stmt->bindValue(":q", $desired_quantity, PDO::PARAM_INT);
+        $stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);
+        try {
+            $stmt->execute();
+            $response["status"] = 200;
+            $response["message"] = "Item added to cart";
+            http_response_code(200);
+        } catch (PDOException $e) {
+            error_log("Add to cart error: " . var_export($e, true));
+            $response["message"] = "Error adding item to cart";
+        }
+    } else {
+        http_response_code(403);
+        $response["status"] = 403;
+        $response["message"] = "Must be logged in to add to cart";
+    }
+}
+
+?>
+
+<?php
+require_once(__DIR__ . "/../../partials/flash.php");
+?>
