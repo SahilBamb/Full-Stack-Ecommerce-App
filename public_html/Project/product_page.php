@@ -13,6 +13,29 @@
 
 <script>
 
+function add_to_cart(item_id, quantity = 1) {
+        postData({
+            item_id: item_id,
+            desired_quantity: quantity
+        }, "/Project/add_to_cart.php").then(data => {
+            console.log(data);
+            if (data.status === 200) {
+                flash(data.message, "success");
+/*                 if (get_cart) {
+                    get_cart();
+                } */
+            } else {
+                flash(data.message, "danger");
+            }
+        }).catch(e => {
+            flash("There was a problem adding the item to cart", "danger");
+        });
+    }
+
+function validate() {  
+    return true;
+}  
+
 </script>
 
 <?php
@@ -155,7 +178,7 @@ endif;
                     </p>
                 </dd>
                 <div class="d-grid gap-2">
-                    <button class="btn btn-primary" type="button">Add to Cart</button>
+                    <button class="btn btn-primary" onclick="add_to_cart('<?php se($id); ?>')" type="button">Add to Cart</button>
                     <button class="btn btn-primary" type="button" disabled>Buy Now</button>
                     <p class="text-center">
                         <i class="bi-geo-fill"></i> Free Shipping & Free Returns
@@ -171,5 +194,7 @@ endif;
 
 <?php endif; ?>
 
-
+<?php
+require_once(__DIR__ . "/../../partials/flash.php");
+?>
 <!-- se($_GET, "category", "", false) -->
