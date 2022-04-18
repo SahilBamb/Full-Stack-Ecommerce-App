@@ -70,7 +70,7 @@ if (isset($_POST["save"])) {
         $hasError = true;
     } 
 
-    if (empty($visi)) {
+    if (($visi!=0) && empty($visi)) {
         flash("Visibility is required", "warning");
         $hasError = true;
     } 
