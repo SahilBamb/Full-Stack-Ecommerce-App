@@ -2,6 +2,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
 <link rel="stylesheet" href="navigation.css">
 
 <?php
@@ -35,17 +39,14 @@ session_start();
 <nav>
     <ul>
         <li><a href="<?php echo get_url('home.php'); ?>">Home</a></li> <!-- moved this from below to here -->
-        <li><a href="<?php echo get_url('shop.php'); ?>">Shop</a></li> <!-- moved this from below to here -->
         <?php if (is_logged_in()) : ?>
             <li><a href="<?php echo get_url('profile.php'); ?>">Profile</a></li>
-            <li><a href="<?php echo get_url('cart.php'); ?>">Cart</a></li>
         <?php endif; ?>
         <?php if (!is_logged_in()) : ?>
             <li><a href="<?php echo get_url('login.php'); ?>">Login</a></li>
             <li><a href="<?php echo get_url('register.php'); ?>">Register</a></li>
         <?php endif; ?>
         <?php if (has_role("Admin")) : ?>
-            <li><a href="<?php echo get_url('admin/list_items.php'); ?>">List Items</a></li>
             <li><a href="<?php echo get_url('admin/create_role.php'); ?>">Create Role</a></li>
             <li><a href="<?php echo get_url('admin/list_roles.php'); ?>">List Roles</a></li>
             <li><a href="<?php echo get_url('admin/assign_roles.php'); ?>">Assign Roles</a></li>
