@@ -23,7 +23,7 @@ if (isset($item_id)) {
             $stmt = $db->prepare("DELETE FROM Cart WHERE user_id = :uid AND item_id = :iid");
             $stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);
             $stmt->bindValue(":iid", $item_id, PDO::PARAM_INT);
-            $mess = "Cleared all ". $item_id ."s from cart";
+            $mess = "Cleared all of that item from cart";
         }
         try {
             $stmt->execute();
