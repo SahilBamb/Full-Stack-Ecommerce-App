@@ -39,7 +39,14 @@ require(__DIR__ . "/../../partials/nav.php");
 
 
 $db = getDB();
-$query = "SELECT id, name, description, category, stock, unit_price FROM Products WHERE visibility=1";
+
+ //sb59 4/18 - original query that will be appended onto 
+$query = "SELECT id, name, description, category, stock, unit_price FROM Products WHERE 1=1";
+
+if (!has_role("Admin")) {
+    $query.=" AND visibility=1";
+}
+
 
 
 if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) {
@@ -55,29 +62,32 @@ if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPr
 
 $search = "";
 $category = "";
-
+ //sb59 4/18 - if the $_GET search variable is set, this adds the term to a variable and adds
+ //a partial query with a placeholder which it appends onto the query
 if (isset($_GET["search"])) {
     echo "<h5>" . "Searching: " . $_GET["search"] . "</h5>";
     $search = "%" . se($_GET, "search", "", false) . "%";
     $subqery = " AND name LIKE :sch"; 
     $query .=$subqery;
 }
-
+ //sb59 4/18 - if the $_GET category variable is set, it does the same as search
+ //The actual query works as a LIKE '%word%' where it matches the word in any location
 if (isset($_GET["category"])) {
     echo "<h5>" . "Category: " . $_GET["category"] . "</h5>";
     $category = "%" . se($_GET, "category", "", false) . "%";
     $subqery = " AND category LIKE ':ctgry'"; 
     $query .=$subqery;
 } 
-
+ //sb59 4/18 - if the $_GET price variable is set, this will simply sort by unit_price
+ //again using a partial query
 $Endquery = " ORDER BY modified LIMIT 10";
 if (isset($_GET["SortByPrice"])) {
     echo "<h5>" . "Sorting By Price " . "</h5>";
     $Endquery = " ORDER BY unit_price LIMIT 10";
 }
-
 $query .=$Endquery;
 
+//sb59 4/18 - This checks if the variables are empty, if they are not it will bind the string values to each placeholder
 $stmt = $db->prepare($query);
 if (!(empty($search))) {$stmt->bindValue(':sch', $search, PDO::PARAM_STR);}
 if (!(empty($category))) {$stmt->bindValue(":ctgry", $category, PDO::PARAM_STR);}
@@ -112,7 +122,11 @@ try {
             <tr>
                 <?php foreach ($record as $column => $value) : ?>
                     <?php if (($column=='id')) : continue; endif  ?> <!-- skips product id row from displaying -->
-                    <td><?php if   ( (is_numeric($value)) && ((int) $value != $value) ) :  echo "$"; endif; ?><?php se($value, null, "N/A"); ?></td>
+                    <td>
+                    <?php if   ( (is_numeric($value)) && ((int) $value != $value) ) :  echo "$"; endif; ?>
+                    <?php se($value, null, "N/A"); ?>
+                    </td>
+
                 <?php endforeach; ?>
                 <td>
                     <a href="product_page.php?id=<?php se($record, "id"); ?>">View Product</a>
