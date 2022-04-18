@@ -11,7 +11,6 @@
 require(__DIR__ . "/../../partials/nav.php");
 ?>
 
-
 <form onsubmit="return validate(this)" method="POST">
     <h1>Register Account</h1>
     <div>
