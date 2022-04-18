@@ -27,26 +27,56 @@ if (!isset($_GET['id'])) {
 
 if (isset($_POST["save"])) {
 
+
     $name = se($_POST, "name", null, false);
     $category = se($_POST, "category", null, false);
     $stock = se($_POST, "stock", null, false);
-    $unit_price = se($_POST, "unit_price", null, false);0;
-    $visibility = se($_POST, "visibility", null, false);
-    $descr = se($_POST, "descr", null, false);
+    $unit_price = round(se($_POST, "unit_price", null, false),2);
+    $visi = se($_POST, "visibility", null, false);
+    $desc = se($_POST, "descr", null, false);
     $id = se($_GET, "id", null, false);
 
     $hasError = false;
-    //sanitize
-
-    //validate
-/*     if (!is_valid_email($email)) {
-        flash("Invalid email address", "danger");
+    if ($stock<0) {
+        flash("Positive stock is required", "warning");
         $hasError = true;
-    } */
+    }     
+    if ($unit_price<0) {
+        flash("Positive unit_price is required", "warning");
+        $hasError = true;
+    } 
+    if (empty($name)) {
+        flash("Name is required", "warning");
+        $hasError = true;
+    } 
 
-    //writing to db
+    if (empty($desc)) {
+        flash("Description is required", "warning");
+        $hasError = true;
+    } 
+
+    if (empty($category)) {
+        flash("Category is required", "warning");
+        $hasError = true;
+    } 
+
+    if (empty($stock)) {
+        flash("Stock is required", "warning");
+        $hasError = true;
+    } 
+
+    if (empty($unit_price)) {
+        flash("Unit_price is required", "warning");
+        $hasError = true;
+    } 
+
+    if (empty($visi)) {
+        flash("Visibility is required", "warning");
+        $hasError = true;
+    } 
+    
     if (!$hasError) {
-        $params = [":name" => $name, ":category" => $category, ":stock" => $stock, ":unit_price" => $unit_price, ":visibility" => $visibility, ":descr" => $descr, ":id" => $id];
+        $params = [":name" => $name, ":category" => $category, ":stock" => $stock, ":unit_price" => $unit_price, ":visibility" => $visi, ":descr" => $desc, ":id" => $id];
         $db = getDB();
         
         $stmt = $db->prepare("UPDATE Products set name = :name, category = :category, stock = :stock, unit_price = :unit_price, visibility = :visibility, description = :descr where id = :id");
@@ -118,33 +148,33 @@ if (isset($_POST["save"])) {
     <form method="POST" onsubmit="return validate(this);">
         <div class="mb-3">
             <label class="form-label" for="name">Name</label>
-            <input class="form-control" type="text" name="name" id="name" value="<?php echo $name ?>" />
+            <input class="form-control" type="text" name="name" id="name" required value="<?php echo $name ?>" />
         </div>
         <div class="mb-3">
             <label class="form-label" for="category">Category</label>
-            <input class="form-control" type="text" name="category" id="category" value="<?php echo $category ?>" />
+            <input class="form-control" type="text" name="category" id="category" required value="<?php echo $category ?>" />
         </div>
         <!-- DO NOT PRELOAD PASSWORD -->
         <div class="mb-3">
             <label class="form-label" for="stock">Stock</label>
-            <input class="form-control" type="number" name="stock" id="stock" value="<?php echo $stock ?>"/>
+            <input class="form-control" type="number" name="stock" id="stock" min=0 required value="<?php echo $stock ?>"/>
         </div>
         <div class="mb-3">
             <label class="form-label" for="np">Unit Price</label>
-            <input class="form-control" type="number" name="unit_price" step="any" id="unit_price" value="<?php echo $unit_price ?>"/>
+            <input class="form-control" type="number" name="unit_price" min=0 step=".01" required id="unit_price" value="<?php echo $unit_price ?>"/>
         </div>
         <div class="mb-3">
             <label class="form-label" for="descr">Description</label>
-            <input class="form-control" type="text" name="descr" id="descr" value="<?php echo $descr ?>"/>
+            <input class="form-control" type="text" name="descr" id="descr" required value="<?php echo $descr ?>"/>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="visibility" value="1" id="flexRadioDefault1" <?php if ($visibility==1) : echo "checked"; endif;?>>
+            <input class="form-check-input" type="radio" name="visibility" value="1" id="flexRadioDefault1" required <?php if ($visibility==1) : echo "checked"; endif;?>>
             <label class="form-check-label" for="flexRadioDefault1">
                 Visible
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="visibility" value="0" id="flexRadioDefault2" <?php if ($visibility==0) : echo "checked"; endif;?>>
+            <input class="form-check-input" type="radio" name="visibility" value="0" id="flexRadioDefault2" required <?php if ($visibility==0) : echo "checked"; endif;?>>
             <label class="form-check-label" for="flexRadioDefault2">
                 Hidden
             </label>
