@@ -21,51 +21,52 @@ if (!has_role("Admin")) {
 ?>
 
 <?php
-$db = getDB();
-//generally try to avoid SELECT *, but this is about being dynamic so I'm using it this time
-//$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND WHERE name LIKE ORDER BY modified LIMIT 10"; 
-$query = "SELECT id, name, description, visibility, category, stock, unit_price FROM Products";
 
-//echo "<pre>" . var_export($_SESSION, true) . "</pre>";
-//echo "<pre>" . var_export($_GET, true) . "</pre>";
+
+$db = getDB();
+$query = "SELECT id, name, description, category, stock, unit_price FROM Products WHERE visibility=1";
+
 
 if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) {
+
+    //sb59 4/18 - This checks if its empty and then clears the GET fields, allowing for users to
+    //clear filters by inputting empty values in the filter form
 
     if ($_GET["search"]=="") {unset($_GET['search']);}
     if ($_GET["category"]=="") {unset($_GET['category']);}
     if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) echo "<h2>" . "Filters Applied" . "</h2>";
-    
+
 }
+
+$search = "";
+$category = "";
 
 if (isset($_GET["search"])) {
     echo "<h5>" . "Searching: " . $_GET["search"] . "</h5>";
-
-    //$search = "%" . $_GET["search"] . "%";
-    //$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND name LIKE '" . $search . "' ORDER BY modified LIMIT 10";
-    
     $search = "%" . se($_GET, "search", "", false) . "%";
-    $subqery = " AND name LIKE '" . $search . "' ";
+    $subqery = " AND name LIKE :sch"; 
     $query .=$subqery;
 }
-
 
 if (isset($_GET["category"])) {
     echo "<h5>" . "Category: " . $_GET["category"] . "</h5>";
     $category = "%" . se($_GET, "category", "", false) . "%";
-    //$query = "SELECT name, description, category, stock, unit_price FROM Products WHERE visibility=1 AND category LIKE '" . $category . "' ORDER BY modified LIMIT 10";
-    $subqery = " AND category LIKE '" . $category . "' ";
+    $subqery = " AND category LIKE ':ctgry'"; 
     $query .=$subqery;
 } 
 
-$Endquery = " ORDER BY modified";
+$Endquery = " ORDER BY modified LIMIT 10";
 if (isset($_GET["SortByPrice"])) {
     echo "<h5>" . "Sorting By Price " . "</h5>";
-    $Endquery = " ORDER BY unit_price";
+    $Endquery = " ORDER BY unit_price LIMIT 10";
 }
 
 $query .=$Endquery;
 
 $stmt = $db->prepare($query);
+if (!(empty($search))) {$stmt->bindValue(':sch', $search, PDO::PARAM_STR);}
+if (!(empty($category))) {$stmt->bindValue(":ctgry", $category, PDO::PARAM_STR);}
+
 $results = [];
 try {
     $stmt->execute();
@@ -123,8 +124,6 @@ try {
     </div>
     <input type="submit" class="btn btn-primary" />
 </form>
-
-
 
 <?php
 //note we need to go up 1 more directory
