@@ -49,41 +49,41 @@
     - [x] \(04/05/2022) User with an admin role or shop owner role will be able to add products to inventory
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md)
         - [Create Product: https://sb59-prod.herokuapp.com/Project/admin/create_product.php](https://sb59-prod.herokuapp.com/Project/admin/create_product.php)
-    - [ ] \(xx/xx/2022) Any user will be able to see products with visibility = true on the Shop page
+    - [x] \(04/15/2022) Any user will be able to see products with visibility = true on the Shop page
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
-        - []()
-    - [ ] \(xx/xx/2022) Admin/Shop owner will be able to see products with any visibility
+        - [Shop: https://sb59-prod.herokuapp.com/Project/shop.php](https://sb59-prod.herokuapp.com/Project/shop.php)
+    - [x] \(04/15/2022) Admin/Shop owner will be able to see products with any visibility
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
-        - []()
-    - [ ] \(xx/xx/2022) Admin/Shop owner will be able to edit any product
+        - [Shop: https://sb59-prod.herokuapp.com/Project/shop.php](https://sb59-prod.herokuapp.com/Project/shop.php)
+    - [x] \(04/16/2022) Admin/Shop owner will be able to edit any product
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
-        - []()
-    - [ ] \(xx/xx/2022) User will be able to click an item from a list and view a full page with more info about the item (Product Details Page)
+        - [Edit Product: https://sb59-prod.herokuapp.com/Project/admin/product_edit.php](https://sb59-prod.herokuapp.com/Project/admin/product_edit.php)
+    - [x] \(04/16/2022) User will be able to click an item from a list and view a full page with more info about the item (Product Details Page)
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
-        - []()
-    - [ ] \(xx/xx/2022) User must be logged in for any Cart related activity below
+        - [Edit Product: https://sb59-prod.herokuapp.com/Project/admin/product_edit.php](https://sb59-prod.herokuapp.com/Project/admin/product_edit.php)
+    - [x] \(04/16/2022) User must be logged in for any Cart related activity below
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
-        - []()
-    - [ ] \(xx/xx/2022) User will be able to add items to Cart
+        - [Cart: https://sb59-prod.herokuapp.com/Project/cart.php](https://sb59-prod.herokuapp.com/Project/cart.php)
+    - [x] \(04/16/2022) User will be able to add items to Cart
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
-        - []()
-    - [ ] \(xx/xx/2022) User will be able to see their cart
+        - [Product Page: https://sb59-prod.herokuapp.com/Project/product_page.php](https://sb59-prod.herokuapp.com/Project/product_page.php)
+    - [x] \(04/16/2022) User will be able to see their cart
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
-        - []()
-    - [ ] \(xx/xx/2022) User will be able to change quantity of items in their cart
+        - [Cart: https://sb59-prod.herokuapp.com/Project/cart.php](https://sb59-prod.herokuapp.com/Project/cart.php)
+    - [x] \(04/16/2022) User will be able to change quantity of items in their cart
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
-        - []()
-    - [ ] \(xx/xx/2022) User will be able to remove a single item from their cart via button click
+        - [Cart: https://sb59-prod.herokuapp.com/Project/cart.php](https://sb59-prod.herokuapp.com/Project/cart.php)
+    - [x] \(04/17/2022) User will be able to remove a single item from their cart via button click
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
-        - []()
-    - [ ] \(xx/xx/2022) User will be able to clear their entire cart via a button click
+        - [Cart: https://sb59-prod.herokuapp.com/Project/cart.php](https://sb59-prod.herokuapp.com/Project/cart.php)
+    - [x] \(04/17/2022) User will be able to clear their entire cart via a button click
         - [Milestone 2](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone2.md) 
-        - []()
+        - [Cart: https://sb59-prod.herokuapp.com/Project/cart.php](https://sb59-prod.herokuapp.com/Project/cart.php)
+        
 - Milestone 3
   - (duplicate template here for Milestone 1 features)
 - Milestone 4
   - (duplicate template here for Milestone 1 features)
-  - 
 ### Intructions
 #### Don't delete this
 1. Pick one project type
