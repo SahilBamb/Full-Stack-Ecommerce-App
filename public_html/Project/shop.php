@@ -93,9 +93,9 @@ try {
 
 ?>
 <br>
-<h2>Shop</h2>
+<h2 style="text-align: center">Shop</h2>
 <?php if (count($results) == 0) : ?>
-    <p>No results to show</p>
+    <p  style="text-align: center">No results to show</p>
 <?php else : ?>
     <table class="table">
         <?php foreach ($results as $index => $record) : ?>

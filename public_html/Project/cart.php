@@ -10,6 +10,25 @@
 
 <script>
 
+function clear_cart(item_id="") {
+        postData({
+            item_id: item_id,
+        }, "/Project/clear_cart.php").then(data => {
+            if (data.status === 200) {
+                flash(data.message, "warning");
+/*                 if (get_cart) {
+                    get_cart();
+                } */
+            } else {
+                flash(data.message, "danger");
+            }
+        }).catch(e => {
+            console.log(e);
+            //flash("There was a problem adding the item to cart", "danger");
+        });
+        setTimeout("location.reload(true);", 50);
+    }
+
 function add_to_cart(item_id, curr_quantity, quantity = 1) {
         //console.log(item_id);
         postData({
@@ -18,7 +37,7 @@ function add_to_cart(item_id, curr_quantity, quantity = 1) {
             curr_quantity: curr_quantity
         }, "/Project/add_to_cart.php").then(data => {
             if (data.status === 200) {
-                flash(data.message, "warning");
+                flash(data.message, "info");
 /*                 if (get_cart) {
                     get_cart();
                 } */
@@ -55,7 +74,6 @@ $db = getDB();
 //echo "<pre>" . var_export($_GET, true) . "</pre>";
 
 //SELECT name, c.id as line_id, item_id, quantity, cost, (cost*quantity) as subtotal FROM RM_Cart c JOIN RM_Items i on c.item_id = i.id WHERE c.user_id = :uid");
-   
 
 $query = "SELECT name, c.id as prodid, item_id, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
 /* $Endquery = " ORDER BY modified LIMIT 10";
@@ -70,11 +88,13 @@ try {
     echo "<pre>" . var_export($e, true) . "</pre>";
 }
 
+$totalCost = 0;
+
 ?>
 <br>
-<h2>Cart</h2>
+<h2 style="text-align: center">Cart</h2>
 <?php if (count($results) == 0) : ?>
-    <p>No results to show</p>
+    <p style="text-align: center">No results to show</p>
 <?php else : ?>
     <table class="table">
         <?php foreach ($results as $index => $record) : ?>
@@ -91,8 +111,9 @@ try {
             <?php endif; ?>
             <tr>
                 <?php foreach ($record as $column => $value) : ?>
+                    <?php if ($column=='subtotal') : $totalCost+= $value; endif;?>
                     <?php if (($column=='prodid') || ($column=='item_id')) : continue; endif  ?> <!-- skips product id values and userid values from displaying -->
-                    <td><?php if   ( (is_numeric($value)) && ((int) $value != $value) ) :  echo "$"; endif;  
+                    <td><?php if   ((is_numeric($value)) && ((int) $value != $value) ) :  echo "$"; endif;  
                     se($value, null, "N/A"); ?></td> <!-- Adds dollar signs to all amounts -->
                 <?php endforeach; ?>
                 <td>
@@ -107,9 +128,16 @@ try {
                         <a href="./admin/product_edit.php?id=<?php se($record, "item_id"); ?>">Edit</a>
                     </td>
                 <?php endif; ?>
+                <td>
+                    <button type="button" onclick="clear_cart('<?php se($record, 'item_id'); ?>')" class="btn btn-outline-primary">Remove All</button>
+                </td>
             </tr>
-        <?php endforeach; ?>
+        <?php endforeach; error_log($totalCost);?>
     </table>
+
+    <h2>Total: $<?php se($totalCost);?></h2>
+    <button type="button" onclick="clear_cart()" class="btn btn-outline-primary">Clear Cart</button>
+    
 
 
 <?php endif; ?>
