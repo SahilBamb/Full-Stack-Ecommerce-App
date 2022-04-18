@@ -24,7 +24,7 @@ function clear_cart(item_id="") {
             }
         }).catch(e => {
             console.log(e);
-            //flash("There was a problem adding the item to cart", "danger");
+            flash("There was a problem adding the item to cart", "danger");
         });
         setTimeout("location.reload(true);", 50);
     }
