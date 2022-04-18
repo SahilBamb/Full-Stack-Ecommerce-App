@@ -157,11 +157,11 @@ if (isset($_POST["save"])) {
         <!-- DO NOT PRELOAD PASSWORD -->
         <div class="mb-3">
             <label class="form-label" for="stock">Stock</label>
-            <input class="form-control" type="number" name="stock" id="stock" min=0 required value="<?php echo $stock ?>"/>
+            <input class="form-control" type="number" name="stock" id="stock" required value="<?php echo $stock ?>"/>
         </div>
         <div class="mb-3">
             <label class="form-label" for="np">Unit Price</label>
-            <input class="form-control" type="number" name="unit_price" min=0 step=".01" required id="unit_price" value="<?php echo $unit_price ?>"/>
+            <input class="form-control" type="number" name="unit_price" step=".01" required id="unit_price" value="<?php echo $unit_price ?>"/>
         </div>
         <div class="mb-3">
             <label class="form-label" for="descr">Description</label>

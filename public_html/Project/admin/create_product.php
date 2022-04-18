@@ -95,11 +95,11 @@ created, modified) -->
     </div>
     <div>
         <label for="stock">Stock</label>
-        <input type="number" step="1" id="stock"  name="stock" value=1 required />
+        <input type="number" step="1" id="stock"  min=0 name="stock" value=1 required />
     </div>
     <div>
         <label for="unit_price">Unit Price</label>
-        <input type="number" step=".01" id="unit_price"  value=.01 name="unit_price" required />
+        <input type="number" step=".01" id="unit_price" min=0 value=.01 name="unit_price" required />
         <label>Visibility</label>
     </div>
     
