@@ -70,9 +70,11 @@ if (isset($_POST["name"]) && isset($_POST["category"]) && isset($_POST["stock"])
             flash("Successfully created product $name!", "success");
         } catch (PDOException $e) {
             if ($e->errorInfo[1] === 1062) {
-                flash("A role with this name already exists, please try another", "warning");
+                flash("A product with this name already exists, please try another", "warning");
             } else {
-                flash(var_export($e->errorInfo, true), "danger");
+                flash("An unexpected error occured in trying to add this product", "danger");
+                //flash(var_export($e->errorInfo, true), "danger");
+                error_log($e);
             }
         }
     }

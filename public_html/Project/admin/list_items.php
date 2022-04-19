@@ -17,14 +17,12 @@ if (!has_role("Admin")) {
     die(header("Location: " . get_url("home.php")));
 }
 
-
 ?>
 
 <?php
 
-
 $db = getDB();
-$query = "SELECT id, name, description, category, stock, unit_price FROM Products WHERE visibility=1";
+$query = "SELECT id, name, description, category, stock, unit_price, visibility FROM Products";
 
 
 if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) {

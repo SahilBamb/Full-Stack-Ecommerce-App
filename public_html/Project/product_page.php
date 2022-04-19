@@ -66,12 +66,15 @@ if (!isset($_GET["id"])) {
     die(header("Location: $BASE_PATH" . "/home.php"));
 }
 
-$id = $_GET["id"]; //NEEDS SANITIZING
+$id = $_GET["id"]; 
 
-//NEEDS SANITIZING
-$query = "SELECT name, description, category, stock, unit_price, image FROM Products WHERE visibility=1 AND id='" . $id . "' ";
+
+//$query = "SELECT name, description, category, stock, unit_price, image FROM Products WHERE visibility=1 AND id='" . $id . "' ";
+$query = "SELECT name, description, category, stock, unit_price, image FROM Products WHERE visibility=1 AND id=:iid ";
+
 
 $stmt = $db->prepare($query);
+$stmt->bindValue(':iid', $id, PDO::PARAM_INT);
 $results = [];
 try {
     $stmt->execute();
