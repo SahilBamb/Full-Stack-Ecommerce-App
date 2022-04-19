@@ -75,7 +75,7 @@ if (isset($_GET["search"])) {
 if (isset($_GET["category"])) {
     echo "<h5>" . "Category: " . $_GET["category"] . "</h5>";
     $category = "%" . se($_GET, "category", "", false) . "%";
-    $subqery = " AND category LIKE ':ctgry'"; 
+    $subqery = " AND category LIKE :ctgry"; 
     $query .=$subqery;
 } 
  //sb59 4/18 - if the $_GET price variable is set, this will simply sort by unit_price
