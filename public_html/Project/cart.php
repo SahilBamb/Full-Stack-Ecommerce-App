@@ -91,6 +91,7 @@ try {
 $totalCost = 0;
 
 ?>
+<div class="container-xxl">
 <br>
 <h2 style="text-align: center">Cart</h2>
 <?php if (count($results) == 0) : ?>
@@ -141,7 +142,7 @@ $totalCost = 0;
     
  <!--    <button type="button" onclick="clear_cart()" class="btn btn-outline-primary">Clear Cart</button>
     <button type="button" class="btn btn-primary btn-lg">Checkout</button> -->
-    
+</div>
 
 
 <?php endif; ?>
