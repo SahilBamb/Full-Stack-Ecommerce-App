@@ -136,7 +136,11 @@ $totalCost = 0;
     </table>
 
     <h2>Total: $<?php se($totalCost);?></h2>
-    <button type="button" onclick="clear_cart()" class="btn btn-outline-primary">Clear Cart</button>
+    <button type="button" onclick="window.location.href = './checkout/checkout.php';" class="btn btn-lg btn-primary">Checkout</button>
+    <button type="button" onclick="clear_cart()" class="btn btn-secondary btn-lg">Clear Cart</button>
+    
+ <!--    <button type="button" onclick="clear_cart()" class="btn btn-outline-primary">Clear Cart</button>
+    <button type="button" class="btn btn-primary btn-lg">Checkout</button> -->
     
 
 

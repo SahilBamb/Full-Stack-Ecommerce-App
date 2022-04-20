@@ -81,7 +81,18 @@
         - [Cart: https://sb59-prod.herokuapp.com/Project/cart.php](https://sb59-prod.herokuapp.com/Project/cart.php)
         
 - Milestone 3
-  - (duplicate template here for Milestone 1 features)
+    - [ ] \(04/05/2022) User will be able to purchase items in their Cart
+        - [Milestone 3](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone3.md)
+        - [Checkout: https://sb59-prod.herokuapp.com/Project/checkout/checkout.php](https://sb59-prod.herokuapp.com/Project/checkout/checkout.php)
+    - [ ] \(XX/XX/2022) Order Confirmation Page
+        - [Milestone 3](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone3.md) 
+        - []()
+    - [ ] \(04/15/2022) User will be able to see their Purchase History
+        - [Milestone 3](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone3.md) 
+        - []()
+    - [ ] \(04/16/2022) Store Owner will be able to see all Purchase History
+        - [Milestone 3](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone3.md) 
+        - []()
 - Milestone 4
   - (duplicate template here for Milestone 1 features)
 ### Intructions
