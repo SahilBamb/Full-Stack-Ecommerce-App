@@ -12,21 +12,35 @@ Why: I enjoyed the design
 
 <script>
 
-function validate() {  
-    return true;
-}  
+function validate(form) {
+
+let firstName = form.firstName.value;
+let lasttName = form.lastName.value;
+let payment = form.payment.value;
+let paymentMethod = form.paymentMethod.value;
+let username = form.username.value;
+let email = form.email.value;
+let address = form.address.value;
+let country = form.country.value;
+let state = form.state.value;
+let zip = form.zip.value;
+
+
+let isValid = true;
+
+return isValid;
+}
 
 </script>
 
 <?php
 
 require(__DIR__ . "/../../../partials/nav.php");
-require_once(__DIR__ . "/../../../partials/flash.php");
 
 $db = getDB();
 
 if (!is_logged_in()) {
-    flash("Please login or register before editing your profile", "warning");
+    flash("Please login or register before attempting to checkout", "warning");
     die(header("Location: " . get_url("login.php")));
 }
 
@@ -56,6 +70,7 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
 
     $firstName = se($_POST, "firstName", "", false);
     $lastName = se($_POST, "lastName", "", false);
+    $name = $firstName . " " . $lastName;
     $payment = se($_POST, "Payment", "", false);
     $paymentMethod = se($_POST, "paymentMethod", "", false);
     $username = se($_POST, "username", "", false);
@@ -66,10 +81,12 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
     $state = se($_POST, "state", "", false);
     $zip = se($_POST, "zip", "", false);
 
+    $hasError = false;
+
     #Verifying current price against products table
 
     $query = "SELECT name, c.id as prodid, item_id, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
-    $query = "SELECT name, unit_price, stock, visibility, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
+    $query = "SELECT name, item_id, unit_price, stock, visibility, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
 
     $stmt = $db->prepare($query);
     $prodTableResults = [];
@@ -84,11 +101,11 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
     $email = get_user_email();
     $cartTotal = 0; 
 
-      if (count($prodTableResults)>0) :
+    if (count($prodTableResults)>0) :
       foreach ($prodTableResults as $index => $record) : 
               //echo "<pre>" . var_export($record, true) . "</pre>";
               if (se($record,"stock","",false)<se($record,"quantity","",false)) {
-                flash("Exceeded Stock: " . se($record,"stock","",false) . " of " . se($record,"name","",false), "danger");
+                flash("Exceeded Stock: Only " . se($record,"stock","",false) . " stock of " . se($record,"name","",false) . " remaining", "danger");
                 $hasError = true;
               };
 
@@ -108,25 +125,86 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
           $hasError = true;
     }
 
-    $hasError = true;    
+    
+  
 
     //description, category, stock, unit_price, visibility required and stock and unit price >0
     if (!$hasError) {
-        $db = getDB();
-        $stmt = $db->prepare("INSERT INTO Products (name, description, category, stock, unit_price, visibility) VALUES(:name, :desc, :cate, :stock, :unit_price, :visi)");
+
+        $OrderSuccess = false;
+        $OrderItemsSuccess = false;
+        //$db = getDB();
+        $stmt = $db->prepare("INSERT INTO Orders (user_id, total_price, address, payment_method, money_received) VALUES(:uid, :total_price, :address, :payment_method, :money_received)");
         try {
-            $stmt->execute([":name" => $name, ":desc" => $desc, ":cate" => $category, ":stock" => $stock, ":unit_price" => $unit_price, ":visi" => $visi]);
-            flash("Successfully created product $name!", "success");
+            $stmt->execute([":uid" => get_user_id(), ":total_price" => $cartTotal, ":address" => $address, ":payment_method" => $paymentMethod, ":money_received" => $payment]);
+            $OrderSuccess = true;
+            //flash("Successfully added order to Orders Table", "success");
         } catch (PDOException $e) {
             if ($e->errorInfo[1] === 1062) {
                 flash("A product with this name already exists, please try another", "warning");
             } else {
                 flash("An unexpected error occured in trying to add this product", "danger");
                 //flash(var_export($e->errorInfo, true), "danger");
-                error_log($e);
+                //error_log($e);
             }
         }
-    }
+    
+
+    $lastId = $db->lastInsertId();
+
+    foreach ($prodTableResults as $index => $record) : 
+      //echo "<pre>" . var_export($record, true) . "</pre>";
+      $stmt = $db->prepare("INSERT INTO OrderItems (order_id, item_id, quantity, unit_price) VALUES(:oid, :iid, :quantity, :unit_price)");
+      try {
+          $stmt->execute([":oid" => $lastId, ":iid" => se($record,"item_id","",false), ":quantity" => se($record,"quantity","",false), ":unit_price" => se($record,"unit_price","",false)]);
+          $OrderItemsSuccess = true;
+          //flash("Successfully added order to OrderItems Table", "success");
+      } catch (PDOException $e) {
+          if ($e->errorInfo[1] === 1062) {
+              flash("A product with this name already exists, please try another", "warning");
+          } else {
+              flash("An unexpected error occured in trying to add this product", "danger");
+              flash(var_export($e->errorInfo, true), "danger");
+              error_log($e);
+          }
+      }
+
+      foreach ($cartResults as $column => $value) : 
+      endforeach;
+      endforeach;
+
+      if (($OrderItemsSuccess) && ($OrderSuccess)) {
+        flash("Order successfully completed!", "success");
+        die(header("Location: " . get_url("home.php")));
+      }
+
+
+
+
+/*       if (se($record,"stock","",false)<se($record,"quantity","",false)) {
+        flash("Exceeded Stock: Only " . se($record,"stock","",false) . " stock of " . se($record,"name","",false) . " remaining", "danger");
+        $hasError = true;
+      };
+
+      if (se($record,"visibility","",false)==0) {
+        flash(se($record,"name","",false) . " no longer available", "danger");
+        $hasError = true;
+      }; 
+
+      foreach ($cartResults as $column => $value) : 
+      endforeach;
+endforeach;
+
+*/
+}
+    
+ 
+
+ 
+
+
+
+
 } 
 
 ?>
@@ -175,7 +253,8 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
     <div class="row g-6">
       <div class="col-md-5 col-lg-4 order-md-last">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
-          <span class="text-primary">Your Cart</span>
+          <!-- <span class="text-primary">Your Cart</span> -->
+          <span class="text-primary"><a href="/./Project/cart.php">Your Cart</a></span>
           <span class="badge bg-primary rounded-pill"><?php echo count($cartResults)?></span>
         </h4>
         <ul class="list-group mb-3">
@@ -277,7 +356,7 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
             </div>
 
             <div class="col-12">
-              <label for="email" class="form-label">Email <span class="text-muted">(Optional)</span></label>
+              <label for="email" class="form-label">Email <span class="text-muted">(Required)</span></label>
               <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" value=<?php echo $email?>>
               <div class="invalid-feedback">
                 Please enter a valid email address for shipping updates.
@@ -395,10 +474,10 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
           <h4 class="mb-3">Payment</h4>
 
           <div class="col-md-3">
-              <label for="zip" class="form-label">Payment</label>
-              <input type="number" step=".01" min="0" class="form-control" id="Payment" name="Payment" placeholder="" required>
+              <label for="zip" class="form-label">Payment Amount</label>
+              <input type="number" step=".01" min="<?php echo $cartTotal ?>" class="form-control" id="Payment" name="Payment" placeholder="" required>
               <div class="invalid-feedback">
-                Payment amount required
+                Minimum $<?php echo $cartTotal; ?> payment required.
               </div>
             </div>
 
@@ -475,7 +554,7 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
     </div>
   </main>
 
-  <footer class="my-5 pt-5 text-muted text-center text-small">
+<!--   <footer class="my-5 pt-5 text-muted text-center text-small">
     <p class="mb-1">&copy; 2017–2021 Company Name</p>
     <ul class="list-inline">
       <li class="list-inline-item"><a href="#">Privacy</a></li>
@@ -484,7 +563,7 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
     </ul>
   </footer>
 </div>
-
+ -->
 
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -492,3 +571,5 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
   </body>
 </html>
 
+
+<?php require_once(__DIR__ . "/../../../partials/flash.php"); ?>

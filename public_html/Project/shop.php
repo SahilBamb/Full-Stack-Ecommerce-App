@@ -39,7 +39,6 @@ require(__DIR__ . "/../../partials/nav.php");
 
 
 $db = getDB();
-
  //sb59 4/18 - original query that will be appended onto 
 $query = "SELECT id, name, description, category, stock, unit_price FROM Products WHERE 1=1";
 
@@ -47,13 +46,10 @@ if (!has_role("Admin")) {
     $query.=" AND visibility=1";
 }
 
-
-
 if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) {
 
     //sb59 4/18 - This checks if its empty and then clears the GET fields, allowing for users to
     //clear filters by inputting empty values in the filter form
-
     if ($_GET["search"]=="") {unset($_GET['search']);}
     if ($_GET["category"]=="") {unset($_GET['category']);}
     if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) echo "<h2>" . "Filters Applied" . "</h2>";
@@ -102,6 +98,7 @@ try {
 
 ?>
 <br>
+<div class="container">
 <h2 style="text-align: center">Shop</h2>
 <?php if (count($results) == 0) : ?>
     <p  style="text-align: center">No results to show</p>
@@ -143,7 +140,7 @@ try {
             </tr>
         <?php endforeach; ?>
     </table>
-
+</div>
 
 <?php endif; ?>
 <!-- se($_GET, "category", "", false) -->
