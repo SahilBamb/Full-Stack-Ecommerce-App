@@ -20,18 +20,14 @@ function validate() {
 
 <?php
 
-
-
-//note we need to go up 1 more directory
 require(__DIR__ . "/../../../partials/nav.php");
 require_once(__DIR__ . "/../../../partials/flash.php");
-
 
 $db = getDB();
 
 if (!is_logged_in()) {
     flash("Please login or register before editing your profile", "warning");
-    die(header("Location: login.php"));
+    die(header("Location: " . get_url("login.php")));
 }
 
 else {
@@ -54,12 +50,13 @@ else {
 
 #firstName lastName username email address address2 country state zip
 
-if ( isset($_POST["firstName"]) && isset($_POST["lastName"]) && isset($_POST["paymentMethod"])
+if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastName"]) && isset($_POST["paymentMethod"])
      && isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["address"]) 
      && isset($_POST["country"]) && isset($_POST["state"]) && isset($_POST["zip"]) )  {
 
     $firstName = se($_POST, "firstName", "", false);
     $lastName = se($_POST, "lastName", "", false);
+    $payment = se($_POST, "Payment", "", false);
     $paymentMethod = se($_POST, "paymentMethod", "", false);
     $username = se($_POST, "username", "", false);
     $email = se($_POST, "email", "", false);
@@ -68,12 +65,51 @@ if ( isset($_POST["firstName"]) && isset($_POST["lastName"]) && isset($_POST["pa
     $country = se($_POST, "country", "", false);
     $state = se($_POST, "state", "", false);
     $zip = se($_POST, "zip", "", false);
-    
-    
-    //echo "<h1> " . $paymentMethod . " </h1>";
-    $hasError = true;    
+
+    #Verifying current price against products table
+
+    $query = "SELECT name, c.id as prodid, item_id, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
+    $query = "SELECT name, unit_price, stock, visibility, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
+
+    $stmt = $db->prepare($query);
+    $prodTableResults = [];
+    try {
+        $stmt->execute([":id" => get_user_id()]);
+        $prodTableResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "<pre>" . var_export($e, true) . "</pre>";
+    }
   
-    
+    $username = get_username();
+    $email = get_user_email();
+    $cartTotal = 0; 
+
+      if (count($prodTableResults)>0) :
+      foreach ($prodTableResults as $index => $record) : 
+              //echo "<pre>" . var_export($record, true) . "</pre>";
+              if (se($record,"stock","",false)<se($record,"quantity","",false)) {
+                flash("Exceeded Stock: " . se($record,"stock","",false) . " of " . se($record,"name","",false), "danger");
+                $hasError = true;
+              };
+
+              if (se($record,"visibility","",false)==0) {
+                flash(se($record,"name","",false) . " no longer available", "danger");
+                $hasError = true;
+              };
+              foreach ($cartResults as $column => $value) : 
+              endforeach;
+              $cartTotal+=se($record,'subtotal',"",false);
+      endforeach;
+    endif;
+
+    $paymentDifference = $cartTotal - $payment;
+    if ($payment<$cartTotal) {
+          flash("Payment is not enough: add " . $paymentDifference . " more to payment", "danger");
+          $hasError = true;
+    }
+
+    $hasError = true;    
+
     //description, category, stock, unit_price, visibility required and stock and unit price >0
     if (!$hasError) {
         $db = getDB();
@@ -168,8 +204,7 @@ if ( isset($_POST["firstName"]) && isset($_POST["lastName"]) && isset($_POST["pa
                         <small class="text-muted">regular shipping item</small>
                       </div>
                       <span class="text-muted">$<?php se($record,'subtotal',"",true); $cartTotal+=se($record,'subtotal',"",false); ?></span>
-                      
-                    </li>
+                  </li>
           <?php endforeach; ?>
         <?php endif;?> 
 <!-- 
@@ -397,8 +432,6 @@ if ( isset($_POST["firstName"]) && isset($_POST["lastName"]) && isset($_POST["pa
 
 
 
-
-
           <!-- <div class="row gy-3">
             <div class="col-md-6">
               <label for="cc-name" class="form-label">Name on card</label>
@@ -436,7 +469,7 @@ if ( isset($_POST["firstName"]) && isset($_POST["lastName"]) && isset($_POST["pa
 
           <hr class="my-4">
 
-          <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+          <button class="w-100 btn btn-primary btn-lg" type="submit" name="save">Complete Purchase</button>
         </form>
       </div>
     </div>
