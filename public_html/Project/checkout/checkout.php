@@ -101,7 +101,7 @@ if ( isset($_POST["firstName"]) && isset($_POST["lastName"]) && isset($_POST["pa
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
-    <title>Checkout example · Bootstrap v5.1</title>
+    <title>Checkout Page</title>
 
     <!-- Bootstrap core CSS -->
 <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
