@@ -17,7 +17,7 @@ Why: I liked the design
   }
   
   /* Style the submit button */
-  input[type=submit] {
+  input[type=submit], button[type=button] {
     background-color: #3F6473;
     color: white;
     padding: 3px 20px;
@@ -33,12 +33,10 @@ Why: I liked the design
     place-items: center;
   }
   
-
   form {
     border-radius:5px;background-color:#E4EDF2;padding:40px;
   }
   
-    
   label{
   display:block;
   padding:4px;

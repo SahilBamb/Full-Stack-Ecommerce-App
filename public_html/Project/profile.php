@@ -148,8 +148,12 @@ $username = get_username();
             <label class="form-label" for="conp">Confirm Password</label>
             <input class="form-control" type="password" name="confirmPassword" id="conp" />
         </div>
+        <br>
         <input type="submit" class="mt-3 btn btn-primary" value="Update Profile" name="save" />
+        <br>
+        <button type="button" onclick="window.location.href = './checkout/checkoutHistory.php';" class="btn btn-lg btn-primary">Checkout History</button>
     </form>
+    
 </div>
 
 <script>
