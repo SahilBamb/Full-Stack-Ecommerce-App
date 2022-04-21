@@ -42,5 +42,6 @@ if (isset($item_id)) {
         //flash("Please login to add to cart", "Danger");
     }
 }
+
 echo json_encode($response);
 
