@@ -17,7 +17,7 @@ Why: I liked the design
   }
   
   /* Style the submit button */
-  input[type=submit], button[type=button] {
+  input[type=submit], button[id=chk] {
     background-color: #3F6473;
     color: white;
     padding: 3px 20px;

@@ -19,7 +19,7 @@ Why: I enjoyed the design
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
-    <title>Checkout History Page</title>
+    <title>Order History Page</title>
 
     <!-- Bootstrap core CSS -->
 <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -99,7 +99,7 @@ if (!is_logged_in()) {
 
     <div class="py-5 text-center">
       <img class="d-block mx-auto mb-4" src="../assets/brand/bag-check-fill.svg" alt="" width="72" height="57">
-      <h2><?php if (has_role("Admin")) {echo "Admin Checkout History (All Users)";} else {echo "Your Checkout History";} ?></h2>
+      <h2><?php if (has_role("Admin")) {echo "Admin Order History (All Users)";} else {echo "Your Order History";} ?></h2>
     </div>
 
     <div class="row">
@@ -110,11 +110,9 @@ if (!is_logged_in()) {
     $orderID = 0;
     
     $query = "SELECT id, user_id, total_price, address, payment_method, money_received FROM Orders WHERE user_id = :uid limit 10";
-    $HeadTitle = "Your Order History";
 
     if (has_role("Admin")) {
       $query = "SELECT id, user_id, total_price, address, payment_method, money_received FROM Orders ORDER BY created limit 10";
-      $HeadTitle = "All Order History";
     }
 
     $stmt = $db->prepare($query);
