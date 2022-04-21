@@ -29,7 +29,9 @@ let zip = form.zip.value;
 let isValid = true;
 
 return isValid;
+
 }
+
 
 </script>
 
@@ -63,71 +65,71 @@ else {
 
 }
 
+$OrderItemsSuccess = false; 
+$OrderSuccess = false;
+
 #firstName lastName username email address address2 country state zip
 
 if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastName"]) && isset($_POST["paymentMethod"])
      && isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["address"]) 
      && isset($_POST["country"]) && isset($_POST["state"]) && isset($_POST["zip"]) )  {
 
-    $firstName = se($_POST, "firstName", "", false);
-    $lastName = se($_POST, "lastName", "", false);
-    $name = $firstName . " " . $lastName;
-    $payment = se($_POST, "Payment", "", false);
-    $paymentMethod = se($_POST, "paymentMethod", "", false);
-    $username = se($_POST, "username", "", false);
-    $email = se($_POST, "email", "", false);
-    $address = se($_POST, "address", "", false);
-    if (isset($_POST["address2"])) {$address .= " " . se($_POST, "address2", "", false);}
-    $country = se($_POST, "country", "", false);
-    $state = se($_POST, "state", "", false);
-    $zip = se($_POST, "zip", "", false);
+      $firstName = se($_POST, "firstName", "", false);
+      $lastName = se($_POST, "lastName", "", false);
+      $name = $firstName . " " . $lastName;
+      $payment = se($_POST, "Payment", "", false);
+      $paymentMethod = se($_POST, "paymentMethod", "", false);
+      $username = se($_POST, "username", "", false);
+      $email = se($_POST, "email", "", false);
+      $address = se($_POST, "address", "", false);
+      if (isset($_POST["address2"])) {$address .= " " . se($_POST, "address2", "", false);}
+      $country = se($_POST, "country", "", false);
+      $state = se($_POST, "state", "", false);
+      $zip = se($_POST, "zip", "", false);
 
-    $hasError = false;
+      $hasError = false;
 
-    #Verifying current price against products table
+      #Verifying current price against products table
 
-    $query = "SELECT name, c.id as prodid, item_id, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
-    $query = "SELECT name, item_id, unit_price, stock, visibility, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
+      $query = "SELECT name, c.id as prodid, item_id, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
+      $query = "SELECT name, item_id, unit_price, stock, visibility, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
 
-    $stmt = $db->prepare($query);
-    $prodTableResults = [];
-    try {
-        $stmt->execute([":id" => get_user_id()]);
-        $prodTableResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        echo "<pre>" . var_export($e, true) . "</pre>";
-    }
-  
-    $username = get_username();
-    $email = get_user_email();
-    $cartTotal = 0; 
-
-    if (count($prodTableResults)>0) :
-      foreach ($prodTableResults as $index => $record) : 
-              //echo "<pre>" . var_export($record, true) . "</pre>";
-              if (se($record,"stock","",false)<se($record,"quantity","",false)) {
-                flash("Exceeded Stock: Only " . se($record,"stock","",false) . " stock of " . se($record,"name","",false) . " remaining", "danger");
-                $hasError = true;
-              };
-
-              if (se($record,"visibility","",false)==0) {
-                flash(se($record,"name","",false) . " no longer available", "danger");
-                $hasError = true;
-              };
-              foreach ($cartResults as $column => $value) : 
-              endforeach;
-              $cartTotal+=se($record,'subtotal',"",false);
-      endforeach;
-    endif;
-
-    $paymentDifference = $cartTotal - $payment;
-    if ($payment<$cartTotal) {
-          flash("Payment is not enough: add " . $paymentDifference . " more to payment", "danger");
-          $hasError = true;
-    }
-
+      $stmt = $db->prepare($query);
+      $prodTableResults = [];
+      try {
+          $stmt->execute([":id" => get_user_id()]);
+          $prodTableResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      } catch (PDOException $e) {
+          echo "<pre>" . var_export($e, true) . "</pre>";
+      }
     
-  
+      $username = get_username();
+      $email = get_user_email();
+      $cartTotal = 0; 
+
+      if (count($prodTableResults)>0) :
+        foreach ($prodTableResults as $index => $record) : 
+                //echo "<pre>" . var_export($record, true) . "</pre>";
+                if (se($record,"stock","",false)<se($record,"quantity","",false)) {
+                  flash("Exceeded Stock: Only " . se($record,"stock","",false) . " stock of " . se($record,"name","",false) . " remaining", "danger");
+                  $hasError = true;
+                };
+
+                if (se($record,"visibility","",false)==0) {
+                  flash(se($record,"name","",false) . " no longer available", "danger");
+                  $hasError = true;
+                };
+                foreach ($cartResults as $column => $value) : 
+                endforeach;
+                $cartTotal+=se($record,'subtotal',"",false);
+        endforeach;
+      endif;
+
+      $paymentDifference = $cartTotal - $payment;
+      if ($payment<$cartTotal) {
+            flash("Payment is not enough: add " . $paymentDifference . " more to payment", "danger");
+            $hasError = true;
+      }
 
     //description, category, stock, unit_price, visibility required and stock and unit price >0
     if (!$hasError) {
@@ -150,7 +152,6 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
             }
         }
     
-
     $lastId = $db->lastInsertId();
 
     foreach ($prodTableResults as $index => $record) : 
@@ -169,45 +170,25 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
               error_log($e);
           }
       }
-
-      foreach ($cartResults as $column => $value) : 
-      endforeach;
+        foreach ($cartResults as $column => $value) : 
+        endforeach;
       endforeach;
 
       if (($OrderItemsSuccess) && ($OrderSuccess)) {
         flash("Order successfully completed!", "success");
+<<<<<<< HEAD
         /* die(header("Location: " . get_url("home.php"))); */
         redirect("home.php");
+=======
+        $_SESSION["user"]["lastID"] = $lastId;
+        die(header("Location: " . get_url("checkout/checkoutConfirmPage.php")));
+        
+>>>>>>> e5dca7d5c02932ec614b4ddde6ac543eb18d0df5
       }
 
-
-
-
-/*       if (se($record,"stock","",false)<se($record,"quantity","",false)) {
-        flash("Exceeded Stock: Only " . se($record,"stock","",false) . " stock of " . se($record,"name","",false) . " remaining", "danger");
-        $hasError = true;
-      };
-
-      if (se($record,"visibility","",false)==0) {
-        flash(se($record,"name","",false) . " no longer available", "danger");
-        $hasError = true;
-      }; 
-
-      foreach ($cartResults as $column => $value) : 
-      endforeach;
-endforeach;
-
-*/
 }
-    
- 
 
- 
-
-
-
-
-} 
+}
 
 ?>
 
@@ -545,6 +526,7 @@ endforeach;
               <div class="invalid-feedback">
                 Security code required
               </div> -->
+
             </div>
           </div>
 
@@ -560,7 +542,7 @@ endforeach;
     <p class="mb-1">&copy; 2017–2021 Company Name</p>
     <ul class="list-inline">
       <li class="list-inline-item"><a href="#">Privacy</a></li>
-      <li class="list-inline-item"><a href="#">Terms</a></li>
+      <li class="list-inline-item"><a href="#">Terms</a></li>f
       <li class="list-inline-item"><a href="#">Support</a></li>
     </ul>
   </footer>

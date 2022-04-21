@@ -10,49 +10,6 @@
 
 <script>
 
-function clear_cart(item_id="") {
-        postData({
-            item_id: item_id,
-        }, "/Project/clear_cart.php").then(data => {
-            if (data.status === 200) {
-                flash(data.message, "warning");
-/*                 if (get_cart) {
-                    get_cart();
-                } */
-            } else {
-                flash(data.message, "danger");
-            }
-        }).catch(e => {
-            console.log(e);
-            flash("There was a problem adding the item to cart", "danger");
-        });
-        setTimeout("location.reload(true);", 50);
-    }
-
-function add_to_cart(item_id, curr_quantity, quantity = 1) {
-        //console.log(item_id);
-        postData({
-            item_id: item_id,
-            desired_quantity: quantity, 
-            curr_quantity: curr_quantity
-        }, "/Project/add_to_cart.php").then(data => {
-            if (data.status === 200) {
-                flash(data.message, "info");
-/*                 if (get_cart) {
-                    get_cart();
-                } */
-            } else {
-                flash(data.message, "danger");
-            }
-        }).catch(e => {
-            console.log(e);
-            //flash("There was a problem adding the item to cart", "danger");
-        });
-
-        setTimeout("location.reload(true);", 400);
-        
-    }
-
 function validate() {  
     return true;
 }  
