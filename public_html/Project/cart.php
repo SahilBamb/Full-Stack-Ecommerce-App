@@ -64,7 +64,8 @@ require(__DIR__ . "/../../partials/nav.php");
 
 if (!is_logged_in()) {
     flash("Please login or register before viewing your cart", "warning");
-    die(header("Location: login.php"));
+    /* die(header("Location: login.php")); */
+    redirect("login.php");
 }
 
 $db = getDB();

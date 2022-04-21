@@ -41,7 +41,8 @@ $db = getDB();
 
 if (!is_logged_in()) {
     flash("Please login or register before attempting to checkout", "warning");
-    die(header("Location: " . get_url("login.php")));
+    /* die(header("Location: " . get_url("login.php"))); */
+    redirect("login.php");
 }
 
 else {
@@ -175,7 +176,8 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
 
       if (($OrderItemsSuccess) && ($OrderSuccess)) {
         flash("Order successfully completed!", "success");
-        die(header("Location: " . get_url("home.php")));
+        /* die(header("Location: " . get_url("home.php"))); */
+        redirect("home.php");
       }
 
 

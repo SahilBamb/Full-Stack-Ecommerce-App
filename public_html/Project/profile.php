@@ -7,7 +7,8 @@
 require_once(__DIR__ . "/../../partials/nav.php");
 if (!is_logged_in()) {
     flash("Please login or register before editing your profile", "warning");
-    die(header("Location: login.php"));
+    /* die(header("Location: login.php")); */
+    redirect("login.php");
 }
 ?>
 

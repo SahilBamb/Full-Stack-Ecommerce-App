@@ -64,6 +64,7 @@ $db = getDB();
 if (!isset($_GET["id"])) {
     flash("That is not a valid product", "warning");
     die(header("Location: $BASE_PATH" . "/home.php"));
+    redirect("home.php");
 }
 
 $id = $_GET["id"]; 
