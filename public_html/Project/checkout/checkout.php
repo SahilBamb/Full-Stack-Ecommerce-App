@@ -176,14 +176,9 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
 
       if (($OrderItemsSuccess) && ($OrderSuccess)) {
         flash("Order successfully completed!", "success");
-<<<<<<< HEAD
-        /* die(header("Location: " . get_url("home.php"))); */
-        redirect("home.php");
-=======
+
         $_SESSION["user"]["lastID"] = $lastId;
         die(header("Location: " . get_url("checkout/checkoutConfirmPage.php")));
-        
->>>>>>> e5dca7d5c02932ec614b4ddde6ac543eb18d0df5
       }
 
 }
