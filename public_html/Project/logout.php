@@ -10,4 +10,7 @@ session_start();
 //to not appear on login and be hidden by the logout transition
 require(__DIR__ . "/../../lib/functions.php");
 flash("Successfully logged out", "success");
-header("Location: login.php");
+/* header("Location: login.php"); */
+redirect('./sign-in/newLogin.php');
+
+

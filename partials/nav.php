@@ -41,7 +41,7 @@ session_start();
             <li><a href="<?php echo get_url('cart.php'); ?>">Cart</a></li>
         <?php endif; ?>
         <?php if (!is_logged_in()) : ?>
-            <li><a href="<?php echo get_url('login.php'); ?>">Login</a></li>
+            <li><a href="<?php echo get_url('sign-in/newLogin.php'); ?>">Login</a></li>
             <li><a href="<?php echo get_url('register.php'); ?>">Register</a></li>
         <?php endif; ?>
         <?php if (has_role("Admin")) : ?>
