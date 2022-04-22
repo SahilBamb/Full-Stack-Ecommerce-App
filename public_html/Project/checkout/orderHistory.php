@@ -19,10 +19,11 @@ Why: I enjoyed the design
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
-    <title>Order History Page</title>
+    <title>Order Details Page</title>
 
     <!-- Bootstrap core CSS -->
 <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
 
 <style>
       .bd-placeholder-img {
@@ -46,6 +47,14 @@ Why: I enjoyed the design
 </head>
 
 
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/./Project/profile.php">Profile</a></li>
+    <li class="breadcrumb-item"><a href="checkoutHistory.php">Order History</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Order Details Page</li>
+  </ol>
+</nav>
+
 <?php
 
 if (!is_logged_in()) {
@@ -53,42 +62,11 @@ if (!is_logged_in()) {
     die(header("Location: " . get_url("login.php")));
 }
 
-/* else {
+if ( !(isset($_GET["id"])) ) {
+  flash("Please select an order", "warning");
+  die(header("Location: " . get_url("checkoutHistory.php")));
+}
 
-  $db = getDB();
-
-  $orderID = 0;
-  
-
-  //$query = "SELECT id, user_id, total_price, address, payment_method, money_received FROM Orders WHERE id = :id";
-  $query = "SELECT id, user_id, total_price, address, payment_method, money_received FROM Orders WHERE user_id = :uid";
-  
-  $stmt = $db->prepare($query);
-  $orderDetails = [];
-  try {
-      $stmt->execute([":uid" => get_user_id()]); //temp
-      $orderDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  } catch (PDOException $e) {
-      echo "<pre>" . var_export($e, true) . "</pre>";
-  }
-
-    foreach ($orderDetails as $index => $record) { 
-      $orderID = se($orderDetails[$index],'id',"",false);
-      $moneyReceived = se($orderDetails[$index],'money_received',"",false);
-      $paymentMethod = se($orderDetails[$index],'payment_method',"",false);
-    
-    $query = "SELECT name, c.id as prodid, item_id, quantity, c.unit_price, ROUND((c.unit_price*c.quantity),2) as subtotal FROM OrderItems c JOIN Products i ON c.item_id = i.id WHERE c.order_id = :id";
-    
-    $stmt = $db->prepare($query);
-    $cartResults = [];
-    try {
-        $stmt->execute([":id" => $orderID]); //temp
-        $cartResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        echo "<pre>" . var_export($e, true) . "</pre>";
-    }
-
-  } */
 
 ?>
 
@@ -98,8 +76,8 @@ if (!is_logged_in()) {
   <main>
 
     <div class="py-5 text-center">
-      <img class="d-block mx-auto mb-4" src="../assets/brand/bag-check-fill.svg" alt="" width="72" height="57">
-      <h2><?php if (has_role("Admin")) {echo "Admin Order History (All Users)";} else {echo "Your Order History";} ?></h2>
+      <img class="d-block mx-auto mb-4" src="../assets/brand/bag-dash-fill.svg" alt="" width="72" height="57">
+      <h2><?php if (has_role("Admin")) {echo "Admin Order History (All Users)";} else {echo "Order #" . se($_GET,'id',"",false) . " Details Page";} ?></h2>
     </div>
 
     <div class="row">
@@ -109,10 +87,10 @@ if (!is_logged_in()) {
     $db = getDB();
     $orderID = 0;
     
-    $query = "SELECT id, user_id, total_price, address, payment_method, money_received FROM Orders WHERE user_id = :uid limit 10";
+    $query = "SELECT id, user_id, total_price, address, payment_method, money_received, created FROM Orders WHERE user_id = :uid limit 10";
 
     if (has_role("Admin")) {
-      $query = "SELECT id, user_id, total_price, address, payment_method, money_received FROM Orders ORDER BY created limit 10";
+      $query = "SELECT id, user_id, total_price, address, payment_method, money_received, created FROM Orders ORDER BY created limit 10";
     }
 
     $stmt = $db->prepare($query);
@@ -126,28 +104,36 @@ if (!is_logged_in()) {
     }
 
     foreach ($orderDetails as $index => $record) { 
-      $orderID = se($orderDetails[$index],'id',"",false);
+      /* $orderID = se($orderDetails[$index],'id',"",false); */
+      $orderID = se($_GET,'id',"",false);
       $moneyReceived = se($orderDetails[$index],'money_received',"",false);
       $paymentMethod = se($orderDetails[$index],'payment_method',"",false);
+      $address = se($orderDetails[$index],'address',"",false);
+      $created = se($orderDetails[$index],'created',"",false);
     
-    $query = "SELECT name, c.id as prodid, item_id, quantity, c.unit_price, ROUND((c.unit_price*c.quantity),2) as subtotal FROM OrderItems c JOIN Products i ON c.item_id = i.id WHERE c.order_id = :id";
-    
-    $stmt = $db->prepare($query);
-    $cartResults = [];
-    try {
-        $stmt->execute([":id" => $orderID]); //temp
-        $cartResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        echo "<pre>" . var_export($e, true) . "</pre>";
-    }
+      $query = "SELECT name, c.id as prodid, item_id, quantity, c.unit_price, ROUND((c.unit_price*c.quantity),2) as subtotal FROM OrderItems c JOIN Products i ON c.item_id = i.id WHERE c.order_id = :id";
+      
+      $stmt = $db->prepare($query);
+      $cartResults = [];
+      try {
+          $stmt->execute([":id" => $orderID]); //temp
+          $cartResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      } catch (PDOException $e) {
+          echo "<pre>" . var_export($e, true) . "</pre>";
+      }
 
 ?>
         <br>
         <h4 class="d-flex justify-content-between align-items-center mb-3">
-          <span class="text-primary"><a  href="orderHistory.php?id=<?php echo $orderID; ?>">Order #<?php se($orderID); ?></a></span>
-          
+          <span class="text-primary"><a  href="">Order #<?php se($orderID); ?></a></span>
           <span class="badge bg-primary rounded-pill"><?php echo count($cartResults)?></span>
         </h4>
+
+        <li class="list-group-item d-flex justify-content-between">
+          <span><strong>Shipping Address: </strong><?php echo $address;?></span>
+          <span><?php echo $created;?></span>
+        </li>
+        <br>
 
         <ul class="list-group">
           <?php 
@@ -160,11 +146,14 @@ if (!is_logged_in()) {
                   <?php endforeach; ?>
                   <li class="list-group-item d-flex justify-content-between lh-sm">
                       <div>
-                      <h6> <?php se($record,'name',"",true); ?> x<?php se($numberOfProds);?></h6>
+                        <h6><?php se($record,'name',"",true); ?> x<?php se($numberOfProds);?></h6>
                         <small class="text-muted">regular shipping item</small>
                       </div>
                       <span class="text-muted">$<?php se($record,'subtotal',"",true); $cartTotal+=se($record,'subtotal',"",false); ?></span>
+                      
                   </li>
+
+
           <?php endforeach; ?>
 
         <?php endif;?> 
@@ -188,23 +177,13 @@ if (!is_logged_in()) {
                 }
             ?>
             </strong>
-        </li>
-
+        </li> 
           </ul>
-          <?php } ?>
+    
+
+          <?php break;} ?>
 
   </main>
-
-<!--   <footer class="my-5 pt-5 text-muted text-center text-small">
-    <p class="mb-1">&copy; 2017–2021 Company Name</p>
-    <ul class="list-inline">
-      <li class="list-inline-item"><a href="#">Privacy</a></li>
-      <li class="list-inline-item"><a href="#">Terms</a></li>
-      <li class="list-inline-item"><a href="#">Support</a></li>
-    </ul>
-  </footer>
-</div>
- -->
 
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
