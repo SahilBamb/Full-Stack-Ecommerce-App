@@ -35,7 +35,7 @@ session_start();
 <nav>
     <ul>
         <li><a href="<?php echo get_url('home.php'); ?>">Home</a></li> <!-- moved this from below to here -->
-        <li><a href="<?php echo get_url('shop.php'); ?>">Shop</a></li> <!-- moved this from below to here -->
+        <li><a href="<?php echo get_url('shopCards.php'); ?>">Shop</a></li> <!-- moved this from below to here -->
         <?php if (is_logged_in()) : ?>
             <li><a href="<?php echo get_url('profile.php'); ?>">Profile</a></li>
             <li><a href="<?php echo get_url('cart.php'); ?>">Cart</a></li>
