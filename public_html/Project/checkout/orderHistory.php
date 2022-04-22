@@ -110,6 +110,7 @@ if ( !(isset($_GET["id"])) ) {
       $paymentMethod = se($orderDetails[$index],'payment_method',"",false);
       $address = se($orderDetails[$index],'address',"",false);
       $created = se($orderDetails[$index],'created',"",false);
+      /* $created = date_format($created,"Y/m/d H:i:s"); */
     
       $query = "SELECT name, c.id as prodid, item_id, quantity, c.unit_price, ROUND((c.unit_price*c.quantity),2) as subtotal FROM OrderItems c JOIN Products i ON c.item_id = i.id WHERE c.order_id = :id";
       
@@ -129,7 +130,7 @@ if ( !(isset($_GET["id"])) ) {
           <span class="badge bg-primary rounded-pill"><?php echo count($cartResults)?></span>
         </h4>
 
-        <li class="list-group-item d-flex justify-content-between">
+        <li class="list-group-item d-flex justify-content-between list-group-item-primary">
           <span><strong>Shipping Address: </strong><?php echo $address;?></span>
           <span><?php echo $created;?></span>
         </li>
