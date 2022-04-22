@@ -46,7 +46,7 @@ require(__DIR__ . "/../../partials/nav.php");
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="home.php">Home</a></li>
-    <li class="breadcrumb-item"><a href="shop.php">Shop</a></li>
+    <li class="breadcrumb-item"><a href="shopCards.php">Shop</a></li>
     <li class="breadcrumb-item active" aria-current="page">Product Page</li>
   </ol>
 </nav>

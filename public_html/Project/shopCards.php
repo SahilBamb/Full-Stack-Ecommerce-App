@@ -178,7 +178,7 @@ try {
             
                 <div class="card-body">
                     <h5 class="card-title"><?php se($record,'name',"",true); ?></h5>
-                    <small class="text-muted"><?php se($record,'category',"",true); ?></small>
+                    <small class="text-muted"><?php echo ucfirst(se($record,'category',"",false)); ?></small>
                     <p class="card-text"><?php echo substr(se($record,'description',"",false),0,60); if (strlen(se($record,'description',"",false))>60) echo "..."; ?></p>
                     
                     <button onclick="add_to_cart('<?php se($record, 'id'); ?>')" class="btn btn-primary">Add to Cart</button>
