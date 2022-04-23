@@ -26,7 +26,6 @@ function se($v, $k = null, $default = "", $isEcho = true) {
         echo htmlspecialchars($returnValue, ENT_QUOTES);
     } else {
         //https://www.php.net/manual/en/function.htmlspecialchars.php
-        if ($returnValue==NULL) {return "";}
         return htmlspecialchars($returnValue, ENT_QUOTES);
     }
 }
