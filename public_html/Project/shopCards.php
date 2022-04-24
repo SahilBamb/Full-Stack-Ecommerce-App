@@ -6,9 +6,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="form.css">
-<title>Home Page</title>
+<title>Shop Page</title>
+
 <script>
+
+
+function submitform(){
+	document.getElementById("ShopStyle").submit();
+    
+}
+
 
 function add_to_cart(item_id, quantity = 1) {
         postData({
@@ -40,7 +47,7 @@ require(__DIR__ . "/../../partials/nav.php");
 
 $db = getDB();
  //sb59 4/18 - original query that will be appended onto 
-$query = "SELECT id, name, description, category, stock, unit_price FROM Products WHERE 1=1";
+$query = "SELECT id, name, description, image, category, stock, unit_price FROM Products WHERE 1=1";
 
 if (!has_role("Admin")) {
     $query.=" AND visibility=1";
@@ -99,16 +106,30 @@ try {
 ?>
 <br>
 <div class="container">
+
+
+
 <h2 style="text-align: center">Shop</h2>
+<form onsubmit="return validate(this)" id="ShopStyle" method="GET">
+    <div class="form-check form-switch">
+        <input class="form-check-input" onclick="submitform()" type="checkbox" role="switch" name="shopStyle" id="flexSwitchCheckChecked" <?php if (se($_GET,'shopStyle',"",false)=="on") echo "checked";?>>
+        <label class="form-check-label" for="flexSwitchCheckChecked">Shop as Catalog</label>
+    </div>
+</form>
+
+
 <?php if (count($results) == 0) : ?>
     <p  style="text-align: center">No results to show</p>
 <?php else : ?>
+
+<?php if (isset($_GET['shopStyle']) && ($_GET['shopStyle']=="on")) :?> 
+
     <table class="table">
         <?php foreach ($results as $index => $record) : ?>
             <?php if ($index == 0) : ?>
                 <thead>
                     <?php foreach ($record as $column => $value) : ?>
-                        <?php if (($column=='id')) : continue; endif  ?> <!-- skips product id row from displaying -->
+                        <?php if (($column=='id') || ($column=='image')) : continue; endif  ?> <!-- skips product id row from displaying -->
                         <th><?php se($column); ?></th>
                     <?php endforeach; ?>
                     <th>Product Page</th>
@@ -118,7 +139,7 @@ try {
             <?php endif; ?>
             <tr>
                 <?php foreach ($record as $column => $value) : ?>
-                    <?php if (($column=='id')) : continue; endif  ?> <!-- skips product id row from displaying -->
+                    <?php if (($column=='id') || ($column=='image')) : continue; endif  ?> <!-- skips product id row from displaying -->
                     <td>
                     <?php if   ( (is_numeric($value)) && ((int) $value != $value) ) :  echo "$"; endif; ?>
                     <?php se($value, null, "N/A"); ?>
@@ -140,7 +161,45 @@ try {
             </tr>
         <?php endforeach; ?>
     </table>
+
 </div>
+
+
+<?php else : ?>
+
+<div class="container">
+<div class="row row-cols-1 row-cols-md-4 g-4">
+    <?php foreach ($results as $index => $record) : ?>
+        
+        <?php echo '<div class="col">'; ?>
+        <div class="card" style="width: 18rem;">
+            <img src="<?php se($record,'image',"http://cohenwoodworking.com/wp-content/uploads/2016/09/image-placeholder-500x500.jpg",true); ?>" class="card-img-top" style="max-height: 200px; max-width:300px; overflow: hidden" alt="...">
+            
+                <div class="card-body">
+                    <h5 class="card-title"><?php se($record,'name',"",true); ?></h5>
+                    <small class="text-muted"><?php echo ucfirst(se($record,'category',"",false)); ?></small>
+                    <p class="card-text"><?php echo substr(se($record,'description',"",false),0,60); if (strlen(se($record,'description',"",false))>60) echo "..."; ?></p>
+                    
+                    <button onclick="add_to_cart('<?php se($record, 'id'); ?>')" class="btn btn-primary">Add to Cart</button>
+                    <a href="product_page.php?id=<?php se($record, "id"); ?>" class="btn btn-secondary">View Product</a>
+                    
+
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted"><?php se($record,'stock',"",true); ?> in Remaining in Stock</small>
+                    <?php if (has_role("Admin")) { ?><a href="/../Project/admin/product_edit.php?id=<?php se($record, "id"); ?>">Edit</a> <?php } ?>
+                </div>
+
+            </div>
+        <?php foreach ($record as $column => $value) : ?>
+        <?php endforeach; ?>   
+        <br>
+        <?php echo '</div>'; ?>     
+    <?php endforeach; ?>
+    </div>
+</div>
+
+<?php endif; ?>
 
 <?php endif; ?>
 <!-- se($_GET, "category", "", false) -->
