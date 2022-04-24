@@ -1,34 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Login Page</title>
 
-<!-- <link rel="stylesheet" href="mystyle.css"> -->
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sign-in/">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="form.css">
+    
+
+    <!-- Bootstrap core CSS -->
+<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
 
-<?php
-require(__DIR__ . "/../../partials/nav.php");
-if (!is_logged_in()) {
-    /* die(header("Location: login.php")); */
-    redirect('./sign-in/newLogin.php');
-}
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
 
-?>
-<div class="container"> <!-- added this div pair -->
-<form onsubmit="return validate(this)" method="POST">
-    <h1>Login to Account</h1>
-    <div>
-        <label for="email">Email/Username</label>
-        <input type="text" name="email" required />
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+
+    <?php require(__DIR__ . "/../../../partials/nav.php"); ?>
+
+
+  </head>
+<body id="mainbody" class="text-center">
+    
+<main class="form-signin">
+  <form onsubmit="return validate(this)" method="POST">
+    <img class="mb-4" src="../assets/brand/envelope-paper-heart.svg" alt="" width="72" height="57">
+    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+    <div class="form-floating">
+      <input type="text" class="form-control" name="email" id="floatingInput" placeholder="name@example.com">
+      <label for="floatingInput">Email Address or Username</label>
     </div>
-    <div>
-        <label for="pw">Password</label>
-        <input type="password" id="pw" name="password" required minlength="8" />
+    <div class="form-floating">
+      <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="Password">
+      <label for="floatingPassword">Password</label>
     </div>
-    <input type="submit" value="Login" />
-</form>
-</div>
+
+    <div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="remember-me"> Remember me
+      </label>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit" value="Login">Sign in</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2022–2022</p>
+  </form>
+</main>
+
+
+    
+  </body>
+</html>
 
 <script>
 
@@ -171,5 +212,5 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
 ?>
 
 <?php
-require(__DIR__ . "/../../partials/flash.php");
+require(__DIR__ . "/../../../partials/flash.php");
 ?>

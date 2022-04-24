@@ -7,51 +7,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="form.css">
+<title>Cart Page</title>
 
 <script>
-
-function clear_cart(item_id="") {
-        postData({
-            item_id: item_id,
-        }, "/Project/clear_cart.php").then(data => {
-            if (data.status === 200) {
-                flash(data.message, "warning");
-/*                 if (get_cart) {
-                    get_cart();
-                } */
-            } else {
-                flash(data.message, "danger");
-            }
-        }).catch(e => {
-            console.log(e);
-            flash("There was a problem adding the item to cart", "danger");
-        });
-        setTimeout("location.reload(true);", 50);
-    }
-
-function add_to_cart(item_id, curr_quantity, quantity = 1) {
-        //console.log(item_id);
-        postData({
-            item_id: item_id,
-            desired_quantity: quantity, 
-            curr_quantity: curr_quantity
-        }, "/Project/add_to_cart.php").then(data => {
-            if (data.status === 200) {
-                flash(data.message, "info");
-/*                 if (get_cart) {
-                    get_cart();
-                } */
-            } else {
-                flash(data.message, "danger");
-            }
-        }).catch(e => {
-            console.log(e);
-            //flash("There was a problem adding the item to cart", "danger");
-        });
-
-        setTimeout("location.reload(true);", 400);
-        
-    }
 
 function validate() {  
     return true;
@@ -64,7 +22,8 @@ require(__DIR__ . "/../../partials/nav.php");
 
 if (!is_logged_in()) {
     flash("Please login or register before viewing your cart", "warning");
-    die(header("Location: login.php"));
+    /* die(header("Location: login.php")); */
+    redirect("login.php");
 }
 
 $db = getDB();
@@ -91,6 +50,7 @@ try {
 $totalCost = 0;
 
 ?>
+<div class="container-xxl">
 <br>
 <h2 style="text-align: center">Cart</h2>
 <?php if (count($results) == 0) : ?>
@@ -136,8 +96,12 @@ $totalCost = 0;
     </table>
 
     <h2>Total: $<?php se($totalCost);?></h2>
-    <button type="button" onclick="clear_cart()" class="btn btn-outline-primary">Clear Cart</button>
+    <button type="button" onclick="window.location.href = './checkout/checkout.php';" class="btn btn-lg btn-primary">Checkout</button>
+    <button type="button" onclick="clear_cart()" class="btn btn-secondary btn-lg">Clear Cart</button>
     
+ <!--    <button type="button" onclick="clear_cart()" class="btn btn-outline-primary">Clear Cart</button>
+    <button type="button" class="btn btn-primary btn-lg">Checkout</button> -->
+</div>
 
 
 <?php endif; ?>

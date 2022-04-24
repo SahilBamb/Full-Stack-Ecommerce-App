@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="form.css"> -->
-
+<title>Product Page</title>
 
 <script>
 
@@ -46,7 +46,7 @@ require(__DIR__ . "/../../partials/nav.php");
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="home.php">Home</a></li>
-    <li class="breadcrumb-item"><a href="shop.php">Shop</a></li>
+    <li class="breadcrumb-item"><a href="shopCards.php">Shop</a></li>
     <li class="breadcrumb-item active" aria-current="page">Product Page</li>
   </ol>
 </nav>
@@ -64,6 +64,7 @@ $db = getDB();
 if (!isset($_GET["id"])) {
     flash("That is not a valid product", "warning");
     die(header("Location: $BASE_PATH" . "/home.php"));
+    redirect("home.php");
 }
 
 $id = $_GET["id"]; 
