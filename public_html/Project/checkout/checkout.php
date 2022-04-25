@@ -74,26 +74,45 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
      && isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["address"]) 
      && isset($_POST["country"]) && isset($_POST["state"]) && isset($_POST["zip"]) )  {
 
-      $firstName = se($_POST, "firstName", "", false);
-      $lastName = se($_POST, "lastName", "", false);
-      $name = $firstName . " " . $lastName;
-      $payment = se($_POST, "Payment", "", false);
-      $paymentMethod = se($_POST, "paymentMethod", "", false);
-      $username = se($_POST, "username", "", false);
-      $email = se($_POST, "email", "", false);
-      $address = se($_POST, "address", "", false);
-      if (isset($_POST["address2"])) {$address .= " " . se($_POST, "address2", "", false);}
-      
-      $country = se($_POST, "country", "", false);
-      $state = se($_POST, "state", "", false);
-      $zip = se($_POST, "zip", "", false);
-      $address = $address . " " . $country . " " . $state . " " . $zip;
+    $firstName = se($_POST, "firstName", "", false);
+    $lastName = se($_POST, "lastName", "", false);
+    $name = $firstName . " " . $lastName;
+    $payment = se($_POST, "Payment", "", false);
+    $paymentMethod = se($_POST, "paymentMethod", "", false);
+    $username = se($_POST, "username", "", false);
+    $email = se($_POST, "email", "", false);
+    $address = se($_POST, "address", "", false);
+    if (isset($_POST["address2"])) {$address .= " " . se($_POST, "address2", "", false);}
+    
+    $country = se($_POST, "country", "", false);
+    $state = se($_POST, "state", "", false);
+    $zip = se($_POST, "zip", "", false);
+    
+    # (sb59 4/24) - After form submission, there is a a basic ServerSide checking to make sure that the required fields are not empty 
+    # More advanced checking is done soon after when comparing the cart's actual prices and quantity with the database
 
-      $hasError = false;
+    $hasError = false;
 
-      #Verifying current price against products table
+    if (empty($firstName) || empty($lastName) ){
+      $hasError = True;
+      flash("Please input valid first and last name", "danger");
+    }
 
-      $query = "SELECT name, c.id as prodid, item_id, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
+    if (empty($paymentMethod)){
+      $hasError = True;
+      flash("Please input a payment method", "danger");
+    }
+
+    if (empty($address) || empty($country) || empty($state) || empty($zip)){
+      $hasError = True;
+      flash("Please input a valid shipping address, country, state and zip code", "danger");
+    }
+
+    $address = $address . " " . $country . " " . $state . " " . $zip;
+    
+    if (!$hasError) {
+
+      # (sb59 4/24) - This SQL statement joins the Cart and the products table which allows us to verify up-to-date prices, quantity and visibility against products table
       $query = "SELECT name, item_id, unit_price, stock, visibility, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
 
       $stmt = $db->prepare($query);
@@ -108,6 +127,11 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
       $username = get_username();
       $email = get_user_email();
       $cartTotal = 0; 
+
+      //(sb59 4/24) - QUANTITY VALIDATION: This code runs through the cart and checks if the quantity demanded is less than the quantity available and if so throws an error message for each product
+      //VISIBILITY VALIDATION: It checks if the visibility is off and will give an error message saying that product is no longer available
+      //PAYMENT VALIDATION: it totals the cost of the products while running through the table (this is important in case there were any prices changes)
+      //It outputs the difference in prices as a flash message if there were any
 
       if (count($prodTableResults)>0) :
         foreach ($prodTableResults as $index => $record) : 
@@ -132,13 +156,14 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
             flash("Payment is not enough: add " . $paymentDifference . " more to payment", "danger");
             $hasError = true;
       }
+    }
 
-    //description, category, stock, unit_price, visibility required and stock and unit price >0
+    // (sb59 - 4/24) - Finally, it only runs the Purchase SQL Query if there is no error. 
     if (!$hasError) {
 
         $OrderSuccess = false;
         $OrderItemsSuccess = false;
-        //$db = getDB();
+        //description, category, stock, unit_price, visibility required and stock and unit price >0
         $stmt = $db->prepare("INSERT INTO Orders (firstName, lastName, user_id, total_price, address, payment_method, money_received) VALUES(:firstName, :lastName, :uid, :total_price, :address, :payment_method, :money_received)");
         try {
             $stmt->execute([":uid" => get_user_id(), ":firstName" => $firstName, ":lastName" => $lastName, ":total_price" => $cartTotal, ":address" => $address, ":payment_method" => $paymentMethod, ":money_received" => $payment]);
@@ -266,43 +291,14 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
                   </li>
           <?php endforeach; ?>
         <?php endif;?> 
-<!-- 
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Second product</h6>
-              <small class="text-muted">Brief description</small>
-            </div>
-            <span class="text-muted">$8</span>
-          </li>
 
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Third item</h6>
-              <small class="text-muted">Brief description</small>
-            </div>
-            <span class="text-muted">$5</span>
-          </li>
-
-          <li class="list-group-item d-flex justify-content-between bg-light">
-            <div class="text-success">
-              <h6 class="my-0">Promo code</h6>
-              <small>EXAMPLECODE</small>
-            </div>
-            <span class="text-success">−$5</span>
-          </li>
-           -->
           <li class="list-group-item d-flex justify-content-between">
             <span>Total (USD)</span>
             <strong>$<?php se($cartTotal);?></strong>
           </li>
         </ul>
 
-        <!-- <form class="card p-2">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Promo code">
-            <button type="submit" class="btn btn-secondary">Redeem</button>
-          </div>
-        </form> -->
+        <!-- (sb59 4/24) - Form validation does a basic check to see if fields are filled out using 'required' attribute and prints out error message if they are not -->
       </div>
       <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">Billing Information</h4>
@@ -323,6 +319,8 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
                 Valid last name is required.
               </div>
             </div>
+
+            <!-- (sb59 4/24) - Fields like username and email are prefilled from using $username and $email variables previously defined from the $_SESSION magic variable -->
 
             <div class="col-12">
               <label for="username" class="form-label">Username</label>
@@ -428,6 +426,8 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
               </div>
             </div>
 
+            <!-- (sb59 4/24) - (Above) Form validation lists drop menu of states to allow for easier access to select valid state -->
+
             <div class="col-md-3">
               <label for="zip" class="form-label">Zip</label>
               <input type="text" class="form-control" id="zip" name="zip" placeholder="" required>
@@ -437,21 +437,12 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
             </div>
           </div>
 
-<!--           <hr class="my-4">
-
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="same-address">
-            <label class="form-check-label" for="same-address">Shipping address is the same as my billing address</label>
-          </div>
-
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="save-info">
-            <label class="form-check-label" for="save-info">Save this information for next time</label>
-          </div> -->
 
           <hr class="my-4">
 
           <h4 class="mb-3">Payment</h4>
+
+          <!-- (sb59 4/24) - Form validation does basic price check to make sure that the payment submitted is greater than the price in the cart and lists the difference if it is not -->
 
           <div class="col-md-3">
               <label for="zip" class="form-label">Payment Amount</label>
@@ -461,6 +452,7 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
               </div>
             </div>
 
+            <!-- (sb59 4/24) - Form validation lists all valid payment options as radio buttons to make sure user submits one of the accepted payment methods -->
             <!-- Cash, Visa, MasterCard, Amex -->
           <div class="my-3">
             <div class="form-check form-check-inline">
