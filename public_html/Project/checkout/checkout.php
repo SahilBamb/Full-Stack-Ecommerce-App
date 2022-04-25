@@ -93,7 +93,7 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
 
       #Verifying current price against products table
 
-      $query = "SELECT name, c.id as prodid, item_id, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
+      // $query = "SELECT name, c.id as prodid, item_id, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
       $query = "SELECT name, item_id, unit_price, stock, visibility, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
 
       $stmt = $db->prepare($query);
@@ -108,6 +108,11 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
       $username = get_username();
       $email = get_user_email();
       $cartTotal = 0; 
+
+      //(sb59 4/24) - QUANTITY VALIDATION: This code runs through the cart and checks if the quantity demanded is less than the quantity available and if so throws an error message for each product
+      //VISIBILITY VALIDATION: It checks if the visibility is off and will give an error message saying that product is no longer available
+      //PAYMENT VALIDATION: it totals the cost of the products while running through the table (this is important in case there were any prices changes)
+      //It outputs the difference in prices as a flash message if there were any
 
       if (count($prodTableResults)>0) :
         foreach ($prodTableResults as $index => $record) : 
@@ -133,12 +138,12 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
             $hasError = true;
       }
 
-    //description, category, stock, unit_price, visibility required and stock and unit price >0
+    // (sb59 - 4/24) - Finally, it only runs the Purchase SQL Query if there is no error. 
     if (!$hasError) {
 
         $OrderSuccess = false;
         $OrderItemsSuccess = false;
-        //$db = getDB();
+        //description, category, stock, unit_price, visibility required and stock and unit price >0
         $stmt = $db->prepare("INSERT INTO Orders (firstName, lastName, user_id, total_price, address, payment_method, money_received) VALUES(:firstName, :lastName, :uid, :total_price, :address, :payment_method, :money_received)");
         try {
             $stmt->execute([":uid" => get_user_id(), ":firstName" => $firstName, ":lastName" => $lastName, ":total_price" => $cartTotal, ":address" => $address, ":payment_method" => $paymentMethod, ":money_received" => $payment]);
