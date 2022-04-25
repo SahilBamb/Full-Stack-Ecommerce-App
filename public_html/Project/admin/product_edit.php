@@ -35,6 +35,7 @@ if (isset($_POST["save"])) {
     $visi = se($_POST, "visibility", null, false);
     $desc = se($_POST, "descr", null, false);
     $id = se($_GET, "id", null, false);
+    $image = se($_POST, "image", null, false);
 
     $hasError = false;
     if ($stock<0) {
@@ -76,10 +77,10 @@ if (isset($_POST["save"])) {
     } 
     
     if (!$hasError) {
-        $params = [":name" => $name, ":category" => $category, ":stock" => $stock, ":unit_price" => $unit_price, ":visibility" => $visi, ":descr" => $desc, ":id" => $id];
+        $params = [":name" => $name, ":image" => $image, ":category" => $category, ":stock" => $stock, ":unit_price" => $unit_price, ":visibility" => $visi, ":descr" => $desc, ":id" => $id];
         $db = getDB();
         
-        $stmt = $db->prepare("UPDATE Products set name = :name, category = :category, stock = :stock, unit_price = :unit_price, visibility = :visibility, description = :descr where id = :id");
+        $stmt = $db->prepare("UPDATE Products set image = :image, name = :name, category = :category, stock = :stock, unit_price = :unit_price, visibility = :visibility, description = :descr where id = :id");
 
         try {
             $stmt->execute($params);
@@ -121,7 +122,7 @@ if (isset($_POST["save"])) {
         $params = [":id" => $id];
         $db = getDB();
         
-        $stmt = $db->prepare("SELECT name, category, stock, unit_price, visibility, description FROM Products where id = :id");
+        $stmt = $db->prepare("SELECT name, image, category, stock, unit_price, visibility, description FROM Products where id = :id");
 
         try {
             $stmt->execute($params);
@@ -141,6 +142,7 @@ if (isset($_POST["save"])) {
     $visibility = se($results[0], "visibility", null, false);
     $descr = se($results[0], "description", null, false);
     $id = se($results[0], "id", null, false);
+    $image = se($results[0], "image", null, false);
 ?>
 
 <div class="container-fluid">  
@@ -166,6 +168,10 @@ if (isset($_POST["save"])) {
         <div class="mb-3">
             <label class="form-label" for="descr">Description</label>
             <input class="form-control" type="text" name="descr" id="descr" required value="<?php echo $descr ?>"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="image">Image URL</label>
+            <input class="form-control" type="text" name="image" id="image" required value="<?php echo $image ?>"/>
         </div>
         <div class="form-check">
             <input class="form-check-input" type="radio" name="visibility" value="1" id="flexRadioDefault1" required <?php if ($visibility==1) : echo "checked"; endif;?>>

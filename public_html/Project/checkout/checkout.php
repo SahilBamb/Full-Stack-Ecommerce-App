@@ -83,9 +83,11 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
       $email = se($_POST, "email", "", false);
       $address = se($_POST, "address", "", false);
       if (isset($_POST["address2"])) {$address .= " " . se($_POST, "address2", "", false);}
+      
       $country = se($_POST, "country", "", false);
       $state = se($_POST, "state", "", false);
       $zip = se($_POST, "zip", "", false);
+      $address = $address . " " . $country . " " . $state . " " . $zip;
 
       $hasError = false;
 
@@ -137,9 +139,9 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
         $OrderSuccess = false;
         $OrderItemsSuccess = false;
         //$db = getDB();
-        $stmt = $db->prepare("INSERT INTO Orders (user_id, total_price, address, payment_method, money_received) VALUES(:uid, :total_price, :address, :payment_method, :money_received)");
+        $stmt = $db->prepare("INSERT INTO Orders (firstName, lastName, user_id, total_price, address, payment_method, money_received) VALUES(:firstName, :lastName, :uid, :total_price, :address, :payment_method, :money_received)");
         try {
-            $stmt->execute([":uid" => get_user_id(), ":total_price" => $cartTotal, ":address" => $address, ":payment_method" => $paymentMethod, ":money_received" => $payment]);
+            $stmt->execute([":uid" => get_user_id(), ":firstName" => $firstName, ":lastName" => $lastName, ":total_price" => $cartTotal, ":address" => $address, ":payment_method" => $paymentMethod, ":money_received" => $payment]);
             $OrderSuccess = true;
             //flash("Successfully added order to Orders Table", "success");
         } catch (PDOException $e) {
