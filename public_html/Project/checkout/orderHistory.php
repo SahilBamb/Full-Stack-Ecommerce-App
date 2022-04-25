@@ -76,7 +76,7 @@ if ( !(isset($_GET["id"])) ) {
 
     <div class="py-5 text-center">
       <img class="d-block mx-auto mb-4" src="../assets/brand/bag-dash-fill.svg" alt="" width="72" height="57">
-      <h2><?php if (has_role("Admin")) {echo "Admin Order History (All Users)";} else {echo "Order #" . se($_GET,'id',"",false) . " Details Page";} ?></h2>
+      <h2><?php if (has_role("Admin")) {echo "Admin Order Details";} else {echo "Order #" . se($_GET,'id',"",false) . " Details Page";} ?></h2>
     </div>
 
     <div class="row">
@@ -86,10 +86,10 @@ if ( !(isset($_GET["id"])) ) {
     $db = getDB();
     $orderID = 0;
     
-    $query = "SELECT firstName, lastName, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id  WHERE c.user_id = :uid limit 10";
+    $query = "SELECT firstName, lastName, c.created, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id  WHERE c.user_id = :uid limit 10";
 
     if (has_role("Admin")) {
-      $query = "SELECT firstName, lastName, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id ORDER BY created limit 10";
+      $query = "SELECT firstName, lastName, c.created, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id ORDER BY c.created limit 10";
     }
 
     $stmt = $db->prepare($query);

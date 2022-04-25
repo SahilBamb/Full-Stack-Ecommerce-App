@@ -110,7 +110,7 @@ if (!is_logged_in()) {
     $query = "SELECT firstName, lastName, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id  WHERE c.user_id = :uid limit 10";
 
     if (has_role("Admin")) {
-      $query = "SELECT firstName, lastName, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id ORDER BY created limit 10";
+      $query = "SELECT firstName, lastName, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id ORDER BY c.created limit 10";
     }
 
     $stmt = $db->prepare($query);
@@ -144,7 +144,7 @@ if (!is_logged_in()) {
         <br>
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-primary">
-            <a  href="orderHistory.php?id=<?php echo $orderID; ?>">Order #<?php se($orderID); ?> - <?php se($orderDetails[0],'firstName',"",true); ?> <?php se($orderDetails[0],'lastName',"",true); ?></a> 
+            <a  href="orderHistory.php?id=<?php echo $orderID; ?>">Order #<?php se($orderID); ?> - <?php se($orderDetails[$index],'firstName',"",true); ?> <?php se($orderDetails[$index],'lastName',"",true); ?></a> 
           </span>
           <span class="badge bg-primary rounded-pill"><?php echo count($cartResults)?></span>
         </h4>
