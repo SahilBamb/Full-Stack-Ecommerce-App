@@ -184,8 +184,10 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
     foreach ($prodTableResults as $index => $record) : 
       //echo "<pre>" . var_export($record, true) . "</pre>";
       $stmt = $db->prepare("INSERT INTO OrderItems (order_id, item_id, quantity, unit_price) VALUES(:oid, :iid, :quantity, :unit_price)");
+      $stmt2 = $db->prepare("UPDATE Products SET stock = stock - :quantity WHERE id=:iid");
       try {
           $stmt->execute([":oid" => $lastId, ":iid" => se($record,"item_id","",false), ":quantity" => se($record,"quantity","",false), ":unit_price" => se($record,"unit_price","",false)]);
+          $stmt2->execute([":iid" => se($record,"item_id","",false), ":quantity" => se($record,"quantity","",false)]);
           $OrderItemsSuccess = true;
           //flash("Successfully added order to OrderItems Table", "success");
       } catch (PDOException $e) {
