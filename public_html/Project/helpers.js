@@ -23,7 +23,7 @@ function add_to_cart(item_id, curr_quantity, quantity = 1) {
 }
 
 
-function clear_cart(item_id="") {
+function clear_cart(item_id="",reloadPage=true) {
     postData({
         item_id: item_id,
     }, "/Project/clear_cart.php").then(data => {
@@ -37,9 +37,9 @@ function clear_cart(item_id="") {
         }
     }).catch(e => {
         console.log(e);
-        flash("There was a problem adding the item to cart", "danger");
+        flash("There was a problem removing the items from your cart", "danger");
     });
-    setTimeout("location.reload(true);", 50);
+    if (reloadPage) setTimeout("location.reload(true);", 50);
 }
 
 function flash (message = "", color = "info") {

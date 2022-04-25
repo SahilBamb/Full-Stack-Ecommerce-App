@@ -25,14 +25,22 @@ if (!isset($_SESSION['user']['lastID'])) {
   die(header("Location: " . get_url("cart.php")));
 }
 
-else {
+?>
+
+<script> 
+
+clear_cart("",false);
+
+</script>
+
+
+
+<?php {
 
   $db = getDB();
 
   #$query = "SELECT name, c.id as prodid, item_id, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
   //$query = "SELECT name, c.id as prodid, item_id, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
-
-  
 
   $orderID = $_SESSION["user"]["lastID"];
   unset($_SESSION["user"]["lastID"]);
