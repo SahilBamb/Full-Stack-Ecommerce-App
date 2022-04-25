@@ -46,7 +46,6 @@ Why: I enjoyed the design
   <link href="form-validation.css" rel="stylesheet">
 </head>
 
-
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/./Project/profile.php">Profile</a></li>
@@ -77,7 +76,7 @@ if ( !(isset($_GET["id"])) ) {
 
     <div class="py-5 text-center">
       <img class="d-block mx-auto mb-4" src="../assets/brand/bag-dash-fill.svg" alt="" width="72" height="57">
-      <h2><?php if (has_role("Admin")) {echo "Admin Order History (All Users)";} else {echo "Order #" . se($_GET,'id',"",false) . " Details Page";} ?></h2>
+      <h2><?php if (has_role("Admin")) {echo "Admin Order Details";} else {echo "Order #" . se($_GET,'id',"",false) . " Details Page";} ?></h2>
     </div>
 
     <div class="row">
@@ -87,10 +86,10 @@ if ( !(isset($_GET["id"])) ) {
     $db = getDB();
     $orderID = 0;
     
-    $query = "SELECT id, user_id, total_price, address, payment_method, money_received, created FROM Orders WHERE user_id = :uid limit 10";
+    $query = "SELECT firstName, lastName, c.created, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id  WHERE c.user_id = :uid limit 10";
 
     if (has_role("Admin")) {
-      $query = "SELECT id, user_id, total_price, address, payment_method, money_received, created FROM Orders ORDER BY created limit 10";
+      $query = "SELECT firstName, lastName, c.created, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id ORDER BY c.created limit 10";
     }
 
     $stmt = $db->prepare($query);
@@ -104,6 +103,7 @@ if ( !(isset($_GET["id"])) ) {
     }
 
     foreach ($orderDetails as $index => $record) { 
+      // echo "<pre>OrderDetails:" . var_export($orderDetails, true) . "</pre>";
       /* $orderID = se($orderDetails[$index],'id',"",false); */
       $orderID = se($_GET,'id',"",false);
       $moneyReceived = se($orderDetails[$index],'money_received',"",false);
@@ -123,10 +123,21 @@ if ( !(isset($_GET["id"])) ) {
           echo "<pre>" . var_export($e, true) . "</pre>";
       }
 
+      $idMatch = 0;
+      foreach ($orderDetails as $index => $record){
+        if (se($record,'id',"",false)==$orderID) $idMatch=1; 
+      }
+
+      if ($idMatch!=1) {
+        flash("You can only view your own orders", "warning");
+        redirect(get_url("./checkout/checkoutHistory.php"));
+      }
+
+
 ?>
         <br>
         <h4 class="d-flex justify-content-between align-items-center mb-3">
-          <span class="text-primary"><a  href="">Order #<?php se($orderID); ?></a></span>
+          <a  href="orderHistory.php?id=<?php echo $orderID; ?>">Order #<?php se($orderID); ?> - <?php se($orderDetails[0],'firstName',"",true); ?> <?php se($orderDetails[0],'lastName',"",true); ?></a> 
           <span class="badge bg-primary rounded-pill"><?php echo count($cartResults)?></span>
         </h4>
 

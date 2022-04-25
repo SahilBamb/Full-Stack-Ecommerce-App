@@ -20,6 +20,7 @@ if (isset($_POST["name"]) && isset($_POST["category"]) && isset($_POST["stock"])
     $stock = se($_POST, "stock", "", false);
     $unit_price = se($_POST, "unit_price", "", false);
     $desc = se($_POST, "description", "", false);
+    $image = se($_POST, "image", "", false);
     $visi = se($_POST, "visibility", "", false);
     $hasError = false;    
     
@@ -64,9 +65,9 @@ if (isset($_POST["name"]) && isset($_POST["category"]) && isset($_POST["stock"])
     //description, category, stock, unit_price, visibility required and stock and unit price >0
     if (!$hasError) {
         $db = getDB();
-        $stmt = $db->prepare("INSERT INTO Products (name, description, category, stock, unit_price, visibility) VALUES(:name, :desc, :cate, :stock, :unit_price, :visi)");
+        $stmt = $db->prepare("INSERT INTO Products (name, image, description, category, stock, unit_price, visibility) VALUES(:name, :image, :desc, :cate, :stock, :unit_price, :visi)");
         try {
-            $stmt->execute([":name" => $name, ":desc" => $desc, ":cate" => $category, ":stock" => $stock, ":unit_price" => $unit_price, ":visi" => $visi]);
+            $stmt->execute([":name" => $name, ":image" => $image, ":desc" => $desc, ":cate" => $category, ":stock" => $stock, ":unit_price" => $unit_price, ":visi" => $visi]);
             flash("Successfully created product $name!", "success");
         } catch (PDOException $e) {
             if ($e->errorInfo[1] === 1062) {
@@ -94,6 +95,10 @@ created, modified) -->
     <div>
         <label for="category">Category</label>
         <input id="category" name="category" required />
+    </div>
+    <div>
+        <label for="image">Image URL</label>
+        <input id="image" name="image" />
     </div>
     <div>
         <label for="stock">Stock</label>
