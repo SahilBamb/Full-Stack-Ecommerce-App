@@ -153,7 +153,7 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
 
       $paymentDifference = $cartTotal - $payment;
       if ($payment<$cartTotal) {
-            flash("Payment is not enough: add " . $paymentDifference . " more to payment", "danger");
+            flash("Payment is not enough: add $" . $paymentDifference . " more to payment", "danger");
             $hasError = true;
       }
     }
