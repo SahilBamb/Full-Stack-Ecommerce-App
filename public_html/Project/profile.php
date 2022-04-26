@@ -337,16 +337,24 @@ $username = get_username();
             <label class="form-label" for="username">Username</label>
             <input class="form-control" type="text" name="username" id="username" value="<?php se($username); ?>" />
         </div>
-        
 
-        <div class="form-group">
-            <label class="form-label" for="username">Privacy</label>
-            <input class="form-control" type="number" min="0" max="1" name="privacy" id="privacy" value="<?php se($privacy); ?>" />
+        <hr>
+        
+        <!-- <div class="form-group">Privacy</div> -->
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="privacy" id="privacy" value="0">
+            <label class="form-check-label" for="inlineRadio1">Hide profile to others</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="privacy" id="privacy" value="1">
+            <label class="form-check-label" for="inlineRadio2">Show profile to others</label>
         </div>
 
         <!-- DO NOT PRELOAD PASSWORD -->
         <br>
-        <div class="form-group">Password Reset</div>
+        <!-- <div class="form-group">Password Reset</div> -->
         <div class="form-group">
             <label class="form-label" for="cp">Current Password</label>
             <input class="form-control" type="password" name="currentPassword" id="cp" />
