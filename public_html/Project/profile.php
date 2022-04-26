@@ -4,6 +4,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
 <link rel="stylesheet" href="form.css">
 
 <style> 
@@ -14,6 +15,7 @@
   resize: both;
   overflow: auto;
  }
+ 
 
 </style>
 
@@ -42,34 +44,37 @@ if (isset($_GET["id"])) {
     $results = [];
 
     try {
-        $stmt->execute([":id" => get_user_id()]);
+        $stmt->execute([":id" => se($requestID,null,"",false)]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         echo "<pre>" . var_export($e, true) . "</pre>";
     }
     $requestedUserName = se($results[0],"username","",false);
     $requestedJoined = se($results[0],"created","",false);
-    $requestedPrivacy = se($results[0],"privacy","",false);
+    $requestedPrivacy = se($results[0],"privacy",0,false);
 
     if ($requestedPrivacy==0) {
 
-        flash("That user's profile is not public", "warning");
+        flash("That users profile is not public", "warning");
         redirect("profile.php");
 
     }
 
-    echo "<pre>" . var_export($results, true) . "</pre>";
+    // echo "<pre>" . var_export($results, true) . "</pre>";
     ?>
     
-
-<div class="text-center">
-    <h2>Profile</h2>
-    <!-- <img src="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg" class = "rounded" alt="..."> -->
+<div class="container">
+  <main>
+    <div class="py-5 text-center">
+      <h2>Profile Page</h2>
+      <!-- <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p> -->
+    </div>
+  </main>
 </div>
 
 <div class="row">
       <div class="col-lg-4">
-
+          
       <div class="card mb-4">
         <div class="card-body text-center">
             <img src="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg" alt="avatar"
@@ -84,61 +89,113 @@ if (isset($_GET["id"])) {
         </div>
       </div>
 
+
         </div>
         <div class="col-lg-8">
             <div class="card mb-4">
             <div class="card-body">
                 <div class="row">
                 <div class="col-sm-3">
-                    <p class="mb-0">Full Name</p>
+                    <p class="mb-0">Username</p>
                 </div>
                 <div class="col-sm-9">
-                    <p class="text-muted mb-0">Johnatan Smith</p>
+                    <p class="text-muted mb-0"><?php se($requestedUserName,null,"",true);?></p>
                 </div>
                 </div>
                 <hr>
-                <div class="row">
-                <div class="col-sm-3">
-                    <p class="mb-0">Email</p>
-                </div>
-                <div class="col-sm-9">
-                    <p class="text-muted mb-0">example@example.com</p>
-                </div>
-                </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">(Hidden)</p>
+                        </div>
+                    </div>
+                <!-- <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Phone</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">(097) 234-5678</p>
+                        </div>
+                    </div>
+                <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Mobile</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">(098) 765-4321</p>
+                        </div>
+                    </div>
                 <hr>
                 <div class="row">
-                <div class="col-sm-3">
-                    <p class="mb-0">Phone</p>
-                </div>
-                <div class="col-sm-9">
-                    <p class="text-muted mb-0">(097) 234-5678</p>
-                </div>
-                </div>
-                <hr>
-                <div class="row">
-                <div class="col-sm-3">
-                    <p class="mb-0">Mobile</p>
-                </div>
-                <div class="col-sm-9">
-                    <p class="text-muted mb-0">(098) 765-4321</p>
-                </div>
-                </div>
-                <hr>
-                <div class="row">
-                <div class="col-sm-3">
-                    <p class="mb-0">Address</p>
-                </div>
-                <div class="col-sm-9">
-                    <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
-                </div>
-                </div>
+                    <div class="col-sm-3">
+                        <p class="mb-0">Address</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
+                    </div>
+                </div> -->
             </div>
             </div>
             <div class="row">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Product Number 1
+                                <div>
+                                    <?php 
+                                    $stars=1;
+                                        for ($x = 0; $x <= 5; $x++) {
+                                            if ($x<=$stars) :
+                                                echo '<i class="bi-star-fill" style="font-size: 1rem; color: goldenrod;"></i>';
+                                            else :
+                                                echo '<i class="bi-star" style="font-size: 1rem; color: goldenrod;"></i>';
+                                            endif;
+                                        } 
+                                    ?>
+                                </div>    
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Product Review</h6>
+                    <!-- <p class="card-text">Product Descr: Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+                    <a href="#" class="card-link">Product link</a>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
             </div>
         </div>
         </div>
   </div>
+
+  <!-- <div class="container">
+  <div class="row">
+
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Product Number 1
+                        <div>
+                            <?php 
+                            $stars=1;
+                                for ($x = 0; $x <= 5; $x++) {
+                                    if ($x<=$stars) :
+                                        echo '<i class="bi-star-fill" style="font-size: 1rem; color: goldenrod;"></i>';
+                                    else :
+                                        echo '<i class="bi-star" style="font-size: 1rem; color: goldenrod;"></i>';
+                                    endif;
+                                } 
+                            ?>
+                        </div>    
+            </h5>
+            <h6 class="card-subtitle mb-2 text-muted">Product Review</h6>
+            <p class="card-text">Product Descr: Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="card-link">Product link</a>
+            <a href="#" class="card-link">Another link</a>
+        </div>
+    </div>
+
+  </div>
+</div> -->
 
 
 <?php 
