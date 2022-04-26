@@ -211,6 +211,7 @@ else {
 if (isset($_POST["save"])) {
     $email = se($_POST, "email", null, false);
     $username = se($_POST, "username", null, false);
+    $privacy = se($_POST, "privacy", null, false);
     $hasError = false;
     //sanitize
     $email = sanitize_email($email);
@@ -225,9 +226,9 @@ if (isset($_POST["save"])) {
     }
     
     if (!$hasError) {
-        $params = [":email" => $email, ":username" => $username, ":id" => get_user_id()];
+        $params = [":email" => $email, ":username" => $username, ":privacy" => $privacy, ":id" => get_user_id()];
         $db = getDB();
-        $stmt = $db->prepare("UPDATE Users set email = :email, username = :username where id = :id");
+        $stmt = $db->prepare("UPDATE Users set email = :email, username = :username, privacy = :privacy where id = :id");
         try {
             $stmt->execute($params);
             flash("Profile saved", "success");
@@ -235,7 +236,7 @@ if (isset($_POST["save"])) {
             users_check_duplicate($e->errorInfo);
         }
         //select fresh data from table
-        $stmt = $db->prepare("SELECT id, email, username from Users where id = :id LIMIT 1");
+        $stmt = $db->prepare("SELECT id, email, username, privacy from Users where id = :id LIMIT 1");
         try {
             $stmt->execute([":id" => get_user_id()]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -320,22 +321,29 @@ $username = get_username();
 ?>
 <div class="container-fluid">
     
-
     
     <div class="text-center">
         <h2>Profile</h2>
-    <img src="https://cdn-images-1.medium.com/max/1200/1*rupxSxU5pKa_HDZ7zYGdqg.jpeg" class = "rounded" alt="...">
-    </div>
-    <form method="POST" onsubmit="return validate(this);">
+        <img src="https://cdn-images-1.medium.com/max/1200/1*rupxSxU5pKa_HDZ7zYGdqg.jpeg" class = "rounded" alt="...">
+        </div>
+        <form method="POST" onsubmit="return validate(this);">
 
         <div class="form-group">
             <label class="form-label" for="email">Email</label>
             <input class="form-control" type="email" name="email" id="email" value="<?php se($email); ?>" />
         </div>
+
         <div class="form-group">
             <label class="form-label" for="username">Username</label>
             <input class="form-control" type="text" name="username" id="username" value="<?php se($username); ?>" />
         </div>
+        
+
+        <div class="form-group">
+            <label class="form-label" for="username">Privacy</label>
+            <input class="form-control" type="number" min="0" max="1" name="privacy" id="privacy" value="<?php se($privacy); ?>" />
+        </div>
+
         <!-- DO NOT PRELOAD PASSWORD -->
         <br>
         <div class="form-group">Password Reset</div>
