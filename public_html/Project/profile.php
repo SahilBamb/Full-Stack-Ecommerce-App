@@ -5,6 +5,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="form.css">
+
+<style> 
+.rounded{
+  border-radius:50% !important; 
+  max-height: 100px;
+  max-width: 100px;
+  resize: both;
+  overflow: auto;
+ }
+
+</style>
+
+
 <title>Profile Page</title>
 <?php
 require_once(__DIR__ . "/../../partials/nav.php");
@@ -14,6 +27,127 @@ if (!is_logged_in()) {
     redirect("login.php");
 }
 ?>
+
+<?php 
+if (isset($_GET["id"])) {
+
+    $publicProfile = true;
+    $requestID = se($_GET,"id","",false);
+
+    $db = getDB();
+
+    $query = "SELECT id, email, created, username, privacy FROM `Users` WHERE :id=id";
+    $stmt = $db->prepare($query);
+    $stmt->bindValue(":id", $requestID, PDO::PARAM_INT);
+    $results = [];
+
+    try {
+        $stmt->execute([":id" => get_user_id()]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "<pre>" . var_export($e, true) . "</pre>";
+    }
+    $requestedUserName = se($results[0],"username","",false);
+    $requestedJoined = se($results[0],"created","",false);
+    $requestedPrivacy = se($results[0],"privacy","",false);
+
+    if ($requestedPrivacy==0) {
+
+        flash("That user's profile is not public", "warning");
+        redirect("profile.php");
+
+    }
+
+    echo "<pre>" . var_export($results, true) . "</pre>";
+    ?>
+    
+
+<div class="text-center">
+    <h2>Profile</h2>
+    <!-- <img src="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg" class = "rounded" alt="..."> -->
+</div>
+
+<div class="row">
+      <div class="col-lg-4">
+
+      <div class="card mb-4">
+        <div class="card-body text-center">
+            <img src="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 150px;">
+            <h5 class="my-3"><?php se($requestedUserName,null,"",true);?></h5>
+            <p class="text-muted mb-1">Joined: <?php se($requestedJoined,null,"",true);?></p>
+            <!-- <p class="text-muted mb-4">Bay Area, San Francisco, CA</p> -->
+            <!-- <div class="d-flex justify-content-center mb-2">
+                <button type="button" class="btn btn-primary">Follow</button>
+                <button type="button" class="btn btn-outline-primary ms-1">Message</button>
+            </div> -->
+        </div>
+      </div>
+
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Full Name</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">Johnatan Smith</p>
+                </div>
+                </div>
+                <hr>
+                <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Email</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">example@example.com</p>
+                </div>
+                </div>
+                <hr>
+                <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Phone</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">(097) 234-5678</p>
+                </div>
+                </div>
+                <hr>
+                <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Mobile</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">(098) 765-4321</p>
+                </div>
+                </div>
+                <hr>
+                <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Address</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="row">
+            </div>
+        </div>
+        </div>
+  </div>
+
+
+<?php 
+
+}
+
+else {
+?>
+
 
 
 <?php
@@ -128,7 +262,13 @@ $email = get_user_email();
 $username = get_username();
 ?>
 <div class="container-fluid">
-    <h2 style="text-align: center">Profile</h2>
+    
+
+    
+    <div class="text-center">
+        <h2>Profile</h2>
+    <img src="https://cdn-images-1.medium.com/max/1200/1*rupxSxU5pKa_HDZ7zYGdqg.jpeg" class = "rounded" alt="...">
+    </div>
     <form method="POST" onsubmit="return validate(this);">
 
         <div class="form-group">
@@ -161,6 +301,9 @@ $username = get_username();
     </form>
     
 </div>
+
+
+<?php } ?>
 
 <script>
     //profile.php (email, username, current/new password length, new == confirm password (given))

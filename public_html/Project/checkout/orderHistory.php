@@ -46,8 +46,8 @@ Why: I enjoyed the design
   <link href="form-validation.css" rel="stylesheet">
 </head>
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
+<nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+  <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item"><a href="/./Project/profile.php">Profile</a></li>
     <li class="breadcrumb-item"><a href="checkoutHistory.php">Order History</a></li>
     <li class="breadcrumb-item active" aria-current="page">Order Details Page</li>
