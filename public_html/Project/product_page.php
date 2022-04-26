@@ -43,13 +43,25 @@ require(__DIR__ . "/../../partials/nav.php");
 ?>
 
 <br>
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="home.php">Home</a></li>
-    <li class="breadcrumb-item"><a href="shopCards.php">Shop</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Product Page</li>
-  </ol>
-</nav>
+
+<!-- <section style="background-color: #eee;"> -->
+  <div class="container py-5">
+    <div class="row">
+      <div class="col">
+
+      <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="home.php">Home</a></li>
+            <li class="breadcrumb-item"><a href="shopCards.php">Shop</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Product Page</li>
+        </ol>
+        </nav>
+
+      </div>
+    </div>
+  </div>
+
+
 
 <?php
 
