@@ -324,7 +324,7 @@ $username = get_username();
     
     <div class="text-center">
         <h2>Profile</h2>
-        <img src="https://cdn-images-1.medium.com/max/1200/1*rupxSxU5pKa_HDZ7zYGdqg.jpeg" class = "rounded" alt="...">
+        <img src="https://vectorified.com/images/facebook-no-profile-picture-icon-26.jpg" class = "rounded" alt="...">
         </div>
         <form method="POST" onsubmit="return validate(this);">
 
