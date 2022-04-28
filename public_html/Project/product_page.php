@@ -61,9 +61,9 @@ $(function () {
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 
-if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
+if ( isset($_GET['id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
 
-    $rID = se($_POST,'item_id',"",false);
+    $rID = se($_GET,'id',"",false);
     $rStars = se($_POST,'stars',"",false);
     $rContent = se($_POST,'ratingContent',"",false);
   
