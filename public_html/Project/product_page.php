@@ -1,13 +1,9 @@
-
-
+<head>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
 </head>
-<!--<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="form.css"> -->
+
 <title>Product Page</title>
 
 <style>
@@ -25,16 +21,11 @@
         }
       }
 
-
 </style>
-
-
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
-
 
 <script>
 
@@ -65,31 +56,10 @@ $(function () {
   $('[data-toggle="popover"]').popover()
 })
 
-
 </script>
-
-
 
 <?php
 require(__DIR__ . "/../../partials/nav.php");
-
-
-// $query = "SELECT id, product_id, user_id, rating, created, comment FROM ratings WHERE product_id = :id";
-
-// $stmt = $db->prepare($query);
-// $cartResults = [];
-// try {
-//     $stmt->execute([":id" => $orderID]); 
-//     $reviewCarts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-// } catch (PDOException $e) {
-//     echo "<pre>" . var_export($e, true) . "</pre>";
-// }
-
-// foreach ($orderDetails as $index => $record) { 
-//     $orderID = se($orderDetails[$index],'id',"",false);
-//     $moneyReceived = se($orderDetails[$index],'money_received',"",false);
-//     $paymentMethod = se($orderDetails[$index],'payment_method',"",false);
-// } 
 
 if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
 
@@ -212,14 +182,15 @@ foreach ($reviewCarts as $index => $record) {
     $reviewCount++;
     $rating += se($record,'rating',"",false);
 }
-$rating/=$reviewCount;
+if ($reviewCount!=0) {$rating/=$reviewCount;}
+else $rating=-1;
     
-
-
-
-//$query = "SELECT name, description, category, stock, unit_price, image FROM Products WHERE visibility=1 AND id='" . $id . "' ";
-$query = "SELECT name, description, category, stock, unit_price, image FROM Products WHERE visibility=1 AND id=:iid ";
-
+if (has_role("Admin")) {
+    $query = "SELECT name, description, category, stock, unit_price, image FROM Products WHERE id=:iid ";
+}
+else {
+    $query = "SELECT name, description, category, stock, unit_price, image FROM Products WHERE visibility=1 AND id=:iid ";
+}
 
 $stmt = $db->prepare($query);
 $stmt->bindValue(':iid', $id, PDO::PARAM_INT);
@@ -252,7 +223,7 @@ endif;
 <br>
 <br>
 <?php if (count($results) == 0) : ?>
-    <p>Product does not exist</p>
+    <p class="text-center">Product does not exist</p>
 <?php else : ?>
 
 <div class="container">
@@ -279,7 +250,11 @@ endif;
                         <?php echo $category ?>
                 </dd>
                
-                <dt class="col-sm-3">Rating</dt>
+                <dt class="col-sm-3">
+                    <?php if ($rating>=0) :?> Rating
+                    <?php else : ?> Not Rated
+                    <?php endif; ?>
+                </dt>
 
                 <dd class="col-sm-9">
                     <div>
@@ -435,33 +410,7 @@ foreach ($reviewCarts as $index => $record) {
             </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
-
-
 
 <?php } ?>
 
