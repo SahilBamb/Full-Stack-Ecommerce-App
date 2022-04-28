@@ -61,9 +61,9 @@ $(function () {
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 
-if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
+if ( isset($_GET['id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
 
-    $rID = se($_POST,'item_id',"",false);
+    $rID = se($_GET,'id',"",false);
     $rStars = se($_POST,'stars',"",false);
     $rContent = se($_POST,'ratingContent',"",false);
   
@@ -75,7 +75,7 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
     $query = "SELECT item_id FROM Orders c JOIN OrderItems i ON c.id = i.order_id WHERE c.user_id = :uid AND item_id = :iid";
   
     $stmt = $db->prepare($query);
-    $stmt->bindValue(':uid', get_user_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':uid', se($_SESSION["user"], "id", false, false), PDO::PARAM_INT);
     $stmt->bindValue(':iid', $rID, PDO::PARAM_INT);
     $results = [];
     try {
@@ -90,6 +90,7 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
   
     if (count($results)<1) {
       flash("You must purchase the product before rating it!", "danger");
+      echo "<pre> ID: " . $rID . " user_id:" . get_user_id() ."</pre>";
     }
   
     else {
@@ -362,6 +363,13 @@ endif;
 </div>
 
 <div class="container">
+
+<br>
+<p class="lead">
+  Customer Reviews
+</p>
+<hr>
+
 <div class="row">
 
 <?php 
