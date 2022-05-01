@@ -63,7 +63,6 @@ require(__DIR__ . "/../../partials/nav.php");
 
 <?php
 
-
 $db = getDB();
  //sb59 4/18 - original query that will be appended onto 
 $query = "SELECT id, name, description, image, category, stock, unit_price FROM Products WHERE 1=1";
@@ -290,12 +289,12 @@ try {
     <ul2 class="pagination justify-content-center">
     
         <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
-            <a class="page-link" href="shopCards.php?page=<?php se($page-1); ?>">Previous</a>
+            <a class="page-link" href="<?php se(getGETURL($page-1)); ?>">Previous</a>
         </li>
     <?php if ($page>1): ?>
         <!-- <a class="page-link" href="?" tabindex="-1">Previous</a> -->
         <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
-            <a class="page-link" href="shopCards.php?page=<?php se($page-1); ?>">
+            <a class="page-link" href="<?php se(getGETURL($page-1)); ?>">
                 <?php se($page-1); ?>
             </a>
         </li>
@@ -307,7 +306,7 @@ try {
     </li>
     <?php if ($page<($totalProducts/$per_page)): ?>
     <li class="page-item <?php if ($page>($totalProducts/$per_page)) echo "disabled" ?>">
-        <a class="page-link" href="shopCards.php?page=<?php se($page+1); ?>">
+        <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">
             <?php se($page+1); ?>
         </a>
     </li>
