@@ -35,20 +35,31 @@ if (!has_role("Admin")) {
     $query.=" AND visibility=1";
     $nolimitQuery.=" AND visibility=1";
 }
+//minStock
 
-
-if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) {
+if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"])) || (isset($_GET["minStock"])) ) {
 
     //sb59 4/18 - This checks if its empty and then clears the GET fields, allowing for users to
     //clear filters by inputting empty values in the filter form
+    if (isset($_GET["minStock"]) && $_GET["minStock"]=="") {unset($_GET['minStock']);}
     if (isset($_GET["search"]) && $_GET["search"]=="") {unset($_GET['search']);}
     if (isset($_GET["category"]) && $_GET["category"]=="") {unset($_GET['category']);}
-    if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) echo "<h2>" . "Filters Applied" . "</h2>";
+    if ( isset($_GET["search"]) || isset($_GET["category"]) || isset($_GET["SortByPrice"]) || isset($_GET["minStock"])  ) echo "<h2>" . "Filters Applied" . "</h2>";
 
 }
 
 $search = "";
 $category = "";
+$minStock = "";
+
+if (isset($_GET["minStock"])) {
+   $minStock = se($_GET, "minStock", "", false);
+   if ($minStock==0) {echo "<h5>" . "Products Out of Stock " . "</h5>";}
+   else {echo "<h5>" . "Maximum Stock: " . $_GET["minStock"] . "</h5>";}
+   $subqery = " AND stock <= :mstck";
+   $query .=$subqery;
+   $nolimitQuery.=$subqery;
+}
  //sb59 4/18 - if the $_GET search variable is set, this adds the term to a variable and adds
  //a partial query with a placeholder which it appends onto the query
 if (isset($_GET["search"])) {
@@ -84,6 +95,8 @@ $query .=$limit;
 
 //Runs query to tell total pages and products
 $stmt = $db->prepare($nolimitQuery);
+if (!(empty($minStock))) {$stmt->bindValue(':mstck', $minStock, PDO::PARAM_INT);}
+if ($minStock==0) {$stmt->bindValue(':mstck', $minStock, PDO::PARAM_INT);}
 if (!(empty($search))) {$stmt->bindValue(':sch', $search, PDO::PARAM_STR);}
 if (!(empty($category))) {$stmt->bindValue(":ctgry", $category, PDO::PARAM_STR);}
 
@@ -103,6 +116,8 @@ if (isset($results)) {
 
 //sb59 4/18 - This checks if the variables are empty, if they are not it will bind the string values to each placeholder
 $stmt = $db->prepare($query);
+if (!(empty($minStock))) {$stmt->bindValue(':mstck', $minStock, PDO::PARAM_INT);}
+if ($minStock==0) {$stmt->bindValue(':mstck', $minStock, PDO::PARAM_INT);}
 if (!(empty($search))) {$stmt->bindValue(':sch', $search, PDO::PARAM_STR);}
 if (!(empty($category))) {$stmt->bindValue(":ctgry", $category, PDO::PARAM_STR);}
 $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
@@ -164,6 +179,10 @@ try {
                             <div class="mb-3">
                                 <label for="category" class="form-label" >Category</label>
                                 <input type="text" class="form-control" value="<?php if (isset($_GET['category'])) se($_GET['category']); ?>" name="category" maxlength="30" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="minStock" class="form-label" > Maximum Stock Amount</label>
+                                <input type="number" step="1" min="0" class="form-control" value="<?php if (isset($_GET['minStock'])) se($_GET['minStock']); ?>" name="minStock" maxlength="30" placeholder="0 for out of stock"/>
                             </div>
                             <div class="mb-3 form-check">
                                 <input type="checkbox" class="form-check-input" id="SortByPrice" name="SortByPrice" value="1">
