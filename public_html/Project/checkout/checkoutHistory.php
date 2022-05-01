@@ -211,8 +211,8 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
     try {
       $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
       $stmt->bindValue(":per_page", $per_page, PDO::PARAM_INT);//[":uid" => get_user_id()]
-      $stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);
-      if (!has_role("Admin")) {$stmt->execute();} 
+      
+      if (!has_role("Admin")) {$stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);$stmt->execute();} 
       else {$stmt->execute();}
         $orderDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -221,8 +221,8 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
 
     $stmt = $db->prepare($nolimitQuery);
     try {
-      $stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);
-      if (!has_role("Admin")) {$stmt->execute();} 
+      
+      if (!has_role("Admin")) {$stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);$stmt->execute();} 
       else {$stmt->execute();}
       $results = $stmt->fetch(PDO::FETCH_ASSOC);
         
