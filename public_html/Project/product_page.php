@@ -132,12 +132,12 @@ if ( isset($_GET['id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
     <div class="row">
       <div class="col">
 
-      <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="home.php">Home</a></li>
-            <li class="breadcrumb-item"><a href="shopCards.php">Shop</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Product Page</li>
-        </ol>
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="home.php">Home</a></li>
+                <li class="breadcrumb-item"><a href="shopCards.php">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Product Page</li>
+            </ol>
         </nav>
 
       </div>
@@ -164,27 +164,53 @@ if (!isset($_GET["id"])) {
 
 $id = $_GET["id"]; 
 
+$query = "SELECT u.username, r.id, product_id, user_id, rating, r.created, privacy, comment FROM Ratings r JOIN Users u ON r.user_id = u.id WHERE r.product_id = :pid";
+$noLimitQuery = "SELECT rating FROM Ratings r JOIN Users u ON r.user_id = u.id WHERE r.product_id = :pid";
 
-$query = "SELECT u.username, r.id, product_id, user_id, rating, r.created, privacy, comment FROM Ratings r JOIN Users u ON r.user_id = u.id WHERE r.product_id = :pid LIMIT 10";
 
-$stmt = $db->prepare($query);
-$cartResults = [];
+
+$stmt = $db->prepare($noLimitQuery);
+$results = [];
 try {
     $stmt->execute([":pid" => $id]); 
-    $reviewCarts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     echo "<pre>" . var_export($e, true) . "</pre>";
 }
-  
 
+if (isset($results)) {
+    // $totalProducts = (int)se($results, "total", 0, false);
+    $totalProducts = (int)count($results);
+    
+}
+  
 $rating = 0;
 $reviewCount = 0; 
-foreach ($reviewCarts as $index => $record) { 
+foreach ($results as $index => $record) { 
     $reviewCount++;
     $rating += se($record,'rating',"",false);
 }
 if ($reviewCount!=0) {$rating/=$reviewCount;}
 else $rating=-1;
+
+$page = se($_GET, "page", 1, false);
+$per_page = 2;
+$offset = ($page - 1) * $per_page;
+$limit = " LIMIT :offset, :per_page";
+$query .=$limit;
+
+$stmt = $db->prepare($query);
+$cartResults = [];
+try {
+    $stmt->bindValue(':pid', $id, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->bindValue(':per_page', $per_page, PDO::PARAM_INT);
+
+    $stmt->execute(); 
+    $reviewCarts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "<pre>" . var_export($e, true) . "</pre>";
+}
     
 if (has_role("Admin")) {
     $query = "SELECT name, description, category, stock, unit_price, image FROM Products WHERE id=:iid ";
@@ -192,6 +218,8 @@ if (has_role("Admin")) {
 else {
     $query = "SELECT name, description, category, stock, unit_price, image FROM Products WHERE visibility=1 AND id=:iid ";
 }
+
+
 
 $stmt = $db->prepare($query);
 $stmt->bindValue(':iid', $id, PDO::PARAM_INT);
@@ -201,7 +229,9 @@ try {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     echo "<pre>" . var_export($e, true) . "</pre>";
+    echo "<pre>" . $query . "</pre>";
 }
+
 
 //echo "<pre>" . var_export($results, true) . "</pre>";
 
@@ -225,6 +255,7 @@ endif;
 <br>
 <?php if (count($results) == 0) : ?>
     <p class="text-center">Product does not exist</p>
+    <?php var_export($results); ?>
 <?php else : ?>
 
 <div class="container">
@@ -261,7 +292,7 @@ endif;
                     <div>
                         <?php 
                             $stars = $rating;
-                            for ($x = 0; $x <= 5; $x++) {
+                            for ($x = 1; $x <= 5; $x++) {
                                 if ($x<=$stars) :
                                     echo '<i class="bi-star-fill" style="font-size: 1rem; color: goldenrod;"></i>';
                                 else :
@@ -362,13 +393,64 @@ endif;
   </div>
 </div>
 
+
+
 <div class="container">
 
-<br>
-<p class="lead">
-  Customer Reviews
-</p>
+<div class="container">
+  <div class="row justify-content-start">
+
+    <div class="col-sm-2">
+        <h5 class="lead">
+        Customer Reviews
+        </h5>
+    </div>
+
+    <div class="col-sm-1">
+<!-- Pagination (uses page files from query section and getGETURL from functions.php) -->
+
+        <nav aria-label="Page navigation example" style="align-items: center; justify-content: center;">
+            <ul2 class="pagination justify-content-center pagination-sm">
+                <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
+                    <a class="page-link" href="<?php se(getGETURL($page-1)); ?>"><<</a>
+                </li>
+            <?php if ($page>1): ?>
+                <!-- <a class="page-link" href="?" tabindex="-1">Previous</a> -->
+                <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
+                    <a class="page-link" href="<?php se(getGETURL($page-1)); ?>">
+                        <?php se($page-1); ?>
+                    </a>
+                </li>
+            <?php endif; ?>
+            <li class="page-item active">
+                <a class="page-link" href="#" >
+                    <?php se($page); ?>
+                </a>
+            </li>
+            <?php if ($page<($totalProducts/$per_page)): ?>
+            <li class="page-item <?php if ($page>($totalProducts/$per_page)) echo "disabled" ?>">
+                <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">
+                    <?php se($page+1); ?>
+                </a>
+            </li>
+            <?php endif; ?>
+            <li class="page-item <?php if ($page>=($totalProducts/$per_page)) echo "disabled" ?>">
+                <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">>></a>
+            </li>
+            </ul2>
+        </nav>
+
+    </div>
+    
+  </div>
+</div>
+
+
+
 <hr>
+<br>
+
+
 
 <div class="row">
 
@@ -398,7 +480,7 @@ foreach ($reviewCarts as $index => $record) {
                     <div>
                     <?php 
                         $stars=$rating;
-                            for ($x = 0; $x <= 5; $x++) {
+                            for ($x = 1; $x <= 5; $x++) {
                                 if ($x<=$stars) :
                                     echo '<i class="bi-star-fill" style="font-size: 1rem; color: goldenrod;"></i>';
                                 else :
