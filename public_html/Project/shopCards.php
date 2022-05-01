@@ -8,6 +8,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
 <title>Shop Page</title>
 
+<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+</style>
 
 
 <script>
@@ -18,14 +34,6 @@ function submitform(){
     
 }
 
-function addtoHTTP($page){
-    $_GET["page"] = $page;
-
-    for (i in $_GET){
-        console.log(i);
-    }
-
-}
 
 function add_to_cart(item_id, quantity = 1) {
         postData({
@@ -52,28 +60,6 @@ function add_to_cart(item_id, quantity = 1) {
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 ?>
-
-<?php
-
-function getGETURL($page) {  
-    $_GET['page'] = $page;
-    $s = "?";
-    $index = 0;
-    foreach ($_GET as $key => $value) {
-        if ($index==0)
-            $s .= $key . "=" . $value;
-        else {
-            $s .= "&" . $key . "=" . $value;
-            
-        }
-        $index++;
-    }
-    error_log($s);
-    return $s;
-}
-
-?>
-
 
 <?php
 
@@ -170,20 +156,22 @@ try {
 }
 
 ?>
+
 <br>
 <h2 style="text-align: center">Shop</h2>
+<hr>
 <!-- <h3>Filters</h3>
 <div id="emailHelp" class="form-text">Submit empty fields to clear filters</div> -->
-
+<div class="container py-9">
 <form onsubmit="return validate(this)" method="GET">
     <div class="form-row align-items-center">
         <div class="col-auto">
             <label class="sr-only" for="search">Search</label>
-            <input type="text" class="form-control" id="search" value="<?php if (isset($_GET['search'])) se($_GET['search']); ?>" name="search" />
+            <input type="text" class="form-control" id="search" value="<?php if (isset($_GET['search'])) se($_GET['search']); ?>" name="search" placeholder="search name"/>
         </div>
         <div class="col-auto">
             <label for="category" class="sr-only" >Category</label>
-            <input type="text" id="category" class="form-control" value="<?php if (isset($_GET['category'])) se($_GET['category']); ?>" name="category" maxlength="30" />
+            <input type="text" id="category" class="form-control" value="<?php if (isset($_GET['category'])) se($_GET['category']); ?>" name="category" placeholder="search category" maxlength="30" />
         </div>
         <div class="col-auto">
             <div class="form-check mb-2">
@@ -196,7 +184,7 @@ try {
         </div>
     </div>
 </form>
-
+</div>
 
 <div class="container">
 
@@ -275,7 +263,6 @@ try {
                     <button onclick="add_to_cart('<?php se($record, 'id'); ?>')" class="btn btn-primary">Add to Cart</button>
                     <a href="product_page.php?id=<?php se($record, "id"); ?>" class="btn btn-secondary">View Product</a>
                     
-
                 </div>
                 <div class="card-footer">
                     <small class="text-muted"><?php se($record,'stock',"",true); ?> in Remaining in Stock</small>
@@ -296,6 +283,8 @@ try {
 <?php endif; ?>
 <!-- se($_GET, "category", "", false) -->
 
+
+<!-- Pagination (uses page files from query section and getGETURL from functions.php) -->
 
 <nav aria-label="Page navigation example" style="align-items: center; justify-content: center;">
     <ul2 class="pagination justify-content-center">
@@ -323,7 +312,7 @@ try {
         </a>
     </li>
     <?php endif; ?>
-    <li class="page-item <?php if ($page>($totalProducts/$per_page)) echo "disabled" ?>">
+    <li class="page-item <?php if ($page>=($totalProducts/$per_page)) echo "disabled" ?>">
         <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">Next</a>
     </li>
   </ul2>
@@ -333,7 +322,7 @@ try {
 
 <?php
 require_once(__DIR__ . "/../../lib/functions.php");
-error_log("add_to_cart received data: " . var_export($_REQUEST, true));
+// error_log("add_to_cart received data: " . var_export($_REQUEST, true));
 if (session_status() != PHP_SESSION_ACTIVE) {
     session_start();
 }
