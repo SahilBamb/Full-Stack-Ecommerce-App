@@ -90,7 +90,7 @@ if ( isset($_GET['id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
   
     if (count($results)<1) {
       flash("You must purchase the product before rating it!", "danger");
-      echo "<pre> ID: " . $rID . " user_id:" . get_user_id() ."</pre>";
+    //   echo "<pre> ID: " . $rID . " user_id:" . get_user_id() ."</pre>";
     }
   
     else {
@@ -117,6 +117,50 @@ if ( isset($_GET['id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
     // $stmt = $db->prepare("INSERT INTO Orders (firstName, lastName, user_id, total_price, address, payment_method, money_received) VALUES(:firstName, :lastName, :uid, :total_price, :address, :payment_method, :money_received)");
     //   $stmt->execute([":uid" => get_user_id(), ":firstName" => $firstName, ":lastName" => $lastName, ":total_price" => $cartTotal, ":address" => $address, ":payment_method" => $paymentMethod, ":money_received" => $payment]);
     //   $OrderSuccess = true;
+
+
+    $id = $_GET["id"]; 
+
+    $noLimitQuery = "SELECT rating FROM Ratings r JOIN Users u ON r.user_id = u.id WHERE r.product_id = :pid";
+        
+    $stmt = $db->prepare($noLimitQuery);
+    $results = [];
+    try {
+        $stmt->execute([":pid" => $id]); 
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "<pre>" . var_export($e, true) . "</pre>";
+    }
+    
+    if (isset($results)) {
+        // $totalProducts = (int)se($results, "total", 0, false);
+        $totalProducts = (int)count($results);
+        
+    }
+      
+    $rating = 0;
+    $reviewCount = 0; 
+    foreach ($results as $index => $record) { 
+        $reviewCount++;
+        $rating += se($record,'rating',"",false);
+    }
+    if ($reviewCount!=0) {$rating/=$reviewCount;}
+    else $rating=0;
+
+    $noLimitQuery = "UPDATE Products SET AVGRating = :avgrat WHERE id = :pid";
+    // UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;
+        
+    $stmt = $db->prepare($noLimitQuery);
+    $results = [];
+    try {
+        $stmt->bindValue(':pid', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':avgrat', $rating, PDO::PARAM_INT);
+        $stmt->execute(); 
+        
+    } catch (PDOException $e) {
+        echo "<pre>" . var_export($e, true) . "</pre>";
+    }
+    
       
           
   
@@ -168,7 +212,6 @@ $query = "SELECT u.username, r.id, product_id, user_id, rating, r.created, priva
 $noLimitQuery = "SELECT rating FROM Ratings r JOIN Users u ON r.user_id = u.id WHERE r.product_id = :pid";
 
 
-
 $stmt = $db->prepare($noLimitQuery);
 $results = [];
 try {
@@ -194,7 +237,7 @@ if ($reviewCount!=0) {$rating/=$reviewCount;}
 else $rating=-1;
 
 $page = se($_GET, "page", 1, false);
-$per_page = 2;
+$per_page = 10;
 $offset = ($page - 1) * $per_page;
 $limit = " LIMIT :offset, :per_page";
 $query .=$limit;
@@ -394,7 +437,7 @@ endif;
 </div>
 
 
-
+<br>
 <div class="container">
 
 <div class="container">
