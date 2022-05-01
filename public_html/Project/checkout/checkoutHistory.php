@@ -92,7 +92,7 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
       echo "<pre>" . var_export($e, true) . "</pre>";
   }
 
-  echo "<pre>" . var_export($results, true) . "</pre>";
+  // echo "<pre>" . var_export($results, true) . "</pre>";
 
   if (count($results)<1) {
     flash("You must purchase the product before rating it!", "danger");

@@ -65,7 +65,7 @@ require(__DIR__ . "/../../partials/nav.php");
 
 $db = getDB();
  //sb59 4/18 - original query that will be appended onto 
-$query = "SELECT id, name, description, image, category, stock, unit_price FROM Products WHERE 1=1";
+$query = "SELECT id, name, description, AVGRating, image, category, stock, unit_price FROM Products WHERE 1=1";
 $nolimitQuery = "SELECT COUNT(id) as total FROM Products WHERE 1=1";
 
 
@@ -75,13 +75,22 @@ if (!has_role("Admin")) {
 }
 
 
-if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) {
+if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"])) || (isset($_GET["SortByRating"]))) {
 
     //sb59 4/18 - This checks if its empty and then clears the GET fields, allowing for users to
     //clear filters by inputting empty values in the filter form
+    if (isset($_GET["SortByPrice"]) && $_GET["SortByPrice"]=="") {unset($_GET['SortByPrice']);}
+    if (isset($_GET["SortByRating"]) && $_GET["SortByRating"]=="") {unset($_GET['SortByRating']);}
+    
     if (isset($_GET["search"]) && $_GET["search"]=="") {unset($_GET['search']);}
     if (isset($_GET["category"]) && $_GET["category"]=="") {unset($_GET['category']);}
-    if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) echo "<h2>" . "Filters Applied" . "</h2>";
+    // if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) echo "<h2>" . "Filters Applied" . "</h2>";
+
+    if (isset($_GET["SortByPrice"]) && isset($_GET["SortByRating"])) {
+        unset($_GET['SortByPrice']);
+        unset($_GET['SortByRating']);
+        flash("You can only Sort By Rating or Sort By Price not both","warning");
+    }
 
 }
 
@@ -90,7 +99,7 @@ $category = "";
  //sb59 4/18 - if the $_GET search variable is set, this adds the term to a variable and adds
  //a partial query with a placeholder which it appends onto the query
 if (isset($_GET["search"])) {
-    echo "<h5>" . "Searching: " . $_GET["search"] . "</h5>";
+    // echo "<h5>" . "Searching: " . $_GET["search"] . "</h5>";
     $search = "%" . se($_GET, "search", "", false) . "%";
     $subqery = " AND name LIKE :sch"; 
     $query .=$subqery;
@@ -99,7 +108,7 @@ if (isset($_GET["search"])) {
  //sb59 4/18 - if the $_GET category variable is set, it does the same as search
  //The actual query works as a LIKE '%word%' where it matches the word in any location
 if (isset($_GET["category"])) {
-    echo "<h5>" . "Category: " . $_GET["category"] . "</h5>";
+    // echo "<h5>" . "Category: " . $_GET["category"] . "</h5>";
     $category = "%" . se($_GET, "category", "", false) . "%";
     $subqery = " AND category LIKE :ctgry"; 
     $query .=$subqery;
@@ -108,9 +117,15 @@ if (isset($_GET["category"])) {
  //sb59 4/18 - if the $_GET price variable is set, this will simply sort by unit_price
  //again using a partial query
 $Endquery = " ORDER BY modified";
+
 if (isset($_GET["SortByPrice"])) {
-    echo "<h5>" . "Sorting By Price " . "</h5>";
+    // echo "<h5>" . "Sorting By Price " . "</h5>";
     $Endquery = " ORDER BY unit_price";
+}
+
+if (isset($_GET["SortByRating"])) {
+    // echo "<h5>" . "Sorting By Rating " . "</h5>";
+    $Endquery = " ORDER BY AVGRating DESC";
 }
 $query .=$Endquery;
 
@@ -162,27 +177,34 @@ try {
 <!-- <h3>Filters</h3>
 <div id="emailHelp" class="form-text">Submit empty fields to clear filters</div> -->
 <div class="container py-9">
-<form onsubmit="return validate(this)" method="GET">
-    <div class="form-row align-items-center">
-        <div class="col-auto">
-            <label class="sr-only" for="search">Search</label>
-            <input type="text" class="form-control" id="search" value="<?php if (isset($_GET['search'])) se($_GET['search']); ?>" name="search" placeholder="search name"/>
-        </div>
-        <div class="col-auto">
-            <label for="category" class="sr-only" >Category</label>
-            <input type="text" id="category" class="form-control" value="<?php if (isset($_GET['category'])) se($_GET['category']); ?>" name="category" placeholder="search category" maxlength="30" />
-        </div>
-        <div class="col-auto">
-            <div class="form-check mb-2">
-                <input type="checkbox" class="form-check-input" id="SortByPrice" name="SortByPrice" value="1">
-                <label class="form-check-label" for="SortByPrice">Sort By Price</label>
+    <form onsubmit="return validate(this)" method="GET">
+        <div class="form-row align-items-center">
+            <input type="hidden" id="shopStyle" name="shopStyle" value="<?php se($_GET,"shopStyle","off",true); ?>">
+            <div class="col-auto">
+                <label class="sr-only" for="search">Search</label>
+                <input type="text" class="form-control" id="search" value="<?php if (isset($_GET['search'])) se($_GET['search']); ?>" name="search" placeholder="search name"/>
+            </div>
+            <div class="col-auto">
+                <label for="category" class="sr-only" >Category</label>
+                <input type="text" id="category" class="form-control" value="<?php if (isset($_GET['category'])) se($_GET['category']); ?>" name="category" placeholder="search category" maxlength="30" />
+            </div>
+            <div class="col-auto">
+                <div class="form-check mb-2">
+                    <input type="checkbox" class="form-check-input" id="SortByPrice" name="SortByPrice" value="1" <?php if (isset($_GET['SortByPrice'])) echo "checked" ?> >
+                    <label class="form-check-label" for="SortByPrice">Sort By Price</label>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-check mb-2">
+                    <input type="checkbox" class="form-check-input" id="SortByRating" name="SortByRating" value="1" <?php if (isset($_GET['SortByRating'])) echo "checked" ?> >
+                    <label class="form-check-label" for="SortByRating">Sort By Rating</label>
+                </div>
+            </div>
+            <div class="col-auto">
+                <input type="submit" class="btn btn-primary"/>
             </div>
         </div>
-        <div class="col-auto">
-            <input type="submit" class="btn btn-primary"/>
-        </div>
-    </div>
-</form>
+    </form>
 </div>
 
 <div class="container">
