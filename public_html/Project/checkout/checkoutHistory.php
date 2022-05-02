@@ -21,8 +21,12 @@ Why: I enjoyed the design
 
     <!-- Bootstrap core CSS -->
 <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
 <style>
+
       .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -36,7 +40,17 @@ Why: I enjoyed the design
           font-size: 3.5rem;
         }
       }
-    </style>
+</style>
+
+
+<script>
+
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+
+</script>
 
     <!-- Custom styles for this template -->
   <link href="form-validation.css" rel="stylesheet">
@@ -48,6 +62,68 @@ if (!is_logged_in()) {
     flash("Please login or register before attempting to checkout", "warning");
     die(header("Location: " . get_url("login.php")));
 }
+
+if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
+
+  $rID = se($_POST,'item_id',"",false);
+  $rStars = se($_POST,'stars',"",false);
+  $rContent = se($_POST,'ratingContent',"",false);
+
+  //Validation, making sure that user bought the product previously
+
+  $db = getDB();
+  // (id, product_id, user_id, rating, comment, created, modified)
+  // $query = "SELECT c.id FROM  INTO Ratings (product_id, user_id, rating, comment) VALUES(:prodid, :uid, :rating, :comment)";
+  $query = "SELECT item_id FROM Orders c JOIN OrderItems i ON c.id = i.order_id WHERE c.user_id = :uid AND item_id = :iid";
+
+  $stmt = $db->prepare($query);
+  $stmt->bindValue(':uid', get_user_id(), PDO::PARAM_INT);
+  $stmt->bindValue(':iid', $rID, PDO::PARAM_INT);
+  $results = [];
+  try {
+      $stmt->execute();
+      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      //flash("Great! you have purchased this product before!", "success");
+  } catch (PDOException $e) {
+      echo "<pre>" . var_export($e, true) . "</pre>";
+  }
+
+  echo "<pre>" . var_export($results, true) . "</pre>";
+
+  if (count($results)<1) {
+    flash("You must purchase the product before rating it!", "danger");
+  }
+
+  else {
+
+  // (id, product_id, user_id, rating, comment, created, modified)
+  $query = "INSERT INTO Ratings (product_id, user_id, rating, comment) VALUES(:prodid, :uid, :rating, :comment)";
+
+  $stmt = $db->prepare($query);
+  $stmt->bindValue(':prodid', $rID, PDO::PARAM_INT);
+  $stmt->bindValue(':uid', get_user_id(), PDO::PARAM_INT);
+  $stmt->bindValue(':rating', $rStars, PDO::PARAM_INT);
+  $stmt->bindValue(':comment', $rContent, PDO::PARAM_STR);
+
+  $results = [];
+  try {
+      $stmt->execute();
+      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      flash("Review Added!", "success");
+  } catch (PDOException $e) {
+      echo "<pre>" . var_export($e, true) . "</pre>";
+  }
+      
+
+  // $stmt = $db->prepare("INSERT INTO Orders (firstName, lastName, user_id, total_price, address, payment_method, money_received) VALUES(:firstName, :lastName, :uid, :total_price, :address, :payment_method, :money_received)");
+  //   $stmt->execute([":uid" => get_user_id(), ":firstName" => $firstName, ":lastName" => $lastName, ":total_price" => $cartTotal, ":address" => $address, ":payment_method" => $paymentMethod, ":money_received" => $payment]);
+  //   $OrderSuccess = true;
+    
+        
+
+}
+}
+
 
 /* else {
 
@@ -86,7 +162,11 @@ if (!is_logged_in()) {
 
   } */
 
+  // echo "<pre>" . var_export($_POST, true) . "</pre>";
 ?>
+
+
+
 
 <body class="bg-light">
     
@@ -153,6 +233,7 @@ if (!is_logged_in()) {
           <?php 
           $cartTotal = 0;
           $numberOfProds = 0;
+          $count = 0;
           if (count($cartResults)>0) :?>
           <?php foreach ($cartResults as $index => $record) : ?>
                   <?php foreach ($cartResults as $column => $value) : ?>
@@ -161,10 +242,53 @@ if (!is_logged_in()) {
                   <li class="list-group-item d-flex justify-content-between lh-sm">
                       <div>
                       <h6> <?php se($record,'name',"",true); ?> x<?php se($numberOfProds);?></h6>
-                        <small class="text-muted">regular shipping item</small>
+                        <small class="text-muted">
+
+                        <p>
+                          <a class="responsive-content btn btn-light" id="rateOrderBtn" data-toggle="collapse" href="#collapseExample<?php echo $count; ?>" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            Rate Order
+                          </a>
+                        </p>
+                        <div class="collapse" id="collapseExample<?php echo $count; ?>">
+                          <div class="card card-body">
+                            <form method="POST" onsubmit="return validate(this);">
+                                <div class="form-group">
+                                    <label class="form-label" for="stars">Stars</label>
+                                    <input type="hidden" value="<?php se($value,'item_id',"",true);?>" name="item_id" />
+                        
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" name="stars" type="radio" id="inlineCheckbox1" value="1">
+                                      <label class="form-check-label" for="inlineCheckbox1">1</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" name="stars" type="radio" id="inlineCheckbox2" value="2">
+                                      <label class="form-check-label" for="inlineCheckbox2">2</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" name="stars" type="radio" id="inlineCheckbox3" value="3">
+                                      <label class="form-check-label" for="inlineCheckbox3">3</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" name="stars" type="radio" id="inlineCheckbox3" value="4">
+                                      <label class="form-check-label" for="inlineCheckbox3">4</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" name="stars" type="radio" id="inlineCheckbox3" value="5">
+                                      <label class="form-check-label" for="inlineCheckbox3">5</label>
+                                    </div>
+                                    <input class="form-control" type="text" name="ratingContent" id="ratingContent" value="" placeholder="Leave your comments!" />
+                                    <input type="submit" class="mt-3 btn btn-primary" value="Submit Review" name="save" />
+                                </div>
+                            </form>
+                          </div>
+                        </div>
+
+
+                        </small>
                       </div>
                       <span class="text-muted">$<?php se($record,'subtotal',"",true); $cartTotal+=se($record,'subtotal',"",false); ?></span>
                   </li>
+          <?php $count++; ?>
           <?php endforeach; ?>
 
         <?php endif;?> 
