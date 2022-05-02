@@ -142,6 +142,30 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
         $hasError = true;
     }
 
+    # (sb59 5/1) - These check if the variables are too long (based on database storage restrictions)
+    if (strlen($paymentMethod)>30) {
+        flash("Payment method is too long", "danger");
+        $hasError = true;
+    }
+
+    # (sb59 5/1) - These check if the variables are too long (based on database restrictions)
+    if (strlen($address)>200) {
+        flash("Address is too long (please correct or abbreviate it) ", "danger");
+        $hasError = true;
+    }
+
+    # (sb59 5/1) - These check if the variables are too long (based on database restrictions)
+    if (strlen($firstName)>30) {
+        flash("First name is too long (please correct or abbreviate it) ", "danger");
+        $hasError = true;
+    }
+
+    # (sb59 5/1) - These check if the variables are too long (based on database restrictions)
+    if (strlen($lastName)>30) {
+        flash("Last name is too long (please correct or abbreviate it) ", "danger");
+        $hasError = true;
+    }
+
     # (sb59 5/1) - This makes sure that it is a valid username and it matches their username (this may be redundant)
     if (!preg_match('/^[a-z0-9_-]{3,16}$/i', $username) || ($username!=get_username())) {
         flash("Username must match your username and only be alphanumeric or  - _", "danger");
