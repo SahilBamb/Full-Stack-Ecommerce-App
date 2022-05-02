@@ -4,7 +4,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
 <link rel="stylesheet" href="form.css">
+
+<style> 
+.rounded{
+  border-radius:50% !important; 
+  max-height: 100px;
+  max-width: 100px;
+  resize: both;
+  overflow: auto;
+ }
+ 
+
+</style>
+
+
 <title>Profile Page</title>
 <?php
 require_once(__DIR__ . "/../../partials/nav.php");
@@ -15,11 +30,188 @@ if (!is_logged_in()) {
 }
 ?>
 
+<?php 
+if (isset($_GET["id"])) {
+
+    $publicProfile = true;
+    $requestID = se($_GET,"id","",false);
+
+    $db = getDB();
+
+    $query = "SELECT id, email, created, username, privacy FROM `Users` WHERE :id=id";
+    $stmt = $db->prepare($query);
+    $stmt->bindValue(":id", $requestID, PDO::PARAM_INT);
+    $results = [];
+
+    try {
+        $stmt->execute([":id" => se($requestID,null,"",false)]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "<pre>" . var_export($e, true) . "</pre>";
+    }
+    $requestedUserName = se($results[0],"username","",false);
+    $requestedJoined = se($results[0],"created","",false);
+    $requestedPrivacy = se($results[0],"privacy",0,false);
+
+    if ($requestedPrivacy==0) {
+
+        flash("That users profile is not public", "warning");
+        redirect("profile.php");
+
+    }
+
+    // echo "<pre>" . var_export($results, true) . "</pre>";
+    ?>
+    
+<div class="container">
+  <main>
+    <div class="py-5 text-center">
+      <h2>Profile Page</h2>
+      <!-- <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p> -->
+    </div>
+  </main>
+</div>
+
+<div class="row">
+      <div class="col-lg-4">
+          
+      <div class="card mb-4">
+        <div class="card-body text-center">
+            <img src="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 150px;">
+            <h5 class="my-3"><?php se($requestedUserName,null,"",true);?></h5>
+            <p class="text-muted mb-1">Joined: <?php se($requestedJoined,null,"",true);?></p>
+            <!-- <p class="text-muted mb-4">Bay Area, San Francisco, CA</p> -->
+            <!-- <div class="d-flex justify-content-center mb-2">
+                <button type="button" class="btn btn-primary">Follow</button>
+                <button type="button" class="btn btn-outline-primary ms-1">Message</button>
+            </div> -->
+        </div>
+      </div>
+
+
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                <div class="col-sm-3">
+                    <p class="mb-0">Username</p>
+                </div>
+                <div class="col-sm-9">
+                    <p class="text-muted mb-0"><?php se($requestedUserName,null,"",true);?></p>
+                </div>
+                </div>
+                <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">(Hidden)</p>
+                        </div>
+                    </div>
+                <!-- <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Phone</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">(097) 234-5678</p>
+                        </div>
+                    </div>
+                <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Mobile</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">(098) 765-4321</p>
+                        </div>
+                    </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Address</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
+                    </div>
+                </div> -->
+            </div>
+            </div>
+            <div class="row">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Product Number 1
+                                <div>
+                                    <?php 
+                                    $stars=1;
+                                        for ($x = 0; $x <= 5; $x++) {
+                                            if ($x<=$stars) :
+                                                echo '<i class="bi-star-fill" style="font-size: 1rem; color: goldenrod;"></i>';
+                                            else :
+                                                echo '<i class="bi-star" style="font-size: 1rem; color: goldenrod;"></i>';
+                                            endif;
+                                        } 
+                                    ?>
+                                </div>    
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Product Review</h6>
+                    <!-- <p class="card-text">Product Descr: Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+                    <a href="#" class="card-link">Product link</a>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+  </div>
+
+  <!-- <div class="container">
+  <div class="row">
+
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Product Number 1
+                        <div>
+                            <?php 
+                            $stars=1;
+                                for ($x = 0; $x <= 5; $x++) {
+                                    if ($x<=$stars) :
+                                        echo '<i class="bi-star-fill" style="font-size: 1rem; color: goldenrod;"></i>';
+                                    else :
+                                        echo '<i class="bi-star" style="font-size: 1rem; color: goldenrod;"></i>';
+                                    endif;
+                                } 
+                            ?>
+                        </div>    
+            </h5>
+            <h6 class="card-subtitle mb-2 text-muted">Product Review</h6>
+            <p class="card-text">Product Descr: Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="card-link">Product link</a>
+            <a href="#" class="card-link">Another link</a>
+        </div>
+    </div>
+
+  </div>
+</div> -->
+
+
+<?php 
+
+}
+
+else {
+?>
+
+
 
 <?php
 if (isset($_POST["save"])) {
     $email = se($_POST, "email", null, false);
     $username = se($_POST, "username", null, false);
+    $privacy = se($_POST, "privacy", null, false);
     $hasError = false;
     //sanitize
     $email = sanitize_email($email);
@@ -34,9 +226,9 @@ if (isset($_POST["save"])) {
     }
     
     if (!$hasError) {
-        $params = [":email" => $email, ":username" => $username, ":id" => get_user_id()];
+        $params = [":email" => $email, ":username" => $username, ":privacy" => $privacy, ":id" => get_user_id()];
         $db = getDB();
-        $stmt = $db->prepare("UPDATE Users set email = :email, username = :username where id = :id");
+        $stmt = $db->prepare("UPDATE Users set email = :email, username = :username, privacy = :privacy where id = :id");
         try {
             $stmt->execute($params);
             flash("Profile saved", "success");
@@ -44,7 +236,7 @@ if (isset($_POST["save"])) {
             users_check_duplicate($e->errorInfo);
         }
         //select fresh data from table
-        $stmt = $db->prepare("SELECT id, email, username from Users where id = :id LIMIT 1");
+        $stmt = $db->prepare("SELECT id, email, username, privacy from Users where id = :id LIMIT 1");
         try {
             $stmt->execute([":id" => get_user_id()]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -128,20 +320,41 @@ $email = get_user_email();
 $username = get_username();
 ?>
 <div class="container-fluid">
-    <h2 style="text-align: center">Profile</h2>
-    <form method="POST" onsubmit="return validate(this);">
+    
+    
+    <div class="text-center">
+        <h2>Profile</h2>
+        <img src="https://vectorified.com/images/facebook-no-profile-picture-icon-26.jpg" class = "rounded" alt="...">
+        </div>
+        <form method="POST" onsubmit="return validate(this);">
 
         <div class="form-group">
             <label class="form-label" for="email">Email</label>
             <input class="form-control" type="email" name="email" id="email" value="<?php se($email); ?>" />
         </div>
+
         <div class="form-group">
             <label class="form-label" for="username">Username</label>
             <input class="form-control" type="text" name="username" id="username" value="<?php se($username); ?>" />
         </div>
+
+        <hr>
+        
+        <!-- <div class="form-group">Privacy</div> -->
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="privacy" id="privacy" value="0">
+            <label class="form-check-label" for="inlineRadio1">Hide profile to others</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="privacy" id="privacy" value="1">
+            <label class="form-check-label" for="inlineRadio2">Show profile to others</label>
+        </div>
+
         <!-- DO NOT PRELOAD PASSWORD -->
         <br>
-        <div class="form-group">Password Reset</div>
+        <!-- <div class="form-group">Password Reset</div> -->
         <div class="form-group">
             <label class="form-label" for="cp">Current Password</label>
             <input class="form-control" type="password" name="currentPassword" id="cp" />
@@ -161,6 +374,9 @@ $username = get_username();
     </form>
     
 </div>
+
+
+<?php } ?>
 
 <script>
     //profile.php (email, username, current/new password length, new == confirm password (given))
