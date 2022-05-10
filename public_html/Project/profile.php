@@ -38,7 +38,7 @@ if (isset($_GET["id"])) {
 
     $db = getDB();
 
-    $query = "SELECT id, email, created, username, privacy FROM `Users` WHERE :id=id";
+    $query = "SELECT id, image, email, created, username, privacy FROM `Users` WHERE :id=id";
     $stmt = $db->prepare($query);
     $stmt->bindValue(":id", $requestID, PDO::PARAM_INT);
     $results = [];
@@ -49,6 +49,9 @@ if (isset($_GET["id"])) {
     } catch (PDOException $e) {
         echo "<pre>" . var_export($e, true) . "</pre>";
     }
+    $image = se($results[0],"image","",false);
+    $defaultImage="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg";
+    if ($image=="") $image = $defaultImage;
     $requestedUserName = se($results[0],"username","",false);
     $requestedJoined = se($results[0],"created","",false);
     $requestedPrivacy = se($results[0],"privacy",0,false);
@@ -60,7 +63,20 @@ if (isset($_GET["id"])) {
 
     }
 
-    // echo "<pre>" . var_export($results, true) . "</pre>";
+
+    $id = $requestID;
+
+    $query = "SELECT p.name, u.username, r.id, product_id, user_id, rating, r.created, privacy, comment FROM Ratings r JOIN Users u ON r.user_id = u.id JOIN Products p ON r.product_id = p.id WHERE r.user_id = :id LIMIT 4;";
+    $stmt = $db->prepare($query);
+    $UserReviews = [];
+    try {
+        $stmt->execute([":id" => $id]); 
+        $UserReviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "<pre>" . var_export($e, true) . "</pre>";
+    }
+
+    // echo "<pre>" . var_export($UserReviews, true) . "</pre>";
     ?>
     
 <div class="container">
@@ -77,7 +93,7 @@ if (isset($_GET["id"])) {
           
       <div class="card mb-4">
         <div class="card-body text-center">
-            <img src="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg" alt="avatar"
+            <img src=<?php se($image,null,$defaultImage,true); ?>  alt="avatar"
                 class="rounded-circle img-fluid" style="width: 150px;">
             <h5 class="my-3"><?php se($requestedUserName,null,"",true);?></h5>
             <p class="text-muted mb-1">Joined: <?php se($requestedJoined,null,"",true);?></p>
@@ -141,28 +157,36 @@ if (isset($_GET["id"])) {
             </div>
             </div>
             <div class="row">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">Product Number 1
-                                <div>
-                                    <?php 
-                                    $stars=1;
-                                        for ($x = 0; $x <= 5; $x++) {
-                                            if ($x<=$stars) :
-                                                echo '<i class="bi-star-fill" style="font-size: 1rem; color: goldenrod;"></i>';
-                                            else :
-                                                echo '<i class="bi-star" style="font-size: 1rem; color: goldenrod;"></i>';
-                                            endif;
-                                        } 
-                                    ?>
-                                </div>    
-                    </h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Product Review</h6>
-                    <!-- <p class="card-text">Product Descr: Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-                    <a href="#" class="card-link">Product link</a>
-                    <a href="#" class="card-link">Another link</a>
+            
+            <?php foreach ($UserReviews as $index => $record) { ?>
+                <div class="col-sm-3">
+                <?php $pName = se($record,'name',"",false);
+                $product_id = se($record,'product_id',"",false);?>
+                <div class="card" style="width: 15rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><?php se($pName);?>
+                            <div>
+                                <?php 
+                                $stars=se($record,'rating',"",false);
+                                    for ($x = 0; $x < 5; $x++) {
+                                        if ($x<=$stars) :
+                                            echo '<i class="bi-star-fill" style="font-size: 1rem; color: goldenrod;"></i>';
+                                        else :
+                                            echo '<i class="bi-star" style="font-size: 1rem; color: goldenrod;"></i>';
+                                        endif;
+                                    } 
+                                ?>
+                            </div>    
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Product Review</h6>
+                        <h6 class="card-subtitle mb-1 text-muted"><?php se($record,'created',"",true);?></h6>
+                        <!-- <p class="card-text">Product Descr: Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+                        <a class="card-link" href='product_page.php?id=<?php se($product_id,null,"",true);?>'>Product link</a>
+                        <a href="shopCards.php" class="card-link">Shop Page</a>
+                    </div>
                 </div>
-            </div>
+                </div>
+                <?php } ?>
             </div>
         </div>
         </div>
@@ -336,6 +360,11 @@ $username = get_username();
         <div class="form-group">
             <label class="form-label" for="username">Username</label>
             <input class="form-control" type="text" name="username" id="username" value="<?php se($username); ?>" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="image">Profile Picture</label>
+            <input class="form-control" type="text" name="image" id="image" value="" />
         </div>
 
         <hr>
