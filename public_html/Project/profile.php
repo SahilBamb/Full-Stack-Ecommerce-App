@@ -30,31 +30,52 @@ if (!is_logged_in()) {
 }
 ?>
 
+<?php
+
+$db = getDB();
+
+$publicProfile = true;
+$requestID = get_user_id();
+
+$query = "SELECT id, image, email, created, username, privacy FROM `Users` WHERE :id=id";
+$stmt = $db->prepare($query);
+$stmt->bindValue(":id", $requestID, PDO::PARAM_INT);
+$results = [];
+
+try {
+    $stmt->execute([":id" => se($requestID,null,"",false)]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "<pre>" . var_export($e, true) . "</pre>";
+}
+$requestedPrivacy = se($results[0],"privacy",0,false);
+$image = se($results[0],"image","",false);
+$defaultImage="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg";
+if ($image=="") $image = $defaultImage;
+?>
+
 <?php 
 if (isset($_GET["id"])) {
 
-    $publicProfile = true;
-    $requestID = se($_GET,"id","",false);
+    // $publicProfile = true;
+    // $requestID = se($_GET,"id","",false);
 
-    $db = getDB();
+    // $query = "SELECT id, image, email, created, username, privacy FROM `Users` WHERE :id=id";
+    // $stmt = $db->prepare($query);
+    // $stmt->bindValue(":id", $requestID, PDO::PARAM_INT);
+    // $results = [];
 
-    $query = "SELECT id, image, email, created, username, privacy FROM `Users` WHERE :id=id";
-    $stmt = $db->prepare($query);
-    $stmt->bindValue(":id", $requestID, PDO::PARAM_INT);
-    $results = [];
+    // try {
+    //     $stmt->execute([":id" => se($requestID,null,"",false)]);
+    //     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // } catch (PDOException $e) {
+    //     echo "<pre>" . var_export($e, true) . "</pre>";
+    // }
+    // $image = se($results[0],"image","",false);
 
-    try {
-        $stmt->execute([":id" => se($requestID,null,"",false)]);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        echo "<pre>" . var_export($e, true) . "</pre>";
-    }
-    $image = se($results[0],"image","",false);
-    $defaultImage="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg";
-    if ($image=="") $image = $defaultImage;
     $requestedUserName = se($results[0],"username","",false);
     $requestedJoined = se($results[0],"created","",false);
-    $requestedPrivacy = se($results[0],"privacy",0,false);
+    
 
     if ($requestedPrivacy==0) {
 
@@ -348,7 +369,9 @@ $username = get_username();
     
     <div class="text-center">
         <h2>Profile</h2>
-        <img src="https://vectorified.com/images/facebook-no-profile-picture-icon-26.jpg" class = "rounded" alt="...">
+        
+        <img src=<?php se($image,null,$defaultImage,true); ?>  alt="avatar"
+                class="rounded" style="width: 150px;">
         </div>
         <form method="POST" onsubmit="return validate(this);">
 
@@ -364,7 +387,7 @@ $username = get_username();
 
         <div class="form-group">
             <label class="form-label" for="image">Profile Picture</label>
-            <input class="form-control" type="text" name="image" id="image" value="" />
+            <input class="form-control" type="text" name="image" id="image" value="<?php se($image) ?>" />
         </div>
 
         <hr>
@@ -372,12 +395,12 @@ $username = get_username();
         <!-- <div class="form-group">Privacy</div> -->
 
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="privacy" id="privacy" value="0">
+            <input class="form-check-input" type="radio" name="privacy" id="privacy" value="0" <?php if ($requestedPrivacy==0) echo "checked"?>>
             <label class="form-check-label" for="inlineRadio1">Hide profile to others</label>
         </div>
 
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="privacy" id="privacy" value="1">
+            <input class="form-check-input" type="radio" name="privacy" id="privacy" value="1" <?php if ($requestedPrivacy==1) echo "checked"?>>
             <label class="form-check-label" for="inlineRadio2">Show profile to others</label>
         </div>
 
