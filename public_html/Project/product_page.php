@@ -77,7 +77,8 @@ if ( isset($_GET['id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
     $query = "SELECT item_id FROM Orders c JOIN OrderItems i ON c.id = i.order_id WHERE c.user_id = :uid AND item_id = :iid";
   
     $stmt = $db->prepare($query);
-    $stmt->bindValue(':uid', se($_SESSION["user"], "id", false, false), PDO::PARAM_INT);
+    // $stmt->bindValue(':uid', se($_SESSION["user"], "id", false, false), PDO::PARAM_INT);
+    $stmt->bindValue(':uid', get_user_id(), PDO::PARAM_INT);
     $stmt->bindValue(':iid', $rID, PDO::PARAM_INT);
     $results = [];
     try {
@@ -90,7 +91,12 @@ if ( isset($_GET['id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
   
     // echo "<pre>" . var_export($results, true) . "</pre>";
   
-  
+    if (!is_logged_in()) {
+        $hasError = True;
+        flash("Please log in to purchase or rate an item", "danger");
+
+    }
+
     if ( !(preg_match("/^[a-zA-Z0-9 ]*$/", $rContent)) ) {
         $hasError = True;
         flash("Please only include numbers or letters in your review", "danger");
@@ -107,7 +113,7 @@ if ( isset($_GET['id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
     }
 
     if (count($results)<1) {
-        flash("You must purchase the product before rating it!", "danger");
+        flash("You must purchase the product before rating it", "danger");
         $hasError = True;
       }
   

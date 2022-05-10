@@ -351,12 +351,14 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
         error_log(var_export($e,true));
     }
 
+    
     $totalProducts = 0;
 
     if (isset($results)) {
         $totalProducts = (int)se($results, "total", 0, false);
     }
-
+    $searchTotal = 0;
+    $searchPayment = 0;
     foreach ($orderDetails as $index => $record) { 
       // echo "<pre>" . var_export($orderDetails, true) . "</pre>";
       $orderID = se($orderDetails[$index],'id',"",false);
@@ -374,12 +376,11 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
         echo "<pre>" . var_export($e, true) . "</pre>";
     }
 
-    
-
 ?>
         
-        <?php if (!empty($category))
-        foreach ($cartResults as $index => $record) : ?>
+        <?php 
+        
+        if (!empty($category))?>
           <?php
               $categoryMatch = false; 
               foreach ($cartResults as $column => $value) {
@@ -389,7 +390,7 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
                 }
               } 
           ?>
-        <?php endforeach; 
+        <?php
         
         if ( (empty($category)) || $categoryMatch) {?> 
 
@@ -467,6 +468,7 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
         <li class="list-group-item d-flex justify-content-between">
           <span>Total (USD)</span>
           <strong>$<?php se($cartTotal);?></strong>
+          <?php $searchTotal+=$cartTotal; $searchPayment+=$moneyReceived;?>
         </li>
         
         <li class="list-group-item d-flex justify-content-between lh-sm">
@@ -492,43 +494,76 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
 
   </main>
 
+  <br>
+
+  <li class="list-group-item d-flex justify-content-between">
+      <span>Search Total (USD)</span>
+      <strong>$<?php se($searchTotal);?></strong>
+    </li>
+  
+  <li class="list-group-item d-flex justify-content-between lh-sm">
+    <span>Search Payment Accepted</span>
+    <strong>$
+      <?php 
+          if ( str_contains($searchPayment, '.') ) {
+            echo $searchPayment;
+          }
+          else {
+            echo $searchPayment . ".00";
+          }
+      ?>
+    </strong>
+    
+  </li>
+
 <br>
 
   <!-- Pagination (uses page files from query section and getGETURL from functions.php) -->
 
   <nav aria-label="Page navigation example" style="align-items: center; justify-content: center;">
     <ul2 class="pagination justify-content-center">
-    
-        <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
-            <a class="page-link" href="<?php se(getGETURL($page-1)); ?>">Previous</a>
-        </li>
+      <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
+          <a class="page-link" href="<?php se(getGETURL($page-1)); ?>">Previous</a>
+      </li>
     <?php if ($page>1): ?>
         <!-- <a class="page-link" href="?" tabindex="-1">Previous</a> -->
-        <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
-            <a class="page-link" href="<?php se(getGETURL($page-1)); ?>">
-                <?php se($page-1); ?>
-            </a>
-        </li>
+      <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
+          <a class="page-link" href="<?php se(getGETURL($page-1)); ?>">
+              <?php se($page-1); ?>
+          </a>
+      </li>
     <?php endif; ?>
-    <li class="page-item active">
-        <a class="page-link" href="#" >
-            <?php se($page); ?>
-        </a>
-    </li>
+      <li class="page-item active">
+          <a class="page-link" href="#" >
+              <?php se($page); ?>
+          </a>
+      </li>
     <?php if ($page<($totalProducts/$per_page)): ?>
-    <li class="page-item <?php if ($page>($totalProducts/$per_page)) echo "disabled" ?>">
-        <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">
-            <?php se($page+1); ?>
-        </a>
-    </li>
+      <li class="page-item <?php if ($page>($totalProducts/$per_page)) echo "disabled" ?>">
+          <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">
+              <?php se($page+1); ?>
+          </a>
+      </li>
     <?php endif; ?>
-    <li class="page-item <?php if ($page>=($totalProducts/$per_page)) echo "disabled" ?>">
-        <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">Next</a>
-    </li>
-  </ul2>
-</nav>
+      <li class="page-item <?php if ($page>=($totalProducts/$per_page)) echo "disabled" ?>">
+          <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">Next</a>
+      </li>
+    </ul2>
+  </nav>
+
+
+
+
+
 
 <br>
+
+
+
+        
+
+
+
 
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
