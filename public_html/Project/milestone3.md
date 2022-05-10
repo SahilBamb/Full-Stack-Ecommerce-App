@@ -1,6 +1,6 @@
 <table><tr><td> <em>Assignment: </em> IT202 Milestone 3 Shop Project</td></tr>
 <tr><td> <em>Student: </em> Sahil Bambulkar(sb59)</td></tr>
-<tr><td> <em>Generated: </em> 4/25/2022 3:30:20 PM</td></tr>
+<tr><td> <em>Generated: </em> 5/1/2022 9:50:49 PM</td></tr>
 <tr><td> <em>Grading Link: </em> <a rel="noreferrer noopener" href="https://learn.ethereallab.app/homework/IT202-010-S22/it202-milestone-3-shop-project/grade/sb59" target="_blank">Grading</a></td></tr></table>
 <table><tr><td> <em>Instructions: </em> <ol>
 <li>Checkout Milestone3 branch </li>
@@ -47,7 +47,10 @@ All website links must be from prod (you can assume/infer this by getting your d
 <tr><td> <em>Caption:</em> <p>ServerSide validation after database query verifying the payment, quantity and visibility with up-to-date<br>information<br></p>
 </td></tr>
 <tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/165016322-85ef068a-2020-4d49-beed-3af77bc55298.png"/></td></tr>
-<tr><td> <em>Caption:</em> <p>ServerSide validation before database query verifying that first name, last name, payment methods,<br>address, country, state and zip code are not empty<br></p>
+<tr><td> <em>Caption:</em> <p>ServerSide validation (before database query) verifying that first name, last name, payment methods,<br>address, country, state and zip code are not empty<br></p>
+</td></tr>
+<tr><td><img width="768px" src="https://user-images.githubusercontent.com/42818731/166174860-8c0af299-c2f9-4868-9885-c77be38e6180.png"/></td></tr>
+<tr><td> <em>Caption:</em> <p>ServerSide Initial checkout validation code (before database query) verifying that all the fields<br>are formatted correctly<br></p>
 </td></tr>
 </table></td></tr>
 <tr><td> <em>Sub-Task 5: </em> Add a screenshot showing the Order Process validations from the UI (Price check, Quantity/Stock check)</td></tr>
