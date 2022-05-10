@@ -63,6 +63,8 @@ require(__DIR__ . "/../../partials/nav.php");
 
 if ( isset($_GET['id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
 
+
+    $hasError = False;
     $rID = se($_GET,'id',"",false);
     $rStars = se($_POST,'stars',"",false);
     $rContent = se($_POST,'ratingContent',"",false);
@@ -88,12 +90,28 @@ if ( isset($_GET['id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
   
     // echo "<pre>" . var_export($results, true) . "</pre>";
   
-    if (count($results)<1) {
-      flash("You must purchase the product before rating it!", "danger");
-    //   echo "<pre> ID: " . $rID . " user_id:" . get_user_id() ."</pre>";
-    }
   
-    else {
+    if ( !(preg_match("/^[a-zA-Z0-9 ]*$/", $rContent)) ) {
+        $hasError = True;
+        flash("Please only include numbers or letters in your review", "danger");
+      }
+      
+    if (($rStars<0) || (5<$rStars)) {
+        flash("Your rating must be between 0 an 5", "danger");
+        $hasError = True;
+      }
+
+    if (strlen($rContent)>250) {
+      flash("Your comment must be less than 250 characters long", "danger");
+      $hasError = True;
+    }
+
+    if (count($results)<1) {
+        flash("You must purchase the product before rating it!", "danger");
+        $hasError = True;
+      }
+  
+    elseif (!$hasError) {
   
     // (id, product_id, user_id, rating, comment, created, modified)
     $query = "INSERT INTO Ratings (product_id, user_id, rating, comment) VALUES (:prodid, :uid, :rating, :comment)";
