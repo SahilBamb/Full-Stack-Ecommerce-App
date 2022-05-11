@@ -57,7 +57,10 @@ function add_to_cart(item_id, quantity = 1) {
 
 </script>
 
+
+
 <?php
+
 require(__DIR__ . "/../../partials/nav.php");
 ?>
 
@@ -70,8 +73,8 @@ $nolimitQuery = "SELECT COUNT(id) as total FROM Products WHERE 1=1";
 
 
 if (!has_role("Admin")) {
-    $query.=" AND visibility=1 ";
-    $nolimitQuery.=" AND visibility=1";
+    $query.=" AND visibility=1 AND stock>0";
+    $nolimitQuery.=" AND visibility=1 AND stock>0 ";
 }
 
 
