@@ -57,7 +57,10 @@ function add_to_cart(item_id, quantity = 1) {
 
 </script>
 
+
+
 <?php
+
 require(__DIR__ . "/../../partials/nav.php");
 ?>
 
