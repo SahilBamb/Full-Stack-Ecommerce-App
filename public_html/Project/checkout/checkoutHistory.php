@@ -205,7 +205,7 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
             </div>
             <div class="col-auto">
                 <div class="form-check mb-2">
-                    <input type="checkbox" class="form-check-input" id="SortByPrice" name="SortByPrice" value="1">
+                    <input type="checkbox" class="form-check-input" id="SortByPrice" name="SortByPrice" value="1" <?php if (isset($_GET['SortByPrice'])) echo "checked"; ?> >
                     <label class="form-check-label" for="SortByPrice">Sort By Order Total</label>
                 </div>
             </div>
@@ -246,6 +246,8 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
 
     if (isset($_GET["startDate"]) || (isset($_GET["endDate"]))) {
 
+      
+
       //sb59 4/18 - This checks if its empty and then clears the GET fields, allowing for users to
       //clear filters by inputting empty values in the filter form
       if (isset($_GET["SortByTotalPrice"]) && $_GET["SortByTotalPrice"]=="") {unset($_GET['SortByTotalPrice']);}
@@ -256,7 +258,9 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
       if (isset($_GET["endDate"]) && $_GET["endDate"]=="") {unset($_GET['endDate']);}
 
       if (isset($_GET["startDate"]) || isset($_GET["endDate"]) || isset($_GET["category"]) || (isset($_GET["SortByTotalPrice"]))) echo "<br><h2>" . "Filters Applied" . "</h2>";
-  
+
+      
+      
   }
 
 //   WHERE BIRTH_DATE_TIME BETWEEN
@@ -297,7 +301,8 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
     //again using a partial query
     $Endquery = " ORDER BY c.created";
 
-    if (isset($_GET["SortByTotalPrice"])) {
+
+    if (isset($_GET["SortByPrice"])) {
         echo "<h5>" . "Sorting By Total Price " . "</h5>";
         $Endquery = " ORDER BY total_price";
     }
@@ -469,7 +474,11 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
                       <div>
                       <h6> <?php se($record,'name',"",true); ?> x<?php se($numberOfProds);?></h6>
                         <small class="text-muted">
-          
+                        <p>
+                          <a class="responsive-content btn btn-light" id="rateOrderBtn" data-toggle="collapse" href="#collapseExample<?php echo $count; ?>" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            Rate Order
+                          </a>
+                        </p>
                         <div class="collapse" id="collapseExample<?php echo $count; ?>">
                           <div class="card card-body">
                             <form method="POST" onsubmit="return validate(this);">
