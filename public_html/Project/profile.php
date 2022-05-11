@@ -23,7 +23,7 @@
 <title>Profile Page</title>
 <?php
 require_once(__DIR__ . "/../../partials/nav.php");
-if (!is_logged_in()) {
+if (!is_logged_in() && !isset($_GET["id"])) {
     flash("Please login or register before editing your profile", "warning");
     /* die(header("Location: login.php")); */
     redirect("login.php");
@@ -35,7 +35,8 @@ if (!is_logged_in()) {
 $db = getDB();
 
 $publicProfile = true;
-$requestID = get_user_id();
+// $requestID = get_user_id();
+$requestID = se($_GET,"id","",false);
 
 $query = "SELECT id, image, email, created, username, privacy FROM `Users` WHERE :id=id";
 $stmt = $db->prepare($query);
