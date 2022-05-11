@@ -108,7 +108,75 @@ if ( isset($_POST["save"]) && isset($_POST["firstName"]) && isset($_POST["lastNa
       flash("Please input a valid shipping address, country, state and zip code", "danger");
     }
 
+    # (sb59 5/1) - Zipcodes are different per nation but this regex validation works for the United States Zip Codes
+    if ( ($country=="United States") && !(preg_match("/\d{5}([ \-]\d{4})?/", $zip)) ) {
+      $hasError = True;
+      flash("That is not a valid US zipcode", "danger");
+    }
+
+    # (sb59 5/1) - This regex validation makes sure the payment is only digits (and potentially one decimal point)
+    if ( !(preg_match("/^\d*(\.\d+)?$/", $payment)) ) {
+      $hasError = True;
+      flash("That is not valid payment format - please use digits", "danger");
+    }
+
+    # (sb59 5/1) - This validation makes sure the state is a valid US state
+    $allUSStates = array("AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS",
+    "KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK",
+    "OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY");
+
+    if (($country=="United States") && !(in_array($state,$allUSStates))) {
+      $hasError = True;
+      flash("Please select a valid US state", "danger");
+    }
+
+    # (sb59 5/1) - This regex validation makes sure the payment is only digits (and potentially one decimal point)
+    if ( !(preg_match("/^\d*(\.\d+)?$/", $payment)) ) {
+      $hasError = True;
+      flash("That is not valid payment format - please use digits and decimal points", "danger");
+    }
+
+    # (sb59 5/1) - This makes sure that it is a valid email (it does not need to match their account email because they may want order updates sent to another email)
+    if (!is_valid_email($email)) {
+        flash("Invalid email address", "danger");
+        $hasError = true;
+    }
+
+    # (sb59 5/1) - These check if the variables are too long (based on database storage restrictions)
+    if (strlen($paymentMethod)>30) {
+        flash("Payment method is too long", "danger");
+        $hasError = true;
+    }
+
+    # (sb59 5/1) - These check if the variables are too long (based on database restrictions)
+    if (strlen($address)>200) {
+        flash("Address is too long (please correct or abbreviate it) ", "danger");
+        $hasError = true;
+    }
+
+    # (sb59 5/1) - These check if the variables are too long (based on database restrictions)
+    if (strlen($firstName)>30) {
+        flash("First name is too long (please correct or abbreviate it) ", "danger");
+        $hasError = true;
+    }
+
+    # (sb59 5/1) - These check if the variables are too long (based on database restrictions)
+    if (strlen($lastName)>30) {
+        flash("Last name is too long (please correct or abbreviate it) ", "danger");
+        $hasError = true;
+    }
+
+    # (sb59 5/1) - This makes sure that it is a valid username and it matches their username (this may be redundant)
+    if (!preg_match('/^[a-z0-9_-]{3,16}$/i', $username) || ($username!=get_username())) {
+        flash("Username must match your username and only be alphanumeric or  - _", "danger");
+        $hasError = true;
+    }
+
+
     $address = $address . " " . $country . " " . $state . " " . $zip;
+
+
+
     
     if (!$hasError) {
 

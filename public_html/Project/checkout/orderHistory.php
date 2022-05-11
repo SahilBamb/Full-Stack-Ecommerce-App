@@ -84,28 +84,32 @@ if ( !(isset($_GET["id"])) ) {
       <?php
 
     $db = getDB();
-    $orderID = 0;
+    $orderID = se($_GET,'id',"",false);
     
-    $query = "SELECT firstName, lastName, c.created, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id  WHERE c.user_id = :uid limit 10";
+    $query = "SELECT firstName, lastName, c.created, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id  WHERE c.user_id = :uid AND c.id = :cidd limit 10";
 
     if (has_role("Admin")) {
-      $query = "SELECT firstName, lastName, c.created, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id ORDER BY c.created limit 10";
+      $query = "SELECT firstName, lastName, c.created, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id WHERE c.id = :cidd ORDER BY c.created limit 10";
     }
 
     $stmt = $db->prepare($query);
     $orderDetails = [];
     try {
-      if (!has_role("Admin")) {$stmt->execute([":uid" => get_user_id()]);} 
-      else {$stmt->execute();}
+      $stmt->bindValue(':cidd', $orderID, PDO::PARAM_INT);
+      if (!has_role("Admin")) {
+        $stmt->bindValue(':uid', get_user_id(), PDO::PARAM_INT);
+      }
+      $stmt->execute();
         $orderDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         echo "<pre>" . var_export($e, true) . "</pre>";
     }
 
+
     foreach ($orderDetails as $index => $record) { 
       // echo "<pre>OrderDetails:" . var_export($orderDetails, true) . "</pre>";
       /* $orderID = se($orderDetails[$index],'id',"",false); */
-      $orderID = se($_GET,'id',"",false);
+      
       $moneyReceived = se($orderDetails[$index],'money_received',"",false);
       $paymentMethod = se($orderDetails[$index],'payment_method',"",false);
       $address = se($orderDetails[$index],'address',"",false);
@@ -162,7 +166,6 @@ if ( !(isset($_GET["id"])) ) {
                         <small class="text-muted">regular shipping item</small>
                       </div>
                       <span class="text-muted">$<?php se($record,'subtotal',"",true); $cartTotal+=se($record,'subtotal',"",false); ?></span>
-                      
                   </li>
 
 
@@ -193,7 +196,7 @@ if ( !(isset($_GET["id"])) ) {
           </ul>
     
 
-          <?php break;} ?>
+          <?php break;} //end of intiial loop?> 
 
   </main>
 
