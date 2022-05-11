@@ -97,10 +97,10 @@ if ( isset($_GET['id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
 
     }
 
-    if ( !(preg_match("/^[a-zA-Z0-9 ]*$/", $rContent)) ) {
-        $hasError = True;
-        flash("Please only include numbers or letters in your review", "danger");
-      }
+    // if ( !(preg_match("/^[a-zA-Z0-9 ]*$/", $rContent)) ) {
+    //     $hasError = True;
+    //     flash("Please only include numbers or letters in your review", "danger");
+    //   }
       
     if (($rStars<0) || (5<$rStars)) {
         flash("Your rating must be between 0 an 5", "danger");
