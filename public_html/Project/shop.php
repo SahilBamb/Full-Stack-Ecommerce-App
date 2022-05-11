@@ -35,7 +35,10 @@ function validate() {
 </script>
 
 <?php
+
 require(__DIR__ . "/../../partials/nav.php");
+
+redirect("shopCards.php");
 
 
 $db = getDB();

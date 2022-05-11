@@ -23,7 +23,7 @@
 <title>Profile Page</title>
 <?php
 require_once(__DIR__ . "/../../partials/nav.php");
-if (!is_logged_in()) {
+if (!is_logged_in() && !isset($_GET["id"])) {
     flash("Please login or register before editing your profile", "warning");
     /* die(header("Location: login.php")); */
     redirect("login.php");
@@ -35,7 +35,8 @@ if (!is_logged_in()) {
 $db = getDB();
 
 $publicProfile = true;
-$requestID = get_user_id();
+// $requestID = get_user_id();
+$requestID = se($_GET,"id","",false);
 
 $query = "SELECT id, image, email, created, username, privacy FROM `Users` WHERE :id=id";
 $stmt = $db->prepare($query);
@@ -44,12 +45,16 @@ $results = [];
 
 try {
     $stmt->execute([":id" => se($requestID,null,"",false)]);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     echo "<pre>" . var_export($e, true) . "</pre>";
 }
-$requestedPrivacy = se($results[0],"privacy",0,false);
-$image = se($results[0],"image","",false);
+$requestedPrivacy = 0;
+$image = "";
+
+    $requestedPrivacy = se($results,"privacy",0,false);
+    $image = se($results,"image","",false);
+
 $defaultImage="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg";
 if ($image=="") $image = $defaultImage;
 ?>
@@ -73,8 +78,8 @@ if (isset($_GET["id"])) {
     // }
     // $image = se($results[0],"image","",false);
 
-    $requestedUserName = se($results[0],"username","",false);
-    $requestedJoined = se($results[0],"created","",false);
+    $requestedUserName = se($results,"username","",false);
+    $requestedJoined = se($results,"created","",false);
     
 
     if ($requestedPrivacy==0) {
@@ -114,7 +119,7 @@ if (isset($_GET["id"])) {
           
       <div class="card mb-4">
         <div class="card-body text-center">
-            <img src=<?php se($image,null,$defaultImage,true); ?>  alt="avatar"
+            <img src=<?php se($image, null, $defaultImage, true); ?>  alt="avatar"
                 class="rounded-circle img-fluid" style="width: 150px;">
             <h5 class="my-3"><?php se($requestedUserName,null,"",true);?></h5>
             <p class="text-muted mb-1">Joined: <?php se($requestedJoined,null,"",true);?></p>
@@ -257,7 +262,9 @@ if (isset($_POST["save"])) {
     $email = se($_POST, "email", null, false);
     $username = se($_POST, "username", null, false);
     $privacy = se($_POST, "privacy", null, false);
+    $imageR = se($_POST, "image", null, false);
     $hasError = false;
+
     //sanitize
     $email = sanitize_email($email);
     //validate
@@ -271,9 +278,9 @@ if (isset($_POST["save"])) {
     }
     
     if (!$hasError) {
-        $params = [":email" => $email, ":username" => $username, ":privacy" => $privacy, ":id" => get_user_id()];
+        $params = [":email" => $email, ":username" => $username, ":image" => $imageR, ":privacy" => $privacy, ":id" => get_user_id()];
         $db = getDB();
-        $stmt = $db->prepare("UPDATE Users set email = :email, username = :username, privacy = :privacy where id = :id");
+        $stmt = $db->prepare("UPDATE Users set email = :email, username = :username, image = :image, privacy = :privacy where id = :id");
         try {
             $stmt->execute($params);
             flash("Profile saved", "success");
