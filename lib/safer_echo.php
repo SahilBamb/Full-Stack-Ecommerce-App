@@ -23,10 +23,10 @@ function se($v, $k = null, $default = "", $isEcho = true) {
     }
     if ($isEcho) {
         //https://www.php.net/manual/en/function.htmlspecialchars.php
-        echo htmlspecialchars($returnValue, ENT_QUOTES);
+        if ($returnValue!=NULL) echo htmlspecialchars($returnValue, ENT_QUOTES);
     } else {
         //https://www.php.net/manual/en/function.htmlspecialchars.php
-        return htmlspecialchars($returnValue, ENT_QUOTES);
+        if ($returnValue!=NULL) return htmlspecialchars($returnValue, ENT_QUOTES);
     }
 }
 function safer_echo($v, $k = null, $default = "", $isEcho = true){
