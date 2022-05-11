@@ -20,6 +20,7 @@ Why: I enjoyed the design
     <title>Order History Page</title>
 
     <!-- Bootstrap core CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -43,6 +44,7 @@ Why: I enjoyed the design
 </style>
 
 
+
 <script>
 
 $(function () {
@@ -62,6 +64,8 @@ if (!is_logged_in()) {
     flash("Please login or register before attempting to checkout", "warning");
     die(header("Location: " . get_url("login.php")));
 }
+
+
 
 if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save']) ) {
 
@@ -88,7 +92,7 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
       echo "<pre>" . var_export($e, true) . "</pre>";
   }
 
-  echo "<pre>" . var_export($results, true) . "</pre>";
+  // echo "<pre>" . var_export($results, true) . "</pre>";
 
   if (count($results)<1) {
     flash("You must purchase the product before rating it!", "danger");
@@ -178,6 +182,44 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
       <h2><?php if (has_role("Admin")) {echo "Admin Order History (All Users)";} else {echo "Your Order History";} ?></h2>
     </div>
 
+    <p class="text-center">
+        <a class="responsive-content btn btn-dark" id="rateOrderBtn" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Filters
+        </a>
+    </p>
+    <div class="collapse" id="collapseExample">
+    <div class="container py-9">
+    <form onsubmit="return validate(this)" method="GET">
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <label class="sr-only" for="category">Category</label>
+                <input type="text" class="form-control" id="category" value="<?php if (isset($_GET['category'])) se($_GET['category']); ?>" name="category" placeholder="category name"/>
+            </div>
+            <div class="col-auto">
+                <label for="startDate" class="sr-only" >Category</label>
+                <input type="date" id="startDate" class="form-control" value="<?php if (isset($_GET['startDate'])) se($_GET['startDate']); ?>" name="startDate" />
+            </div>
+            <div class="col-auto">
+                <label for="endDate" class="sr-only" >Category</label>
+                <input type="date" id="endDate" class="form-control" value="<?php if (isset($_GET['endDate'])) se($_GET['endDate']); ?>" name="endDate" />
+            </div>
+            <div class="col-auto">
+                <div class="form-check mb-2">
+                    <input type="checkbox" class="form-check-input" id="SortByPrice" name="SortByPrice" value="1">
+                    <label class="form-check-label" for="SortByPrice">Sort By Order Total</label>
+                </div>
+            </div>
+            <div class="col-auto">
+                <input type="submit" class="btn btn-primary"/>
+            </div>
+        </div>
+    </form>
+</div>
+
+    </div>
+
+
+
     <div class="row">
       <div class="order-md-last">
       <?php
@@ -187,29 +229,150 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
     
     //$query = "SELECT name, c.id as prodid, item_id, quantity, unit_price, ROUND((unit_price*quantity),2) as subtotal FROM Cart c JOIN Products i ON c.item_id = i.id WHERE c.user_id = :id";
   
-    $query = "SELECT firstName, lastName, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id  WHERE c.user_id = :uid limit 10";
+    $query = "SELECT firstName, lastName, c.id, c.user_id, total_price, c.created, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id WHERE c.user_id = :uid";
+    $nolimitQuery = "SELECT COUNT(firstName) as total FROM Orders c JOIN Users i ON c.user_id = i.id WHERE c.user_id = :uid";
+    //SELECT firstName, lastName, p.category, c.id, c.user_id, total_price, c.created, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id JOIN OrderItems o ON o.order_id = c.id JOIN Products p ON p.id = o.item_id WHERE c.user_id = :uid
 
     if (has_role("Admin")) {
-      $query = "SELECT firstName, lastName, c.id, c.user_id, total_price, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id ORDER BY c.created limit 10";
+      $query = "SELECT firstName, lastName, c.id, c.user_id, total_price, c.created, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id WHERE 1=1";
+      $nolimitQuery = "SELECT COUNT(firstName) as total FROM Orders c JOIN Users i ON c.user_id = i.id WHERE 1=1";
     }
+
+
+// Filter by Date Range
+// Filter by Category
+// Sort by total, date purchased, etc
+
+
+    if (isset($_GET["startDate"]) || (isset($_GET["endDate"]))) {
+
+      //sb59 4/18 - This checks if its empty and then clears the GET fields, allowing for users to
+      //clear filters by inputting empty values in the filter form
+      if (isset($_GET["SortByTotalPrice"]) && $_GET["SortByTotalPrice"]=="") {unset($_GET['SortByTotalPrice']);}
+      
+      if (isset($_GET["category"]) && $_GET["category"]=="") {unset($_GET['category']);}
+
+      if (isset($_GET["startDate"]) && $_GET["startDate"]=="") {unset($_GET['startDate']);}
+      if (isset($_GET["endDate"]) && $_GET["endDate"]=="") {unset($_GET['endDate']);}
+
+      if (isset($_GET["startDate"]) || isset($_GET["endDate"]) || isset($_GET["category"]) || (isset($_GET["SortByTotalPrice"]))) echo "<br><h2>" . "Filters Applied" . "</h2>";
+  
+  }
+
+//   WHERE BIRTH_DATE_TIME BETWEEN
+// '2000-01-01 00:00:00' AND '2002-09-18 12:00:00';
+  
+    $startDate = "";
+    $endDate = "";
+    $category = "";
+    
+    if (isset($_GET["startDate"]) && isset($_GET["endDate"])) {
+        $startDate = "" . se($_GET, "startDate", "", false) . "";
+        $endDate = "" . se($_GET, "endDate", "", false) . "";
+        echo "<h5>" . "Orders Between: " . $startDate . " and " . $endDate . "</h5>";
+        $subqery = " AND c.created BETWEEN :startDate AND :endDate"; 
+        $query .=$subqery;
+        $nolimitQuery.=$subqery;
+    }
+    
+    if (isset($_GET["startDate"]) && !isset($_GET["endDate"])) {
+        echo "<h5>" . "Orders Placed On: " . $_GET["startDate"] . "</h5>";
+        $startDate = "" . se($_GET, "startDate", "", false) . "";
+        $subqery = " AND c.created > :startDate"; 
+        $query .=$subqery;
+        $nolimitQuery.=$subqery;
+    }
+    
+    //sb59 4/18 - if the $_GET category variable is set, it does the same as search
+    //The actual query works as a LIKE '%word%' where it matches the word in any location
+    if (isset($_GET["category"])) {
+        echo "<h5>" . "Orders with Products in Category: " . $_GET["category"] . "</h5>";
+        $category = "" . se($_GET, "category", "", false) . "";
+        // $subqery = " AND order_created LIKE :ctgry"; 
+        // $query .=$subqery;
+        // $nolimitQuery.=$subqery;
+    } 
+
+    //sb59 4/18 - if the $_GET price variable is set, this will simply sort by unit_price
+    //again using a partial query
+    $Endquery = " ORDER BY c.created";
+
+    if (isset($_GET["SortByTotalPrice"])) {
+        echo "<h5>" . "Sorting By Total Price " . "</h5>";
+        $Endquery = " ORDER BY total_price";
+    }
+
+    $query .=$Endquery;
+
+    //Test Query not final
+    // $query = "SELECT firstName, lastName, c.id, c.user_id, total_price, c.created as order_created, address, payment_method, money_received FROM Orders c JOIN Users i ON c.user_id = i.id WHERE c.user_id = :uid AND c.created > '2014-8-12 18:51:44'";
+    // $nolimitQuery = "SELECT COUNT(firstName) as total FROM Orders c JOIN Users i ON c.user_id = i.id WHERE c.user_id = :uid AND 1=1";
+    $page = se($_GET, "page", 1, false);
+    $per_page = 10;
+    if (!empty($category) || ( (!empty($endDate)) && (!empty($startDate)) )) {$per_page = 100; $catPage=$page; $page=1;}
+    $offset = ($page - 1) * $per_page;
+    $limit = " LIMIT :offset, :per_page";
+    $query .=$limit;
+
+    //Runs query to tell total pages and products
+
 
     $stmt = $db->prepare($query);
     $orderDetails = [];
     try {
-      if (!has_role("Admin")) {$stmt->execute([":uid" => get_user_id()]);} 
+      if (!empty($startDate)) $stmt->bindValue(":startDate", $startDate, PDO::PARAM_STR);
+      if (!empty($endDate)) $stmt->bindValue(":endDate", $endDate, PDO::PARAM_STR);
+
+      $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+      $stmt->bindValue(":per_page", $per_page, PDO::PARAM_INT);//[":uid" => get_user_id()]
+      
+      if (!has_role("Admin")) {$stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);$stmt->execute();} 
       else {$stmt->execute();}
         $orderDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         echo "<pre>" . var_export($e, true) . "</pre>";
+        error_log('Error Log Starting');
+        error_log(var_export($e,true));
     }
 
+
+    $stmt = $db->prepare($nolimitQuery);
+    try {
+      if (!empty($startDate)) $stmt->bindValue(":startDate", $startDate, PDO::PARAM_STR);
+      if (!empty($endDate)) $stmt->bindValue(":endDate", $endDate, PDO::PARAM_STR);
+      if (!has_role("Admin")) {
+        $stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);
+      } 
+      $stmt->execute();
+      $results = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+    } catch (PDOException $e) {
+        echo "<pre>" . var_export($e, true) . "</pre>";
+        error_log('Error Log Starting');
+        error_log(var_export($e,true));
+    }
+
+    
+    $totalProducts = 0;
+    
+
+    if (isset($results)) {
+        $totalProducts = (int)se($results, "total", 0, false);
+    }
+    
+    $searchTotal = 0;
+    $searchPayment = 0;
+    if (!empty($category) ||  ( (!empty($endDate)) && (!empty($startDate)) ) ){
+      $totalProducts = 0;
+      $categoryIndex = 0;
+    }
     foreach ($orderDetails as $index => $record) { 
       // echo "<pre>" . var_export($orderDetails, true) . "</pre>";
       $orderID = se($orderDetails[$index],'id',"",false);
       $moneyReceived = se($orderDetails[$index],'money_received',"",false);
       $paymentMethod = se($orderDetails[$index],'payment_method',"",false);
     
-    $query = "SELECT name, c.id as prodid, item_id, quantity, c.unit_price, ROUND((c.unit_price*c.quantity),2) as subtotal FROM OrderItems c JOIN Products i ON c.item_id = i.id WHERE c.order_id = :id";
+    $query = "SELECT name, c.id as prodid, category, item_id, quantity, c.unit_price, ROUND((c.unit_price*c.quantity),2) as subtotal FROM OrderItems c JOIN Products i ON c.item_id = i.id WHERE c.order_id = :id";
     
     $stmt = $db->prepare($query);
     $cartResults = [];
@@ -221,6 +384,69 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
     }
 
 ?>
+        <?php 
+        
+        $categorySearchCheck = True;
+        $categoryMatch = True;
+        if (  (!empty($category))  ||  ( (!empty($endDate)) && (!empty($startDate)) ) ){
+              $categorySearchCheck = False;
+              $categoryMatch = False; 
+              $startTimestamp1 = strtotime($startDate);
+              $endTimestamp2 = strtotime($endDate);
+              $createdTimestamp = strtotime(se($record,'created',"N/A",false));
+              foreach ($cartResults as $column => $value) {
+
+                if ((!empty($category)) &&  ( (!empty($endDate)) && (!empty($startDate)) ) ){
+
+                  if ( (se($value,'category',"N/A",false)==$category) && (($startTimestamp1<=$createdTimestamp) && ($createdTimestamp<=$endTimestamp2)) ) {
+                    $totalProducts++;
+                    if  ( ( (($catPage - 1)*10) <= $categoryIndex) && ($categoryIndex < (($catPage)*10) ) ) {
+                      $categorySearchCheck = True;
+                    }
+                    $categoryIndex++;
+                    $categoryMatch = true;
+                    break;
+                  }
+
+                }
+
+                else if (!empty($category)) {
+                  if (se($value,'category',"N/A",false)==$category) {
+                    $totalProducts++;
+                    if  ( ( (($catPage - 1)*10) <= $categoryIndex) && ($categoryIndex < (($catPage)*10) ) ) {
+                      $categorySearchCheck = True;
+                    }
+                    $categoryIndex++;
+                    $categoryMatch = true;
+                    break;
+                  }
+                }
+
+                else if (  ( (!empty($endDate)) && (!empty($startDate)) ) ){
+
+                  if ( ($startTimestamp1<=$createdTimestamp) && ($createdTimestamp<=$endTimestamp2) ) {
+                    $totalProducts++;
+                    if  ( ( (($catPage - 1)*10) <= $categoryIndex) && ($categoryIndex < (($catPage)*10) ) ) {
+                      $categorySearchCheck = True;
+                    }
+                    $categoryIndex++;
+                    $categoryMatch = true;
+                    break;
+                  }
+
+                }
+                
+
+
+
+              } 
+            }
+          ?>
+
+        <?php
+
+        if (((empty($category)) || $categoryMatch) && $categorySearchCheck) {?> 
+
         <br>
         <h4 class="d-flex justify-content-between align-items-center mb-3">
           <span class="text-primary">
@@ -235,7 +461,7 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
           $numberOfProds = 0;
           $count = 0;
           if (count($cartResults)>0) :?>
-          <?php foreach ($cartResults as $index => $record) : ?>
+          <?php foreach ($cartResults as $index => $record) : ?> 
                   <?php foreach ($cartResults as $column => $value) : ?>
                     <?php $numberOfProds=se($record,'quantity',"",false);?>
                   <?php endforeach; ?>
@@ -243,19 +469,13 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
                       <div>
                       <h6> <?php se($record,'name',"",true); ?> x<?php se($numberOfProds);?></h6>
                         <small class="text-muted">
-
-                        <p>
-                          <a class="responsive-content btn btn-light" id="rateOrderBtn" data-toggle="collapse" href="#collapseExample<?php echo $count; ?>" role="button" aria-expanded="false" aria-controls="collapseExample">
-                            Rate Order
-                          </a>
-                        </p>
+          
                         <div class="collapse" id="collapseExample<?php echo $count; ?>">
                           <div class="card card-body">
                             <form method="POST" onsubmit="return validate(this);">
                                 <div class="form-group">
                                     <label class="form-label" for="stars">Stars</label>
                                     <input type="hidden" value="<?php se($value,'item_id',"",true);?>" name="item_id" />
-                        
                                     <div class="form-check form-check-inline">
                                       <input class="form-check-input" name="stars" type="radio" id="inlineCheckbox1" value="1">
                                       <label class="form-check-label" for="inlineCheckbox1">1</label>
@@ -282,15 +502,12 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
                             </form>
                           </div>
                         </div>
-
-
                         </small>
                       </div>
                       <span class="text-muted">$<?php se($record,'subtotal',"",true); $cartTotal+=se($record,'subtotal',"",false); ?></span>
                   </li>
           <?php $count++; ?>
           <?php endforeach; ?>
-
         <?php endif;?> 
 
         <li class="list-group-item d-flex justify-content-between">
@@ -317,22 +534,124 @@ if ( isset($_POST['item_id']) && isset($_POST['stars']) && isset($_POST['save'])
           </ul>
           <?php } ?>
 
+          <?php 
+        if(!empty($category) || ( (!empty($endDate)) && (!empty($startDate)) )): 
+          $cartTotal = 0;
+          foreach ($cartResults as $index => $record) : 
+            $cartTotal+=se($record,'subtotal',"",false); 
+          endforeach;  
+          if ($categoryMatch){
+              $searchTotal+=$cartTotal; 
+              $searchPayment+=$moneyReceived;
+            }
+        endif;
+            
+            ?>
+
+          <?php } ?>
+
   </main>
 
-<!--   <footer class="my-5 pt-5 text-muted text-center text-small">
-    <p class="mb-1">&copy; 2017–2021 Company Name</p>
-    <ul class="list-inline">
-      <li class="list-inline-item"><a href="#">Privacy</a></li>
-      <li class="list-inline-item"><a href="#">Terms</a></li>
-      <li class="list-inline-item"><a href="#">Support</a></li>
-    </ul>
-  </footer>
-</div>
- -->
+  <br>
 
+  <li class="list-group-item d-flex justify-content-between">
+      <span>Search Total (USD)</span>
+      <strong>$<?php se($searchTotal);?></strong>
+    </li>
+  
+  <li class="list-group-item d-flex justify-content-between lh-sm">
+    <span>Search Payment Accepted</span>
+    <strong>$
+      <?php 
+          if ( str_contains($searchPayment, '.') ) {
+            echo $searchPayment;
+          }
+          else {
+            echo $searchPayment . ".00";
+          }
+      ?>
+    </strong>
+    
+  </li>
+
+<br>
+
+  <!-- Pagination (uses page files from query section and getGETURL from functions.php) -->
+
+  <?php if (empty($category) && ( (empty($endDate)) && (empty($startDate)) ) ):?> 
+        
+  <nav aria-label="Page navigation example" style="align-items: center; justify-content: center;">
+    <ul2 class="pagination justify-content-center">
+      <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
+          <a class="page-link" href="<?php se(getGETURL($page-1)); ?>">Previous</a>
+      </li>
+    <?php if ($page>1): ?>
+        <!-- <a class="page-link" href="?" tabindex="-1">Previous</a> -->
+      <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
+          <a class="page-link" href="<?php se(getGETURL($page-1)); ?>">
+              <?php se($page-1); ?>
+          </a>
+      </li>
+    <?php endif; ?>
+      <li class="page-item active">
+          <a class="page-link" href="#" >
+              <?php se($page); ?>
+          </a>
+      </li>
+    <?php if ($page<($totalProducts/$per_page)): ?>
+      <li class="page-item <?php if ($page>($totalProducts/$per_page)) echo "disabled" ?>">
+          <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">
+              <?php se($page+1); ?>
+          </a>
+      </li>
+    <?php endif; ?>
+      <li class="page-item <?php if ($page>=($totalProducts/$per_page)) echo "disabled" ?>">
+          <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">Next</a>
+      </li>
+    </ul2>
+  </nav>
+
+  <?php else:
+  $page = $catPage;
+  $per_page = 10;
+    
+    ?>
+    
+  <nav aria-label="Page navigation example" style="align-items: center; justify-content: center;">
+  <ul2 class="pagination justify-content-center">
+    <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
+        <a class="page-link" href="<?php se(getGETURL($page-1)); ?>">Previous</a>
+    </li>
+  <?php if ($page>1): ?>
+      <!-- <a class="page-link" href="?" tabindex="-1">Previous</a> -->
+    <li class="page-item <?php if ($page-1<=0) echo "disabled" ?>">
+        <a class="page-link" href="<?php se(getGETURL($page-1)); ?>">
+            <?php se($page-1); ?>
+        </a>
+    </li>
+  <?php endif; ?>
+    <li class="page-item active">
+        <a class="page-link" href="#" >
+            <?php se($page); ?>
+        </a>
+    </li>
+  <?php if ($page<($totalProducts/$per_page)): ?>
+    <li class="page-item <?php if ($page>($totalProducts/$per_page)) echo "disabled" ?>">
+        <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">
+            <?php se($page+1); ?>
+        </a>
+    </li>
+  <?php endif; ?>
+    <li class="page-item <?php if ($page>=($totalProducts/$per_page)) echo "disabled" ?>">
+        <a class="page-link" href="<?php se(getGETURL($page+1)); ?>">Next</a>
+    </li>
+  </ul2>
+  </nav>
+  <?php endif; ?>
+
+<br>
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-
-      <script src="form-validation.js"></script>
+    <script src="form-validation.js"></script>
   </body>
 </html>
 

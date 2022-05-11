@@ -43,7 +43,7 @@ $db = getDB();
 $query = "SELECT id, name, description, category, stock, unit_price FROM Products WHERE 1=1";
 
 if (!has_role("Admin")) {
-    $query.=" AND visibility=1";
+    $query.=" AND visibility=1 AND stock>0 ";
 }
 
 if (isset($_GET["search"]) || isset($_GET["category"]) || (isset($_GET["SortByPrice"]))) {
