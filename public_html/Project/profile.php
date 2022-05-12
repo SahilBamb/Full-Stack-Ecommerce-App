@@ -54,14 +54,16 @@ try {
 $requestedPrivacy = 0;
 $image = "";
 
-echo "<pre>" . var_export($_POST, true) . "</pre>";
+// echo "<pre>" . var_export($_POST, true) . "</pre>";
 
-if (isset($_POST['privacy'])) $requestedPrivacy = se($_POST,"privacy",0,false);
+
 
 $image = se($results,"image","",false);
 $requestedPrivacy = se($results,"privacy",0,false);
 $defaultImage="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg";
 if ($image=="") $image = $defaultImage;
+
+if (isset($_POST['privacy'])) $requestedPrivacy = se($_POST,"privacy",0,false);
 
 ?>
 
