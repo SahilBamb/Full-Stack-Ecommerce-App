@@ -13,6 +13,9 @@
  End Line item / Feature Template -- DO NOT DELETE THIS SECTION --> 
  
  
+[![IMAGE ALT TEXT](https://user-images.githubusercontent.com/42818731/168180605-15d93c95-db5b-40ed-a304-c7d44ad03b4b.png)](https://www.youtube.com/watch?v=QiN_E7Zj0Pg&ab_channel=FindingFocus "Video Title")
+
+
 ### Proposal Checklist and Evidence
 
 - Milestone 1
