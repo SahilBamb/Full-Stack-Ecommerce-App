@@ -98,27 +98,27 @@
         
 - Milestone 4
 
-    - [ ] \(0X/XX/2022) User can set their profile to be public or private (will need another column in Users table)
+    - [x] \(04/26/2022) User can set their profile to be public or private (will need another column in Users table)
         - [Milestone 4](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone4.md) 
-        - []()
-    - [ ] \(0X/XX/2022) User will be able to rate a product they purchased
+        - [Profile Page: https://sb59-prod.herokuapp.com/Project/profile.php](https://sb59-prod.herokuapp.com/Project/profile.php)
+    - [x] \(04/28/2022) User will be able to rate a product they purchased
         - [Milestone 4](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone4.md) 
-        - []()
-    - [ ] \(0X/XX/2022) User’s Purchase History Changes
+        - [Product Page: https://sb59-prod.herokuapp.com/Project/product_page.php?id=11](https://sb59-prod.herokuapp.com/Project/product_page.php?id=11)
+    - [x] \(05/10/2022) User’s Purchase History Changes
         - [Milestone 4](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone4.md) 
-        - []()
-    - [ ] \(0X/XX/2022) Store Owner Purchase History Changes
+        - [Checkout: https://sb59-prod.herokuapp.com/Project/checkout/checkoutHistory.php](https://sb59-prod.herokuapp.com/Project/checkout/checkoutHistory.php)
+    - [x] \(05/10/2022) Store Owner Purchase History Changes
         - [Milestone 4](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone4.md) 
-        - []()
-    - [ ] \(0X/XX/2022) Add pagination to Shop Page (and any other product lists not yet mentioned)
+        - [Order History Page: https://sb59-prod.herokuapp.com/Project/checkout/checkoutHistory.php](https://sb59-prod.herokuapp.com/Project/checkout/checkoutHistory.php)
+    - [x] \(04/10/2022) Add pagination to Shop Page (and any other product lists not yet mentioned)
         - [Milestone 4](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone4.md) 
-        - []()
-    - [ ] \(0X/XX/2022) Store Owner will be able to see all products out of stock
+        - [Shop Page: https://sb59-prod.herokuapp.com/Project/shopCards.php](https://sb59-prod.herokuapp.com/Project/shopCards.php)
+    - [x] \(04/10/2022) Store Owner will be able to see all products out of stock
         - [Milestone 4](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone4.md) 
-        - []()
-    - [ ] \(0X/XX/2022) User can sort products by average rating on the Shop Page
+        - [List Items: https://sb59-prod.herokuapp.com/Project/admin/list_items.php](https://sb59-prod.herokuapp.com/Project/admin/list_items.php)
+    - [x] \(05/01/2022) User can sort products by average rating on the Shop Page
         - [Milestone 4](https://github.com/SahilBamb/IT202-010/blob/Milestone1/public_html/Project/milestone4.md) 
-        - []()
+        - [Shop Page: https://sb59-prod.herokuapp.com/Project/shopCards.php](https://sb59-prod.herokuapp.com/Project/shopCards.php)
 ### Intructions
 #### Don't delete this
 1. Pick one project type

@@ -36,7 +36,7 @@ $db = getDB();
 
 $publicProfile = true;
 // $requestID = get_user_id();
-$requestID = se($_GET,"id","",false);
+$requestID = get_user_id();
 
 $query = "SELECT id, image, email, created, username, privacy FROM `Users` WHERE :id=id";
 $stmt = $db->prepare($query);
@@ -52,11 +52,14 @@ try {
 $requestedPrivacy = 0;
 $image = "";
 
-    $requestedPrivacy = se($results,"privacy",0,false);
-    $image = se($results,"image","",false);
+$requestedPrivacy = se($results,"privacy",0,false);
+if (isset($_POST['privacy'])) $requestedPrivacy = se($_POST,"privacy",0,false);
+$image = se($results,"image","",false);
+
 
 $defaultImage="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg";
 if ($image=="") $image = $defaultImage;
+
 ?>
 
 <?php 
@@ -89,7 +92,7 @@ if (isset($_GET["id"])) {
 
     }
 
-
+    $requestID = se($_GET,"id","",false);
     $id = $requestID;
 
     $query = "SELECT p.name, u.username, r.id, product_id, user_id, rating, r.created, privacy, comment FROM Ratings r JOIN Users u ON r.user_id = u.id JOIN Products p ON r.product_id = p.id WHERE r.user_id = :id LIMIT 4;";
@@ -258,7 +261,7 @@ else {
 
 
 <?php
-if (isset($_POST["save"])) {
+if (!isset($_GET["id"]) && isset($_POST["save"])) {
     $email = se($_POST, "email", null, false);
     $username = se($_POST, "username", null, false);
     $privacy = se($_POST, "privacy", null, false);
