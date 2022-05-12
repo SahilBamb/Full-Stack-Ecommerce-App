@@ -560,7 +560,12 @@ foreach ($reviewCarts as $index => $record) {
                 <?php if (!empty($comment)) {?>
                     <h6 class="card-subtitle mb-2 text-muted">"<?php se($comment)?>"</h6>
                     <?php }?>
-                <small class="card-subtitle mb-2 text-muted">-<?php if ($reviewPrivacy==1) {se($reviewUser);} else {se("Anonymous");}?></small>
+                <small class="card-subtitle mb-2 text-muted">-
+                    <a href="profile.php?id=<?php se($user_id); ?>" >
+                    <?php if ($reviewPrivacy==1) {se($reviewUser);} else {se("Anonymous");}?>
+                    </a>
+                
+                </small>
                 <!-- <p class="card-text">Product Descr: Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
                 <!-- <a href="#" class="card-link">Product link</a>
                 <a href="#" class="card-link">Another link</a> -->
