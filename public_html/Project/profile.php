@@ -37,6 +37,8 @@ $db = getDB();
 $publicProfile = true;
 // $requestID = get_user_id();
 $requestID = get_user_id();
+if (isset($_GET['id'])) $requestID = se($_GET,"id",0,false);
+
 
 $query = "SELECT id, image, email, created, username, privacy FROM `Users` WHERE :id=id";
 $stmt = $db->prepare($query);
@@ -52,11 +54,12 @@ try {
 $requestedPrivacy = 0;
 $image = "";
 
-$requestedPrivacy = se($results,"privacy",0,false);
+echo "<pre>" . var_export($_POST, true) . "</pre>";
+
 if (isset($_POST['privacy'])) $requestedPrivacy = se($_POST,"privacy",0,false);
+
 $image = se($results,"image","",false);
-
-
+$requestedPrivacy = se($results,"privacy",0,false);
 $defaultImage="https://1.bp.blogspot.com/-jHrJ3VITQf8/UDILF_ctbOI/AAAAAAAACn4/UwOvDmW4EJw/s1600/CUTE+GIRL+HAIR+FB+DP.jpg";
 if ($image=="") $image = $defaultImage;
 
@@ -83,6 +86,7 @@ if (isset($_GET["id"])) {
 
     $requestedUserName = se($results,"username","",false);
     $requestedJoined = se($results,"created","",false);
+    $requestedPrivacy = se($results,"privacy",0,false);
     
 
     if ($requestedPrivacy==0) {
