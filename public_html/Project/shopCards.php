@@ -59,10 +59,7 @@ function add_to_cart(item_id, quantity = 1) {
 
 
 
-<?php
-
-require(__DIR__ . "/../../partials/nav.php");
-?>
+<?php require(__DIR__ . "/../../partials/nav.php"); ?>
 
 <?php
 
@@ -289,6 +286,7 @@ try {
                     
                 </div>
                 <div class="card-footer">
+                    
                     <small class="text-muted"><?php se($record,'stock',"",true); ?> in Remaining in Stock</small>
                     <?php if (has_role("Admin")) { ?><a href="/../Project/admin/product_edit.php?id=<?php se($record, "id"); ?>">Edit</a> <?php } ?>
                 </div>
