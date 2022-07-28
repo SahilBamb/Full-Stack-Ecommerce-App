@@ -16,6 +16,16 @@ A brief description of what this project does and who it's for
 - User Account Settings
 - User Public Profile
 - Editable Profile
+- Admin Functions (add product, edit product, create roles, etc.)
+- Product Creation 
+- Product stock, visibility, images, reviews
+- Shop Page (Cards and Catalog)
+- Session Cart
+- Checkout Page
+- Complete Checkout Process
+- Order Confirmation Page
+- Order History Page
+- Universal Pagination
 
 
 ## Screenshots
