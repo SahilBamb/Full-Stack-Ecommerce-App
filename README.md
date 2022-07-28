@@ -1,6 +1,6 @@
 ![logo](https://user-images.githubusercontent.com/42818731/181546207-4b0a4706-559d-46d7-b91d-89e5f327bda8.png)
 
-# Project Title
+# Shopify Alternative Full Stack Ecommerce Application 
 
 Allows online store owners to replicate all of Shopify’s store features without $300 annual cost. 
 
