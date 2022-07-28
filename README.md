@@ -2,8 +2,7 @@
 
 # Project Title
 
-A brief description of what this project does and who it's for
-
+Allows online store owners to replicate all of Shopify’s store features without $300 annual cost. 
 
 ## Features
 
